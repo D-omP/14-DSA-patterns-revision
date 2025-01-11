@@ -1,0 +1,62 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog');
+const recentPosts = posts.sort((a, b) => 
+  b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+).slice(0, 5);
+---
+
+<Layout title="Aryan Singh's Tech Blog">
+  <div class="max-w-4xl mx-auto">
+    <header class="mb-12">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">Welcome to My Tech Blog</h1>
+      <p class="text-xl text-gray-600">
+        Software Engineer sharing insights about Cloud Architecture, AI/ML, and System Design.
+        Join 6000+ professionals learning about modern tech and engineering best practices.
+      </p>
+    </header>
+
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">Recent Posts</h2>
+      <div class="space-y-8">
+        {recentPosts.map(post => (
+          <article class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+            <a href={`/blog/${post.slug}`}>
+              <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                {post.data.title}
+              </h3>
+              <p class="text-gray-600 mb-4">{post.data.description}</p>
+              <div class="flex items-center text-sm text-gray-500">
+                <span>{post.data.pubDate.toLocaleDateString()}</span>
+                <span class="mx-2">•</span>
+                <span>{post.data.category.replace('-', ' ').toUpperCase()}</span>
+              </div>
+            </a>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="bg-primary-50 p-8 rounded-lg">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">Newsletter</h2>
+      <p class="text-gray-600 mb-6">
+        Get weekly insights about Cloud Architecture, System Design, and Software Engineering best practices.
+      </p>
+      <form class="flex flex-col sm:flex-row gap-4">
+        <input
+          type="email"
+          placeholder="Enter your email"
+          class="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+        />
+        <button
+          type="submit"
+          class="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+        >
+          Subscribe
+        </button>
+      </form>
+    </section>
+  </div>
+</Layout>
