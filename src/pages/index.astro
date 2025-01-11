@@ -9,18 +9,73 @@ const recentPosts = posts.sort((a, b) =>
 ---
 
 <Layout title="Aryan Singh's Tech Blog">
-  <div class="max-w-4xl mx-auto">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6">
     <header class="mb-12">
-      <h1 class="text-4xl font-bold text-gray-900 mb-4">Welcome to My Tech Blog</h1>
-      <p class="text-xl text-gray-600">
-        Software Engineer sharing insights about Cloud Architecture, AI/ML, and System Design.
-        Join 6000+ professionals learning about modern tech and engineering best practices.
-      </p>
+      <div>
+        <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Aryan Singh - sharing my learnings</h1>
+        <p class="text-lg sm:text-xl text-gray-600">
+          Ex-Google Software Engineer sharing insights about Tech, AI, Startups, E-Commerce, Cricket, and more.
+          Join me while I overshare everything I've learned in my 5+ years of experience.
+        </p>
+      </div>
     </header>
+
+    <section class="mb-12 bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-8 rounded-xl border border-gray-200 shadow-sm">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b-2 border-primary-300 pb-2 inline-block">Background</h2>
+      <div class="space-y-4">
+        <p class="text-gray-700 flex items-center p-3 bg-white rounded-lg border-l-4 border-primary-400 shadow-sm">
+          👨‍💻 Previously Software Engineer at Google and Arrow Electronics
+        </p>
+        <p class="text-gray-700 flex items-center p-3 bg-white rounded-lg border-l-4 border-primary-400 shadow-sm">
+          🎓 Computer Science at UMass
+        </p>
+        <p class="text-gray-700 flex items-center p-3 bg-white rounded-lg border-l-4 border-primary-400 shadow-sm">
+          🚀 Tech Educator with 600k+ social media following
+        </p>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b-2 border-primary-300 pb-2 inline-block">My Projects</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+        {[
+          {
+            title: "30 Days Coding",
+            url: "https://30dayscoding.com",
+            description: "Master coding challenges in 30 days"
+          },
+          {
+            title: "Skillset Master",
+            url: "https://skillsetmaster.com",
+            description: "Level up your technical skills"
+          },
+          {
+            title: "Get AI News",
+            url: "https://getainews.com",
+            description: "Stay updated with AI developments"
+          },
+          {
+            title: "Startup News",
+            url: "https://getstartupnews.com",
+            description: "Latest in the startup ecosystem"
+          }
+        ].map(project => (
+          <a href={project.url} target="_blank" rel="noopener noreferrer" 
+             class="block p-6 bg-white rounded-lg border border-gray-200 shadow-sm 
+                    hover:shadow-lg transition-all hover:-translate-y-1 
+                    hover:border-primary-300 group">
+            <h3 class="text-xl font-semibold text-gray-900 mb-2 group-hover:text-primary-600">
+              {project.title}
+            </h3>
+            <p class="text-gray-600">{project.description}</p>
+          </a>
+        ))}
+      </div>
+    </section>
 
     <section class="mb-12">
       <h2 class="text-2xl font-bold text-gray-900 mb-6">Recent Posts</h2>
-      <div class="space-y-8">
+      <div class="space-y-6 sm:space-y-8">
         {recentPosts.map(post => (
           <article class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
             <a href={`/blog/${post.slug}`}>
@@ -39,7 +94,7 @@ const recentPosts = posts.sort((a, b) =>
       </div>
     </section>
 
-    <section class="bg-primary-50 p-8 rounded-lg">
+    <section class="bg-primary-50 p-4 sm:p-8 rounded-lg">
       <h2 class="text-2xl font-bold text-gray-900 mb-4">Newsletter</h2>
       <p class="text-gray-600 mb-6">
         Get weekly insights about Cloud Architecture, System Design, and Software Engineering best practices.
