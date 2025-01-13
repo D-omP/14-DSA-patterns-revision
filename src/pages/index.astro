@@ -5,7 +5,7 @@ import { getCollection } from 'astro:content';
 const posts = await getCollection('blog');
 const recentPosts = posts.sort((a, b) => 
   b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-).slice(0, 5);
+).slice(0, 4);
 
 const projects = [
         {
@@ -86,6 +86,30 @@ const projects = [
       </div>
     </header>
 
+
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">Recent Blogs</h2>
+      <div class="space-y-6 sm:space-y-8">
+        {recentPosts.map(post => (
+          <article class="group bg-white p-6 rounded-lg shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100">
+            <a href={`/blog/${post.slug}`} class="block">
+              <h3 class="text-xl font-semibold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors">
+                {post.data.title}
+              </h3>
+              <p class="text-gray-600 mb-4 line-clamp-2">{post.data.description}</p>
+              <div class="flex items-center text-sm">
+                <span class="text-primary-600 font-medium">{post.data.pubDate.toLocaleDateString()}</span>
+                <span class="mx-2 text-gray-400">•</span>
+                <span class="px-2 py-1 bg-primary-50 text-primary-700 rounded-full text-xs font-medium">
+                  {post.data.category.replace('-', ' ').toUpperCase()}
+                </span>
+              </div>
+            </a>
+          </article>
+        ))}
+      </div>
+    </section>
+
     <section class="mb-12">
       <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b-2 border-primary-300 pb-2 inline-block">Currently working on</h2>
       
@@ -140,26 +164,6 @@ const projects = [
       </div>
     </section> -->
 
-    <section class="mb-12">
-      <h2 class="text-2xl font-bold text-gray-900 mb-6">Recent Posts</h2>
-      <div class="space-y-6 sm:space-y-8">
-        {recentPosts.map(post => (
-          <article class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-            <a href={`/blog/${post.slug}`}>
-              <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                {post.data.title}
-              </h3>
-              <p class="text-gray-600 mb-4">{post.data.description}</p>
-              <div class="flex items-center text-sm text-gray-500">
-                <span>{post.data.pubDate.toLocaleDateString()}</span>
-                <span class="mx-2">•</span>
-                <span>{post.data.category.replace('-', ' ').toUpperCase()}</span>
-              </div>
-            </a>
-          </article>
-        ))}
-      </div>
-    </section>
 
     <section class="bg-primary-50 p-4 sm:p-8 rounded-lg">
       <h2 class="text-2xl font-bold text-gray-900 mb-4">Newsletter</h2>

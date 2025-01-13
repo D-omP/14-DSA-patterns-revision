@@ -4,13 +4,21 @@ import Layout from '../../layouts/Layout.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
-  return posts.map(post => ({
+  const sortedPosts = posts.sort((a, b) => 
+    b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  );
+
+  return sortedPosts.map((post, index) => ({
     params: { slug: post.slug },
-    props: { post },
+    props: { 
+      post,
+      prevPost: sortedPosts[index + 1] || null,
+      nextPost: sortedPosts[index - 1] || null
+    },
   }));
 }
 
-const { post } = Astro.props;
+const { post, prevPost, nextPost } = Astro.props;
 const { Content } = await post.render();
 ---
 
@@ -25,9 +33,66 @@ const { Content } = await post.render();
       </div>
     </header>
 
+
+    <!-- Post Navigation -->
+    <nav class="mt-12 mb-8 border-t border-gray-200 pt-8">
+      <div class="flex justify-between items-stretch flex-col sm:flex-row gap-6">
+        {prevPost && (
+          <a 
+            href={`/blog/${prevPost.slug}`}
+            class="group flex items-center text-gray-600 hover:text-primary-600 transition-colors w-full sm:w-auto"
+          >
+            <svg 
+              class="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform flex-shrink-0" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="2" 
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+            <div class="min-w-0">
+              <div class="text-sm text-gray-500">Previous</div>
+              <div class="font-medium truncate">{prevPost.data.title}</div>
+            </div>
+          </a>
+        )}
+
+        {nextPost && (
+          <a 
+            href={`/blog/${nextPost.slug}`}
+            class="group flex items-center text-gray-600 hover:text-primary-600 transition-colors w-full sm:w-auto sm:ml-auto sm:text-right justify-end"
+          >
+            <div class="min-w-0">
+              <div class="text-sm text-gray-500">Next</div>
+              <div class="font-medium truncate">{nextPost.data.title}</div>
+            </div>
+            <svg 
+              class="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform flex-shrink-0" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="2" 
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </a>
+        )}
+      </div>
+    </nav>
+
     <div class="prose prose-lg prose-primary">
       <Content />
     </div>
+
 
     <footer class="mt-12 pt-8 border-t border-gray-200">
       <div class="flex items-center justify-between">
