@@ -20,9 +20,44 @@ export async function getStaticPaths() {
 
 const { post, prevPost, nextPost } = Astro.props;
 const { Content } = await post.render();
+
+// Generate structured data for the article
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": post.data.title,
+  "description": post.data.description,
+  "author": {
+    "@type": "Person",
+    "name": post.data.author,
+    "url": "https://aryansingh.com/about"
+  },
+  "datePublished": post.data.pubDate.toISOString(),
+  "dateModified": post.data.modifiedDate?.toISOString() || post.data.pubDate.toISOString(),
+  "image": post.data.image || "/images/default-og.png",
+  "keywords": post.data.tags.join(", "),
+  "publisher": {
+    "@type": "Organization",
+    "name": "Aryan Singh",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://aryansingh.com/logo.png"
+    }
+  }
+};
 ---
 
-<Layout title={post.data.title}>
+<Layout 
+  title={post.data.title}
+  description={post.data.description}
+  image={post.data.image}
+  article={true}
+  publishDate={post.data.pubDate}
+  modifiedDate={post.data.modifiedDate}
+  author={post.data.author}
+  tags={post.data.tags}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   <article class="max-w-4xl mx-auto prose prose-lg">
     <header class="mb-8">
       <h1 class="mb-2">{post.data.title}</h1>

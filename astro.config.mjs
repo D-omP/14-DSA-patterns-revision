@@ -1,16 +1,8 @@
 import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
 import mdx from '@astrojs/mdx';
+import tailwind from '@astrojs/tailwind';
 
 export default defineConfig({
-  integrations: [
-    tailwind(),
-    mdx()
-  ],
-  markdown: {
-    shikiConfig: {
-      theme: 'github-dark',
-      wrap: true
-    }
-  }
+  site: 'https://aryansingh.com',
+  integrations: [mdx(), tailwind()],
 });
