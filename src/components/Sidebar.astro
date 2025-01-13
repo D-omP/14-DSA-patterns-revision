@@ -13,6 +13,7 @@ const categories = {
   'ai-ml': 'AI stuff',
   'startup-journey': 'Startup Journey',
   // 'programming': 'Programming Tutorials',
+  'content': 'Content creation',
 };
 
 const postsByCategory = Object.fromEntries(
@@ -27,61 +28,58 @@ const currentPost = posts.find(post => post.slug === currentSlug);
 const currentCategory = currentPost?.data.category;
 ---
 
-<aside class="fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 overflow-y-auto transform transition-transform duration-300 ease-in-out md:translate-x-0 -translate-x-full z-50" id="sidebar">
-  <div class="p-4">
-    <div class="mb-6">
+<aside class="fixed left-0 top-0 h-screen w-72 bg-gradient-to-b from-white to-gray-50 border-r border-gray-200 overflow-y-auto transform transition-transform duration-300 ease-in-out md:translate-x-0 -translate-x-full z-50 shadow-lg" id="sidebar">
+  <div class="p-6">
+    <div class="mb-8">
       <a href="/" class="block hover:opacity-80 transition-opacity">
-        <h2 class="text-xl font-bold text-gray-900">Aryan Singh</h2>
-        <p class="text-xs text-gray-600 mt-1">Engineer, Creator | 600K+ Followers</p>
+        <h2 class="text-2xl font-bold bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">Aryan Singh</h2>
+        <p class="text-sm text-gray-600 mt-1.5 font-medium">Engineer, Creator | 600K+ Followers</p>
       </a>
     </div>
 
-    <div class="mb-4">
+    <div class="mb-6">
       <input
         type="search"
         placeholder="Search posts..."
-        class="w-full px-3 py-1.5 text-sm rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+        class="w-full px-4 py-2 text-sm rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50 placeholder-gray-400 transition-all"
       />
     </div>
 
-    <nav>
+    <nav class="space-y-2">
       {Object.entries(categories).map(([key, label]) => {
         const isCurrentCategory = key === currentCategory;
         return (
-          <div class="mb-2">
+          <div class="group">
             <button
               class:list={[
-                "flex items-center justify-between w-full px-2 py-1.5 text-left text-sm hover:bg-gray-100 rounded-lg",
-                isCurrentCategory ? "text-primary-600 bg-primary-50" : "text-gray-700"
+                "flex items-center justify-between w-full px-4 py-2.5 text-left rounded-xl transition-all duration-200",
+                isCurrentCategory 
+                  ? "text-primary-600 bg-primary-50 shadow-sm" 
+                  : "text-gray-700 hover:bg-gray-100"
               ]}
               data-category={key}
             >
               <span class="font-medium">{label}</span>
               <svg
-                class="w-3.5 h-3.5 transition-transform"
+                class="w-4 h-4 transition-transform duration-200"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
                 style={isCurrentCategory ? "transform: rotate(0deg)" : "transform: rotate(-90deg)"}
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
               </svg>
             </button>
-            <ul class:list={["ml-3 mt-1 space-y-1", !isCurrentCategory && "hidden"]}>
+            <ul class:list={["mt-1 space-y-1 px-2", !isCurrentCategory && "hidden"]}>
               {postsByCategory[key].map(post => (
                 <li>
                   <a
                     href={`/blog/${post.slug}`}
                     class:list={[
-                      "block px-2 py-1 text-xs hover:text-primary-600 hover:bg-gray-50 rounded",
+                      "block px-4 py-2 text-sm transition-all duration-200 rounded-lg",
                       currentSlug === post.slug 
-                        ? "text-primary-600 bg-primary-50 font-medium" 
-                        : "text-gray-600"
+                        ? "text-primary-600 bg-primary-50 font-medium shadow-sm" 
+                        : "text-gray-600 hover:text-primary-600 hover:bg-gray-100"
                     ]}
                   >
                     {post.data.title}
@@ -94,12 +92,12 @@ const currentCategory = currentPost?.data.category;
       })}
     </nav>
 
-    <div class="mt-6 pt-6 border-t border-gray-200">
-      <div class="flex space-x-4 justify-center">
+    <div class="mt-8 pt-6 border-t border-gray-200">
+      <div class="flex space-x-5 justify-center">
         <a href="https://twitter.com/singh1aryan" 
            target="_blank" 
            rel="noopener noreferrer" 
-           class="text-gray-600 hover:text-primary-600">
+           class="text-gray-500 hover:text-primary-600 transition-colors duration-200">
           <span class="sr-only">Twitter</span>
           <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
             <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
@@ -108,7 +106,7 @@ const currentCategory = currentPost?.data.category;
         <a href="https://linkedin.com/in/singh1aryan" 
            target="_blank" 
            rel="noopener noreferrer" 
-           class="text-gray-600 hover:text-primary-600">
+           class="text-gray-500 hover:text-primary-600 transition-colors duration-200">
           <span class="sr-only">LinkedIn</span>
           <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
             <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
@@ -117,7 +115,7 @@ const currentCategory = currentPost?.data.category;
         <a href="https://instagram.com/singh.aryan.45" 
            target="_blank" 
            rel="noopener noreferrer" 
-           class="text-gray-600 hover:text-primary-600">
+           class="text-gray-500 hover:text-primary-600 transition-colors duration-200">
           <span class="sr-only">Instagram</span>
           <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>

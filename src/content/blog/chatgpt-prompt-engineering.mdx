@@ -190,10 +190,47 @@ Let's look at how this template works for a software engineer learning machine l
 ## Best Practices for Prompt Engineering
 
 1. Be specific and detailed
+   ```example
+   ❌ "Write code for a sorting algorithm"
+   ✅ "Write a Python implementation of the quicksort algorithm with detailed comments explaining the partition logic and time complexity"
+   ```
+
 2. Use clear formatting
+   ```example
+   ❌ "give me info about react hooks explain lifecycle methods and include code examples"
+   ✅ "Explain React hooks with:
+      - Brief introduction to each hook
+      - Code examples for useState and useEffect
+      - Comparison with lifecycle methods
+      - Common use cases
+      Please format the response with markdown and include syntax-highlighted code blocks."
+   ```
+
 3. Break down complex requests
+   ```example
+   ❌ "Create a full-stack web application"
+   ✅ "Let's build a web application in steps:
+      1. First, design the database schema for a user authentication system
+      2. Then, create the API endpoints for user registration and login
+      3. Finally, implement the frontend login form
+      Please provide the solution for step 1 first."
+   ```
+
 4. Include examples when needed
+   ```example
+   ❌ "Help me write regex for email validation"
+   ✅ "Help me write a regex pattern for email validation. Here are some test cases it should handle:
+      Valid: user@domain.com, user.name@domain.co.uk
+      Invalid: user@domain, @domain.com, user@.com"
+   ```
+
 5. Specify output format preferences
+   ```example
+   ❌ "Explain Docker concepts"
+   ✅ "Explain Docker concepts in a table format with three columns:
+      | Concept | Description | Example Command |
+      Include: containers, images, volumes, and networks"
+   ```
 
 ## Conclusion
 
