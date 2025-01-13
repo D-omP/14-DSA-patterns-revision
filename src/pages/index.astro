@@ -6,6 +6,66 @@ const posts = await getCollection('blog');
 const recentPosts = posts.sort((a, b) => 
   b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 ).slice(0, 5);
+
+const projects = [
+        {
+          category: "Launched",
+          projects: [
+            {
+              title: "30 Days Coding",
+              url: "https://30dayscoding.com",
+              description: "Master coding challenges in 30 days",
+              status: "launched"
+            },
+            {
+              title: "Skillset Master",
+              url: "https://skillsetmaster.com",
+              description: "Level up with trending skills",
+              status: "launched"
+            }
+          ]
+        },
+        {
+          category: "In Progress",
+          projects: [
+            {
+              title: "Build in minutes",
+              url: "https://buildinminutes.com",
+              description: "Build any app in minutes",
+              status: "in-progress"
+            }, 
+            {
+              title: "Baby SaaS",
+              url: "https://babysaas.com",
+              description: "Build your own SaaS in minutes",
+              status: "in-progress"
+            }, 
+            {
+              title: "Get AI News",
+              url: "https://getainews.com",
+              description: "Stay updated with AI developments",
+              status: "in-progress"
+            }, 
+            {
+              title: "Startup News",
+              url: "https://getstartupnews.com",
+              description: "Latest in the startup ecosystem",
+              status: "coming-soon"
+            }, 
+          ]
+        },
+        {
+          category: "Coming Soon",
+          projects: [
+            {
+              title: "Startup News",
+              url: "https://getstartupnews.com",
+              description: "Latest in the startup ecosystem",
+              status: "coming-soon"
+            }
+          ]
+        }
+      ];
 ---
 
 <Layout title="Aryan Singh's Tech Blog">
@@ -15,7 +75,6 @@ const recentPosts = posts.sort((a, b) =>
         <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Aryan Singh - sharing my learnings</h1>
         <p class="text-lg sm:text-xl text-gray-600">
           Ex-Google Software Engineer sharing insights about Tech, AI, Startups, E-Commerce, Cricket, and more.
-          Join me while I overshare everything I've learned in my 5+ years of experience.
         </p>
       </div>
     </header>
@@ -37,40 +96,38 @@ const recentPosts = posts.sort((a, b) =>
 
     <section class="mb-12">
       <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b-2 border-primary-300 pb-2 inline-block">My Projects</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-        {[
-          {
-            title: "30 Days Coding",
-            url: "https://30dayscoding.com",
-            description: "Master coding challenges in 30 days"
-          },
-          {
-            title: "Skillset Master",
-            url: "https://skillsetmaster.com",
-            description: "Level up your technical skills"
-          },
-          {
-            title: "Get AI News",
-            url: "https://getainews.com",
-            description: "Stay updated with AI developments"
-          },
-          {
-            title: "Startup News",
-            url: "https://getstartupnews.com",
-            description: "Latest in the startup ecosystem"
-          }
-        ].map(project => (
-          <a href={project.url} target="_blank" rel="noopener noreferrer" 
-             class="block p-6 bg-white rounded-lg border border-gray-200 shadow-sm 
-                    hover:shadow-lg transition-all hover:-translate-y-1 
-                    hover:border-primary-300 group">
-            <h3 class="text-xl font-semibold text-gray-900 mb-2 group-hover:text-primary-600">
-              {project.title}
-            </h3>
-            <p class="text-gray-600">{project.description}</p>
-          </a>
-        ))}
-      </div>
+      
+      {projects.map(section => (
+        <div class="mb-8 last:mb-0">
+          <h3 class="text-xl font-semibold text-gray-800 mb-4 pl-4 border-l-4 border-primary-400">
+            {section.category}
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            {section.projects.map(project => (
+              <a href={project.url} 
+                 target="_blank" 
+                 rel="noopener noreferrer"
+                 class={`block p-6 bg-white rounded-lg border border-gray-200 shadow-sm 
+                         hover:shadow-lg transition-all hover:-translate-y-1 
+                         hover:border-primary-300 group
+                         ${project.status === 'coming-soon' ? 'opacity-75 cursor-not-allowed' : ''}`}>
+                <div class="flex justify-between items-start mb-2">
+                  <h3 class="text-xl font-semibold text-gray-900 group-hover:text-primary-600">
+                    {project.title}
+                  </h3>
+                  {project.status === 'in-progress' && 
+                    <span class="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full">In Progress</span>
+                  }
+                  {project.status === 'coming-soon' && 
+                    <span class="text-xs px-2 py-1 bg-gray-100 text-gray-800 rounded-full">Coming Soon</span>
+                  }
+                </div>
+                <p class="text-gray-600">{project.description}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
     </section>
 
     <section class="mb-12">

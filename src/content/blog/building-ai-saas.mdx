@@ -1,5 +1,5 @@
 ---
-title: "Building an AI SaaS: From Concept to Production"
+title: "Building an AI SaaS"
 description: "A comprehensive guide to building a modern AI SaaS application with authentication, payments, and OpenAI integration."
 pubDate: 2024-01-25
 category: "ai-ml"
@@ -7,9 +7,30 @@ author: "Aryan Singh"
 tags: ["saas", "ai", "openai", "stripe", "supabase"]
 ---
 
-# Building an AI SaaS: From Concept to Production
-
 After building several AI-powered applications, I've developed a systematic approach to creating successful AI SaaS products. Here's my complete guide to building one from scratch.
+
+## Table of Contents
+- [Project Overview](#project-overview)
+- [Core Features Implementation](#core-features-implementation)
+  - [Authentication Flow](#1-authentication-flow)
+  - [Chat Implementation](#2-chat-implementation)
+  - [OpenAI Integration](#3-openai-integration)
+  - [Credits System](#4-credits-system)
+  - [Stripe Integration](#5-stripe-integration)
+- [Database Schema](#database-schema)
+- [User Interface Components](#user-interface-components)
+  - [Profile Section](#profile-section)
+  - [Credits Purchase UI](#credits-purchase-ui)
+- [Best Practices & Tips](#best-practices--tips)
+- [Common Issues & Solutions](#common-issues--solutions)
+- [Technical Stack](#technical-stack)
+- [Development Environment Setup](#development-environment-setup)
+- [Advanced Features](#advanced-features)
+  - [Rate Limiting](#rate-limiting)
+  - [Analytics Integration](#analytics-integration)
+  - [Prompt Management](#prompt-management)
+- [Testing Strategy](#testing-strategy)
+- [Deployment Guide](#deployment-guide)
 
 ## Project Overview
 
@@ -295,6 +316,183 @@ const handleChat = async () => {
   }
   // Process chat...
 };
+```
+
+## Technical Stack
+
+Here's our complete technical stack:
+
+- **Frontend**: Next.js 14 with App Router
+- **Backend**: Edge Functions (Vercel/Cloudflare)
+- **Database**: Supabase (PostgreSQL)
+- **Authentication**: Supabase Auth
+- **Payments**: Stripe
+- **AI Provider**: OpenAI
+- **Analytics**: PostHog
+- **Monitoring**: Sentry
+- **Testing**: Jest + Playwright
+
+## Development Environment Setup
+
+```bash
+# Initial setup
+npm create next-app@latest ai-saas --typescript --tailwind
+cd ai-saas
+
+# Install dependencies
+npm install @supabase/supabase-js stripe openai @vercel/analytics
+npm install @tailwindcss/typography @tailwindcss/forms --save-dev
+
+# Environment variables
+cp .env.example .env.local
+```
+
+### Advanced OpenAI Integration
+```typescript:src/lib/openai.ts
+import { Configuration, OpenAIApi } from 'openai';
+import { rateLimit } from '../utils/rate-limit';
+
+export class AIService {
+  private static instance: AIService;
+  private openai: OpenAIApi;
+  
+  private constructor() {
+    this.openai = new OpenAIApi(new Configuration({
+      apiKey: process.env.OPENAI_API_KEY,
+    }));
+  }
+
+  static getInstance(): AIService {
+    if (!AIService.instance) {
+      AIService.instance = new AIService();
+    }
+    return AIService.instance;
+  }
+
+  async processMessage(content: string, context: string[] = []) {
+    // Rate limiting check
+    const identifier = context[0]?.userId || 'anonymous';
+    const rateLimitResult = await rateLimit(identifier);
+    
+    if (!rateLimitResult.success) {
+      throw new Error('Rate limit exceeded');
+    }
+
+    try {
+      const completion = await this.openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: [
+          { role: "system", content: "You are a helpful AI assistant." },
+          ...context.map(msg => ({ role: "user", content: msg })),
+          { role: "user", content }
+        ],
+        temperature: 0.7,
+        max_tokens: 500,
+        presence_penalty: 0.6,
+      });
+
+      return completion.data.choices[0].message.content;
+    } catch (error) {
+      console.error('OpenAI API Error:', error);
+      throw new Error('Failed to process message');
+    }
+  }
+}
+```
+
+### Rate Limiting Implementation
+```typescript:src/utils/rate-limit.ts
+import { Redis } from '@upstash/redis';
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_URL,
+  token: process.env.UPSTASH_REDIS_TOKEN,
+});
+
+export async function rateLimit(identifier: string, limit = 10, window = 60) {
+  const key = `rate_limit:${identifier}`;
+  
+  try {
+    const requests = await redis.incr(key);
+    
+    if (requests === 1) {
+      await redis.expire(key, window);
+    }
+
+    return {
+      success: requests <= limit,
+      remaining: Math.max(0, limit - requests),
+    };
+  } catch (error) {
+    console.error('Rate limiting error:', error);
+    return { success: true, remaining: limit }; // Fail open
+  }
+}
+```
+
+### Analytics Integration
+```typescript:src/lib/analytics.ts
+import posthog from 'posthog-js';
+
+export class Analytics {
+  static init() {
+    if (typeof window !== 'undefined') {
+      posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
+        api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+      });
+    }
+  }
+
+  static trackEvent(event: string, properties?: Record<string, any>) {
+    posthog.capture(event, properties);
+  }
+
+  static identifyUser(userId: string, traits?: Record<string, any>) {
+    posthog.identify(userId, traits);
+  }
+}
+```
+
+## Testing Strategy
+
+```typescript:src/tests/chat.test.ts
+import { render, fireEvent, waitFor } from '@testing-library/react';
+import Chat from '../components/Chat';
+
+describe('Chat Component', () => {
+  it('should handle message sending', async () => {
+    const { getByRole, getByText } = render(<Chat />);
+    
+    const input = getByRole('textbox');
+    const sendButton = getByRole('button', { name: /send/i });
+
+    fireEvent.change(input, { target: { value: 'Hello AI' } });
+    fireEvent.click(sendButton);
+
+    await waitFor(() => {
+      expect(getByText(/Hello AI/)).toBeInTheDocument();
+    });
+  });
+});
+```
+
+## Deployment Guide
+
+```yaml:vercel.json
+{
+  "env": {
+    "OPENAI_API_KEY": "@openai_api_key",
+    "STRIPE_SECRET_KEY": "@stripe_secret_key",
+    "SUPABASE_URL": "@supabase_url",
+    "SUPABASE_ANON_KEY": "@supabase_anon_key"
+  },
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_SUPABASE_URL": "@supabase_url",
+      "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@supabase_anon_key"
+    }
+  }
+}
 ```
 
 Want to learn more about building AI applications? Follow me for more tutorials and insights! 

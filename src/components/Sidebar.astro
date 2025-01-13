@@ -8,11 +8,11 @@ const currentSlug = currentPath.split('/').pop();
 
 const categories = {
   'career': 'Career Development',
-  'chatGPT': 'Chat GPT',
-  'tech-insights': 'Tech Insights',
+  // 'chatGPT': 'Chat GPT',
+  // 'tech-insights': 'Tech Insights',
   'ai-ml': 'AI stuff',
   'startup-journey': 'Startup Journey',
-  'programming': 'Programming Tutorials',
+  // 'programming': 'Programming Tutorials',
 };
 
 const postsByCategory = Object.fromEntries(
@@ -30,8 +30,10 @@ const currentCategory = currentPost?.data.category;
 <aside class="fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 overflow-y-auto transform transition-transform duration-300 ease-in-out md:translate-x-0 -translate-x-full z-50" id="sidebar">
   <div class="p-4">
     <div class="mb-6">
-      <h2 class="text-xl font-bold text-gray-900">Aryan Singh</h2>
-      <p class="text-xs text-gray-600 mt-1">Engineer, Creator | 600K+ Followers</p>
+      <a href="/" class="block hover:opacity-80 transition-opacity">
+        <h2 class="text-xl font-bold text-gray-900">Aryan Singh</h2>
+        <p class="text-xs text-gray-600 mt-1">Engineer, Creator | 600K+ Followers</p>
+      </a>
     </div>
 
     <div class="mb-4">
