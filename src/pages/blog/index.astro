@@ -59,7 +59,7 @@ const structuredData = {
 ---
 
 <Layout 
-  title="Aryan Singh's Blog | Technology, AI, Startups & More"
+  title="Aryan Singh's Blog"
   description={description}
   image="/images/blog-og.png"
   article={false}
@@ -93,7 +93,7 @@ const structuredData = {
       <p class="text-xl text-gray-600 mb-8">
         Insights on building products, indie hacking, and technology. From an engineer and creator sharing real-world experiences in building and scaling projects.
       </p>
-      <SearchBar client:load />
+      <SearchBar />
     </div>
 
     <div class="space-y-8" id="posts-container">
@@ -125,40 +125,4 @@ const structuredData = {
       ))}
     </div>
   </div>
-</Layout>
-
-<script>
-  interface ActiveFilters {
-    search: string;
-  }
-
-  let activeFilters: ActiveFilters = {
-    search: ''
-  };
-
-  function filterPosts() {
-    const posts = document.querySelectorAll<HTMLElement>('#posts-container article');
-    
-    posts.forEach(post => {
-      const title = post.querySelector('h2')?.textContent?.toLowerCase() || '';
-      const description = post.querySelector('p')?.textContent?.toLowerCase() || '';
-      const category = post.querySelector('.rounded-full')?.textContent?.toLowerCase() || '';
-
-      const matchesSearch = !activeFilters.search || 
-        title.includes(activeFilters.search.toLowerCase()) ||
-        description.includes(activeFilters.search.toLowerCase()) ||
-        category.includes(activeFilters.search.toLowerCase());
-
-      post.style.display = matchesSearch ? 'block' : 'none';
-    });
-  }
-
-  const searchInput = document.querySelector<HTMLInputElement>('#search-input');
-  if (searchInput) {
-    searchInput.addEventListener('input', (e) => {
-      const target = e.target as HTMLInputElement;
-      activeFilters.search = target.value;
-      filterPosts();
-    });
-  }
-</script> 
+</Layout> 
