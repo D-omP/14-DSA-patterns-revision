@@ -21,7 +21,7 @@ const {
   tags = []
 } = Astro.props;
 
-const siteUrl = import.meta.env.SITE || 'https://aryansingh.com';
+const siteUrl = import.meta.env.SITE || 'https://coderaryan.com';
 const canonicalURL = new URL(Astro.url.pathname, siteUrl);
 const socialImageURL = new URL(image.startsWith('http') ? image : image, siteUrl);
 ---

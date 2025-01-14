@@ -1,0 +1,18 @@
+---
+interface Props {
+  categories: string[];
+}
+
+const { categories } = Astro.props;
+---
+
+<div class="space-y-2">
+  {categories.map(category => (
+    <button
+      class="block w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100 text-gray-700 transition-colors"
+      data-category={category}
+    >
+      {category.replace('-', ' ').toUpperCase()}
+    </button>
+  ))}
+</div> 

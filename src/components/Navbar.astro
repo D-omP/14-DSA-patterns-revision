@@ -1,11 +1,22 @@
 ---
 const navItems = [
   { label: 'Home', href: '/' },
-//   { label: 'Blog', href: '/blog' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'About', href: '/about' },
 //   { label: 'Projects', href: '/projects' },
-//   { label: 'About', href: '/about' },
 //   { label: 'Contact', href: '/contact' }
 ];
+
+// Get current path from Astro.url
+const currentPath = Astro.url.pathname;
+
+// Function to check if a nav item is active
+function isActive(href: string) {
+  if (href === '/') {
+    return currentPath === '/';
+  }
+  return currentPath.startsWith(href);
+}
 ---
 
 <nav class="bg-white shadow-sm border-b border-gray-200 fixed w-full top-0 z-50">
@@ -25,7 +36,12 @@ const navItems = [
         {navItems.map(item => (
           <a
             href={item.href}
-            class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-primary-600 hover:border-primary-500"
+            class:list={[
+              "inline-flex items-center px-1 pt-1 text-sm font-medium border-b-2 transition-colors",
+              isActive(item.href) 
+                ? "text-primary-600 border-primary-500" 
+                : "text-gray-700 border-transparent hover:text-primary-600 hover:border-primary-500"
+            ]}
           >
             {item.label}
           </a>
@@ -68,7 +84,12 @@ const navItems = [
       {navItems.map(item => (
         <a
           href={item.href}
-          class="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50"
+          class:list={[
+            "block pl-3 pr-4 py-2 text-base font-medium border-l-4",
+            isActive(item.href)
+              ? "bg-primary-50 border-primary-500 text-primary-600"
+              : "border-transparent text-gray-700 hover:text-primary-600 hover:bg-gray-50 hover:border-primary-300"
+          ]}
         >
           {item.label}
         </a>

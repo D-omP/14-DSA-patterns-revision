@@ -3,9 +3,14 @@ import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 const posts = await getCollection('blog');
-const recentPosts = posts.sort((a, b) => 
-  b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-).slice(0, 4);
+const recentPosts = posts
+  .sort((a, b) => {
+    // Handle potential undefined or invalid dates
+    const dateA = a.data.pubDate instanceof Date ? a.data.pubDate : new Date(a.data.pubDate);
+    const dateB = b.data.pubDate instanceof Date ? b.data.pubDate : new Date(b.data.pubDate);
+    return dateB.getTime() - dateA.getTime();
+  })
+  .slice(0, 7);
 
 const projects = [
         {
@@ -34,7 +39,19 @@ const projects = [
               url: "https://immigrantjobhelp.com",
               description: "Job search for immigrants",
               status: "launched"
-            }
+            },
+      {
+        title: "Coder Aryan",
+        url: "https://coderaryan.com",
+        description: "Personal blog where I share everything",
+        status: "launched"
+      }, 
+      {
+        title: "My Instagram Page",
+        url: "https://instagram.com/singh.aryan.45",
+        description: "450k+ followers on Instagram",
+        status: "launched"
+      }
           ]
         },
         {
@@ -81,26 +98,34 @@ const projects = [
       <div>
         <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Aryan Singh</h1>
         <p class="text-lg sm:text-xl text-gray-600">
-          Ex-Google Software Engineer sharing insights about Tech, AI, Startups, E-Commerce, Cricket, and more.
+          Engineer, Creator, and Indie Hacker building products and sharing insights about Tech, AI, and Startups.
         </p>
       </div>
     </header>
 
 
     <section class="mb-12">
-      <h2 class="text-2xl font-bold text-gray-900 mb-6">Recent Blogs</h2>
-      <div class="space-y-6 sm:space-y-8">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">Recent Blogs</h2>
+        <a href="/blog" class="flex items-center gap-2 text-primary-600 hover:text-primary-700 transition-colors">
+          All blogs
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+        </a>
+      </div>
+      <div class="space-y-4">
         {recentPosts.map(post => (
-          <article class="group bg-white p-6 rounded-lg shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100">
+          <article class="group bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100">
             <a href={`/blog/${post.slug}`} class="block">
-              <h3 class="text-xl font-semibold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors">
+              <h3 class="text-lg font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
                 {post.data.title}
               </h3>
-              <p class="text-gray-600 mb-4 line-clamp-2">{post.data.description}</p>
-              <div class="flex items-center text-sm">
-                <span class="text-primary-600 font-medium">{post.data.pubDate.toLocaleDateString()}</span>
+              <p class="text-gray-600 text-sm mt-1 mb-2 line-clamp-2">{post.data.description}</p>
+              <div class="flex items-center text-xs">
+                <span class="text-primary-600">{post.data.pubDate.toLocaleDateString()}</span>
                 <span class="mx-2 text-gray-400">•</span>
-                <span class="px-2 py-1 bg-primary-50 text-primary-700 rounded-full text-xs font-medium">
+                <span class="px-2 py-0.5 bg-primary-50 text-primary-700 rounded-full">
                   {post.data.category.replace('-', ' ').toUpperCase()}
                 </span>
               </div>

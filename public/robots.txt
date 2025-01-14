@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Sitemaps
-Sitemap: https://aryansingh.com/sitemap.xml 
+Sitemap: https://coderaryan.com/sitemap.xml 

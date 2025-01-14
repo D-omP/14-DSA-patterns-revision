@@ -1,0 +1,200 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const projects = [
+  {
+    category: "Launched",
+    projects: [
+      {
+        title: "30 Days Coding",
+        url: "https://30dayscoding.com",
+        description: "Master all coding principles",
+        status: "launched"
+      },
+      {
+        title: "Skillset Master",
+        url: "https://skillsetmaster.com",
+        description: "Level up with trending skills",
+        status: "launched"
+      }, 
+      {
+        title: "Simple investings",
+        url: "https://simpleinvestings.com",
+        description: "Simple investing for beginners",
+        status: "launched"
+      }, 
+      {
+        title: "Immigrant Job Help",
+        url: "https://immigrantjobhelp.com",
+        description: "Job search for immigrants",
+        status: "launched"
+      }, 
+      {
+        title: "Coder Aryan",
+        url: "https://coderaryan.com",
+        description: "Personal blog where I share everything",
+        status: "launched"
+      }, 
+      {
+        title: "My Instagram Page",
+        url: "https://instagram.com/singh.aryan.45",
+        description: "450k+ followers on Instagram",
+        status: "launched"
+      }
+    ]
+  },
+  {
+    category: "In Progress",
+    projects: [
+      {
+        title: "Build in minutes",
+        url: "https://buildinminutes.com",
+        description: "Build any app in minutes",
+        status: "in-progress"
+      }, 
+      {
+        title: "Baby SaaS",
+        url: "https://babysaas.com",
+        description: "Build your own SaaS in minutes",
+        status: "in-progress"
+      }, 
+      {
+        title: "Get AI News",
+        url: "https://getainews.com",
+        description: "Stay updated with AI developments",
+        status: "in-progress"
+      }, 
+      {
+        title: "Get Startup News",
+        url: "https://getstartupnews.com",
+        description: "Latest in the startup ecosystem",
+        status: "in-progress"
+      }, 
+      {
+        title: "Career tools AI",
+        url: "https://careertoolsai.com",
+        description: "AI tools for your career",
+        status: "in-progress"
+      }
+    ]
+  }
+];
+
+const experiences = [
+  {
+    company: "Google",
+    role: "Software Engineer",
+    period: "2021-2024",
+    description: "Worked on Google Ads."
+  },
+  {
+    company: "Arrow Electronics",
+    role: "Software Engineer Intern",
+    period: "2019",
+    description: "Built enterprise applications for supply chain management and inventory tracking."
+  }
+];
+---
+
+<Layout 
+  title="About Aryan Singh | Ex-Google Engineer, Tech Creator"
+  description="Learn about Aryan Singh's journey from Google to content creation, projects, and expertise in software engineering, AI, and startups."
+>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+    <section class="mb-16">
+      <h1 class="text-4xl font-bold text-gray-900 mb-6">About Me</h1>
+      <div class="prose prose-lg max-w-none">
+        <p class="text-xl text-gray-600 mb-6">
+          Hey! I'm Aryan Singh, an engineer turned indie hacker and creator. I combine my engineering background with entrepreneurial spirit to build products that solve real problems.
+          With experience from Google and a portfolio of indie projects, I share insights about building in public, bootstrapping startups, and navigating the tech industry. My focus is on helping others build sustainable businesses and valuable products.
+        </p>
+      </div>
+    </section>
+
+
+    <section class="mb-16">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b-2 border-primary-300 pb-2 inline-block">Projects</h2>
+        
+        {projects.map(section => (
+          <div class="mb-8 last:mb-0">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4 pl-4 border-l-4 border-primary-400">
+              {section.category}
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              {section.projects.map(project => (
+                <a href={project.url} 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   class={`block p-6 bg-white rounded-lg border border-gray-200 shadow-sm 
+                           hover:shadow-lg transition-all hover:-translate-y-1 
+                           hover:border-primary-300 group
+                           ${project.status === 'coming-soon' ? 'opacity-75 cursor-not-allowed' : ''}`}>
+                  <div class="flex justify-between items-start mb-2">
+                    <h3 class="text-xl font-semibold text-gray-900 group-hover:text-primary-600">
+                      {project.title}
+                    </h3>
+                    {project.status === 'launched' && 
+                      <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">Launched</span>
+                    }
+                    {project.status === 'in-progress' && 
+                      <span class="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full">In Progress</span>
+                    }
+                  </div>
+                  <p class="text-gray-600">{project.description}</p>
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
+      </section>
+
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold text-gray-900 mb-8">Experience</h2>
+      <div class="grid gap-6">
+        {experiences.map(exp => (
+          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-xl font-bold text-gray-900">{exp.company}</h3>
+              <span class="text-gray-500 text-sm">{exp.period}</span>
+            </div>
+            <div class="text-primary-600 font-medium mb-2">{exp.role}</div>
+            <p class="text-gray-600">{exp.description}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold text-gray-900 mb-6">Let's Connect</h2>
+      <p class="text-lg text-gray-600 mb-6">
+        I'm always excited to connect with fellow tech enthusiasts, creators, and builders. Feel free to reach out on any of these platforms:
+      </p>
+      <div class="flex gap-4">
+        <a 
+          href="https://twitter.com/singh1aryan"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+        >
+          Twitter
+        </a>
+        <a 
+          href="https://linkedin.com/in/singh1aryan"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+        >
+          LinkedIn
+        </a>
+        <a 
+          href="https://github.com/singh1aryan"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+        >
+          GitHub
+        </a>
+      </div>
+    </section>
+  </div>
+</Layout> 

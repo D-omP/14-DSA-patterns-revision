@@ -2,7 +2,7 @@ import { getCollection } from 'astro:content';
 
 export async function GET({ site }) {
   const posts = await getCollection('blog');
-  const siteUrl = site || 'https://aryansingh.com';
+  const siteUrl = site || 'https://coderaryan.com';
   
   return new Response(
     `<?xml version="1.0" encoding="UTF-8"?>
