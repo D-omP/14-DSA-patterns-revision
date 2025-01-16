@@ -1,0 +1,159 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const projects = [
+  {
+    category: "Launched",
+    projects: [
+      {
+        title: "30 Days Coding",
+        url: "https://30dayscoding.com",
+        description: "Master coding challenges in 30 days",
+        status: "launched"
+      },
+      {
+        title: "Skillset Master",
+        url: "https://skillsetmaster.com",
+        description: "Level up with trending skills",
+        status: "launched"
+      }, 
+      {
+        title: "Simple investings",
+        url: "https://simpleinvestings.com",
+        description: "Simple investing for beginners",
+        status: "launched"
+      }, 
+      {
+        title: "Immigrant Job Help",
+        url: "https://immigrantjobhelp.com",
+        description: "Job search for immigrants",
+        status: "launched"
+      },
+      {
+        title: "Coder Aryan",
+        url: "https://coderaryan.com",
+        description: "Personal blog where I share everything",
+        status: "launched"
+      }, 
+      {
+        title: "My Instagram Page",
+        url: "https://instagram.com/singh.aryan.45",
+        description: "450k+ followers on Instagram",
+        status: "launched"
+      }
+    ]
+  },
+  {
+    category: "In Progress",
+    projects: [
+      {
+        title: "Build in minutes",
+        url: "https://buildinminutes.com",
+        description: "Build any app in minutes",
+        status: "in-progress"
+      }, 
+      {
+        title: "Baby SaaS",
+        url: "https://babysaas.com",
+        description: "Build your own SaaS in minutes",
+        status: "in-progress"
+      }, 
+      {
+        title: "Get AI News",
+        url: "https://getainews.com",
+        description: "Stay updated with AI developments",
+        status: "in-progress"
+      }, 
+      {
+        title: "Get Startup News",
+        url: "https://getstartupnews.com",
+        description: "Latest in the startup ecosystem",
+        status: "in-progress"
+      }, 
+      {
+        title: "Career tools AI",
+        url: "https://careertoolsai.com",
+        description: "AI tools for your career",
+        status: "in-progress"
+      }
+    ]
+  }
+];
+
+// Generate structured data for projects
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  "name": "Aryan Singh's Projects",
+  "description": "Collection of projects by Aryan Singh, including SaaS applications, educational platforms, and tools for developers.",
+  "author": {
+    "@type": "Person",
+    "name": "Aryan Singh",
+    "url": "https://coderaryan.com",
+    "jobTitle": "Software Engineer",
+    "alumniOf": "Google"
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "itemListElement": projects.flatMap((category, categoryIndex) =>
+      category.projects.map((project, projectIndex) => ({
+        "@type": "SoftwareApplication",
+        "position": categoryIndex * 100 + projectIndex + 1,
+        "name": project.title,
+        "url": project.url,
+        "description": project.description,
+        "applicationCategory": "WebApplication",
+        "operatingSystem": "Any",
+        "offers": {
+          "@type": "Offer",
+          "availability": project.status === "launched" ? "https://schema.org/InStock" : "https://schema.org/PreOrder"
+        }
+      }))
+    )
+  }
+};
+---
+
+<Layout 
+  title="Projects | Aryan Singh"
+  description="Explore Aryan Singh's portfolio of projects including SaaS applications, educational platforms, and developer tools."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+    <header class="mb-12">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">My Projects</h1>
+      <p class="text-xl text-gray-600">
+        A collection of projects I've built and currently working on. From educational platforms to developer tools, each project aims to solve specific problems in tech.
+      </p>
+    </header>
+
+    {projects.map(category => (
+      <section class="mb-16">
+        <h2 class="text-2xl font-bold text-gray-900 mb-8">{category.category}</h2>
+        <div class="grid gap-6 md:grid-cols-2">
+          {category.projects.map(project => (
+            <a 
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="block p-6 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+            >
+              <div class="flex justify-between items-start mb-4">
+                <h3 class="text-xl font-bold text-gray-900">{project.title}</h3>
+                <span class={`px-3 py-1 rounded-full text-xs font-medium ${
+                  project.status === 'launched' 
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-yellow-100 text-yellow-800'
+                }`}>
+                  {project.status === 'launched' ? 'Live' : 'In Progress'}
+                </span>
+              </div>
+              <p class="text-gray-600">{project.description}</p>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+</Layout> 
