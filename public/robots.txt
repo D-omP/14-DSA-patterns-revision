@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
 
-# Sitemaps
-Sitemap: https://coderaryan.com/sitemap.xml 
+Sitemap: https://coderaryan.com/sitemap-index.xml
+
+# Optimize crawling
+Crawl-delay: 10 

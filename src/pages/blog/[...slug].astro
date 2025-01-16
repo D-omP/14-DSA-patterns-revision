@@ -21,49 +21,70 @@ export async function getStaticPaths() {
 const { post, prevPost, nextPost } = Astro.props;
 const { Content } = await post.render();
 
-// Generate share URLs
-const postUrl = new URL(Astro.url.pathname, Astro.site).toString();
-const shareText = `Check out "${post.data.title}" by @singh1aryan`;
-const shareUrls = {
-  twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(postUrl)}`,
-  linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`
-};
-
-// Generate structured data for the article
+// Enhanced structured data
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
   "headline": post.data.title,
   "description": post.data.description,
+  "keywords": post.data.tags.join(", "),
   "author": {
     "@type": "Person",
-    "name": post.data.author,
-    "url": "https://aryansingh.com/about"
+    "name": "Aryan Singh",
+    "url": "https://coderaryan.com/about",
+    "jobTitle": "Software Engineer",
+    "alumniOf": "Google"
   },
   "datePublished": post.data.pubDate.toISOString(),
   "dateModified": post.data.modifiedDate?.toISOString() || post.data.pubDate.toISOString(),
-  "image": post.data.image || "/images/default-og.png",
-  "keywords": post.data.tags.join(", "),
+  "image": post.data.image || "https://coderaryan.com/images/blog-og.png",
   "publisher": {
     "@type": "Organization",
     "name": "Aryan Singh",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://aryansingh.com/logo.png"
+      "url": "https://coderaryan.com/logo.png"
     }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": new URL(Astro.url.pathname, Astro.site).toString()
   }
+};
+
+// Generate canonical URL
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
+
+// Generate share URLs with UTM parameters
+const shareText = `Check out "${post.data.title}" by @singh1aryan`;
+const shareUrls = {
+  twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(canonicalURL)}&utm_source=twitter&utm_medium=social&utm_campaign=share`,
+  linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(canonicalURL)}&utm_source=linkedin&utm_medium=social&utm_campaign=share`
 };
 ---
 
 <Layout 
-  title={post.data.title}
+  title={`${post.data.title} | Aryan Singh's Blog`}
   description={post.data.description}
-  image="/images/blog-og.png"
+  image={post.data.image || "/images/blog-og.png"}
   article={true}
   publishDate={post.data.pubDate}
   author={post.data.author}
+  canonicalURL={canonicalURL}
 >
-  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  <Fragment slot="head">
+    <link rel="canonical" href={canonicalURL} />
+    <meta property="article:published_time" content={post.data.pubDate.toISOString()} />
+    {post.data.modifiedDate && 
+      <meta property="article:modified_time" content={post.data.modifiedDate.toISOString()} />
+    }
+    <meta property="article:author" content="https://aryansingh.com/about" />
+    {post.data.tags.map(tag => 
+      <meta property="article:tag" content={tag} />
+    )}
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  </Fragment>
+
   <article class="max-w-4xl mx-auto prose prose-lg">
     <header class="mb-8">
       <h1 class="mb-2">{post.data.title}</h1>

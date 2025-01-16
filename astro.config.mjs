@@ -1,8 +1,21 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
-import tailwind from '@astrojs/tailwind';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://coderaryan.com',
-  integrations: [mdx(), tailwind()],
+  integrations: [
+    mdx(),
+    sitemap({
+      changefreq: 'weekly',
+      priority: 0.7,
+      lastmod: new Date(),
+      i18n: {
+        defaultLocale: 'en',
+        locales: {
+          en: 'en-US',
+        },
+      },
+    }),
+  ],
 });
