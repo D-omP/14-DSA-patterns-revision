@@ -1,13 +1,22 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
-import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
+
+// Only import sitemap if it's available
+let sitemap;
+try {
+  sitemap = require('@astrojs/sitemap');
+} catch (e) {
+  console.warn('Sitemap integration not available');
+}
 
 export default defineConfig({
   site: 'https://coderaryan.com',
   integrations: [
     mdx(),
-    sitemap({
+    tailwind(),
+    // Only add sitemap if it's available
+    ...(sitemap ? [sitemap({
       changefreq: 'weekly',
       priority: 0.7,
       lastmod: new Date(),
@@ -17,7 +26,6 @@ export default defineConfig({
           en: 'en-US',
         },
       },
-    }),
-    tailwind(),
+    })] : []),
   ],
 });
