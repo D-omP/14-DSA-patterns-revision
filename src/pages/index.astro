@@ -90,124 +90,152 @@ const projects = [
           ]
         },
       ];
+
+const features = [
+  {
+    title: "AI-Powered SaaS Dashboard",
+    description: "Build a complete admin dashboard with AI-powered analytics, user management, and real-time insights.",
+    tech: ["Next.js", "OpenAI", "Prisma"]
+  },
+  {
+    title: "AI Content Generator",
+    description: "Create a SaaS that generates SEO-optimized content, social media posts, and marketing copy using AI.",
+    tech: ["React", "GPT-4", "MongoDB"]
+  },
+  {
+    title: "AI Task Manager",
+    description: "Develop a smart task management system that uses AI to prioritize and categorize tasks.",
+    tech: ["Vue.js", "Node.js", "PostgreSQL"]
+  }
+];
+
+const modules = [
+  {
+    title: "1. Foundation & Setup",
+    items: [
+      "Modern SaaS Architecture & Tech Stack Selection",
+      "AI Integration Fundamentals",
+      "Development Environment Setup"
+    ]
+  },
+  {
+    title: "2. Core Development",
+    items: [
+      "Authentication & User Management",
+      "Database Design & Implementation",
+      "API Development & Integration"
+    ]
+  },
+  {
+    title: "3. AI Integration & Advanced Features",
+    items: [
+      "OpenAI API Implementation",
+      "Real-time Features & WebSockets",
+      "Payment Integration & Subscriptions"
+    ]
+  }
+];
 ---
 
-<Layout title="Aryan Singh's Tech Blog">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6">
-    <header class="mb-12">
-      <div>
-        <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Aryan Singh</h1>
-        <p class="text-lg sm:text-xl text-gray-600">
-          Engineer, Creator, and Indie Hacker building products and sharing insights about Tech, AI, and Startups.
-        </p>
-      </div>
-    </header>
-
-
-    <section class="mb-12">
-      <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold text-gray-900">Recent Blogs</h2>
-        <a href="/blog" class="flex items-center gap-2 text-primary-600 hover:text-primary-700 transition-colors">
-          All blogs
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+<Layout 
+  title="Build SaaS with AI - Complete Course"
+  description="Learn to build profitable SaaS products with AI in days, not months. Complete course by Ex-Google Engineer."
+>
+  <div class="max-w-7xl mx-auto">
+    <!-- Hero Section -->
+    <div class="text-center mb-16">
+      <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium bg-primary-100 text-primary-800">
+        Limited Time Offer - 50% OFF
+      </span>
+      <h1 class="mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+        Build & Launch Your SaaS <br class="hidden sm:block" />
+        <span class="text-primary-600">10x Faster with AI</span>
+      </h1>
+      <p class="mt-6 text-xl sm:text-2xl text-gray-600 max-w-3xl mx-auto">
+        Learn how to leverage AI to build profitable SaaS products in days, not months. 
+        A complete course for developers who want to ship faster.
+      </p>
+      <div class="mt-8 flex justify-center gap-4">
+        <a 
+          href="#pricing" 
+          class="inline-flex items-center px-8 py-4 rounded-lg bg-primary-600 text-white font-medium hover:bg-primary-700 transition-colors"
+        >
+          Get Started Now
+          <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
           </svg>
         </a>
+        <a 
+          href="#curriculum" 
+          class="inline-flex items-center px-8 py-4 rounded-lg bg-white text-primary-600 font-medium border-2 border-primary-600 hover:bg-primary-50 transition-colors"
+        >
+          View Curriculum
+        </a>
       </div>
-      <div class="space-y-4">
-        {recentPosts.map(post => (
-          <article class="group bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100">
-            <a href={`/blog/${post.slug}`} class="block">
-              <h3 class="text-lg font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
-                {post.data.title}
-              </h3>
-              <p class="text-gray-600 text-sm mt-1 mb-2 line-clamp-2">{post.data.description}</p>
-              <div class="flex items-center text-xs">
-                <span class="text-primary-600">{post.data.pubDate.toLocaleDateString()}</span>
-                <span class="mx-2 text-gray-400">•</span>
-                <span class="px-2 py-0.5 bg-primary-50 text-primary-700 rounded-full">
-                  {post.data.category.replace('-', ' ').toUpperCase()}
-                </span>
-              </div>
-            </a>
-          </article>
+      <div class="mt-8 flex justify-center items-center gap-8 text-sm text-gray-500">
+        {['Lifetime Access', '30-Day Money Back', 'Community Access'].map(item => (
+          <span class="flex items-center">
+            <svg class="w-5 h-5 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            {item}
+          </span>
         ))}
       </div>
-    </section>
+    </div>
 
-    <section class="mb-12">
-      <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b-2 border-primary-300 pb-2 inline-block">Currently working on</h2>
-      
-      {projects.map(section => (
-        <div class="mb-8 last:mb-0">
-          <h3 class="text-xl font-semibold text-gray-800 mb-4 pl-4 border-l-4 border-primary-400">
-            {section.category}
-          </h3>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-            {section.projects.map(project => (
-              <a href={project.url} 
-                 target="_blank" 
-                 rel="noopener noreferrer"
-                 class={`block p-6 bg-white rounded-lg border border-gray-200 shadow-sm 
-                         hover:shadow-lg transition-all hover:-translate-y-1 
-                         hover:border-primary-300 group
-                         ${project.status === 'coming-soon' ? 'opacity-75 cursor-not-allowed' : ''}`}>
-                <div class="flex justify-between items-start mb-2">
-                  <h3 class="text-xl font-semibold text-gray-900 group-hover:text-primary-600">
-                    {project.title}
-                  </h3>
-                  {project.status === 'launched' && 
-                    <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">Launched</span>
-                  }
-                  {project.status === 'in-progress' && 
-                    <span class="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full">In Progress</span>
-                  }
-                  {project.status === 'coming-soon' && 
-                    <span class="text-xs px-2 py-1 bg-gray-100 text-gray-800 rounded-full">Coming Soon</span>
-                  }
-                </div>
-                <p class="text-gray-600">{project.description}</p>
-              </a>
-            ))}
+    <!-- Projects Section -->
+    <div class="mb-20">
+      <h2 class="text-3xl font-bold text-center mb-12">What You'll Build</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {features.map(feature => (
+          <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow p-6">
+            <h3 class="text-xl font-semibold mb-2">{feature.title}</h3>
+            <p class="text-gray-600 mb-4">{feature.description}</p>
+            <div class="flex flex-wrap gap-2">
+              {feature.tech.map(tech => (
+                <span class="px-2 py-1 bg-gray-100 text-sm rounded">{tech}</span>
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
-    </section>
-
-    <!-- <section class="mb-12 bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-8 rounded-xl border border-gray-200 shadow-sm">
-      <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b-2 border-primary-300 pb-2 inline-block">Background</h2>
-      <div class="space-y-4">
-        <p class="text-gray-700 flex items-center p-3 bg-white rounded-lg border-l-4 border-primary-400 shadow-sm">
-          👨‍💻 Previously Software Engineer at Google and Arrow Electronics
-        </p>
-        <p class="text-gray-700 flex items-center p-3 bg-white rounded-lg border-l-4 border-primary-400 shadow-sm">
-          🎓 Computer Science at UMass
-        </p>
-        <p class="text-gray-700 flex items-center p-3 bg-white rounded-lg border-l-4 border-primary-400 shadow-sm">
-          🚀 Tech Educator with 600k+ social media following
-        </p>
+        ))}
       </div>
-    </section> -->
+    </div>
 
+    <!-- Course Modules -->
+    <div class="mb-20">
+      <h2 class="text-3xl font-bold text-center mb-12">Course Curriculum</h2>
+      <div class="max-w-3xl mx-auto space-y-6">
+        {modules.map(module => (
+          <div class="bg-white rounded-lg p-6 shadow-sm">
+            <h3 class="text-xl font-semibold mb-4">{module.title}</h3>
+            <ul class="space-y-3 text-gray-600">
+              {module.items.map(item => (
+                <li class="flex items-center">
+                  <svg class="w-5 h-5 mr-3 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
 
-    <section class="bg-primary-50 p-4 sm:p-8 rounded-lg">
-      <h2 class="text-2xl font-bold text-gray-900 mb-4">Newsletter</h2>
-      <p class="text-gray-600 mb-6">
-        Get weekly insights about Cloud Architecture, System Design, and Software Engineering best practices.
+    <!-- CTA Section -->
+    <section class="text-center bg-primary-50 rounded-2xl p-8 mb-16">
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">Start Building Today</h2>
+      <p class="text-xl text-gray-600 mb-8">
+        Join hundreds of developers who are already building AI-powered SaaS products
       </p>
-      <form class="flex flex-col sm:flex-row gap-4">
-        <input
-          type="email"
-          placeholder="Enter your email"
-          class="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-        />
-        <button
-          type="submit"
-          class="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-        >
-          Subscribe
-        </button>
-      </form>
+      <a 
+        href="#pricing" 
+        class="inline-flex items-center px-8 py-4 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-lg font-medium"
+      >
+        Get Started Now
+      </a>
     </section>
   </div>
 </Layout>

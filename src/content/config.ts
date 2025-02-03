@@ -12,4 +12,15 @@ const blog = defineCollection({
   })
 });
 
-export const collections = { blog };
+const course = defineCollection({
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.date(),
+    category: z.string(),
+    author: z.string().default('Aryan Singh'),
+    tags: z.array(z.string()).default([])
+  })
+});
+
+export const collections = { blog, course };

@@ -1,0 +1,534 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const features = [
+  {
+    title: "AI-Powered SaaS Dashboard",
+    description: "Build a complete admin dashboard with AI-powered analytics, user management, and real-time insights.",
+    tech: ["Next.js", "OpenAI", "Prisma"]
+  },
+  {
+    title: "AI Content Generator",
+    description: "Create a SaaS that generates SEO-optimized content, social media posts, and marketing copy using AI.",
+    tech: ["React", "GPT-4", "MongoDB"]
+  },
+  {
+    title: "AI Task Manager",
+    description: "Develop a smart task management system that uses AI to prioritize and categorize tasks.",
+    tech: ["Vue.js", "Node.js", "PostgreSQL"]
+  }
+];
+
+const courseModules = [
+  {
+    number: "1",
+    title: "Introduction to SaaS & AI",
+    description: "Learn the fundamentals of SaaS and AI integration",
+    lessons: [
+      {
+        title: "What is SaaS?",
+        topics: [
+          "Definition and benefits (scalability, subscriptions)",
+          "Cloud-native architecture",
+          "Case studies: Slack, Notion, Zoom"
+        ]
+      },
+      {
+        title: "Key Features of SaaS Apps",
+        topics: [
+          "Multi-tenancy architecture",
+          "Subscription billing systems",
+          "Security and compliance"
+        ]
+      },
+      {
+        title: "Role of AI in SaaS",
+        topics: [
+          "AI use cases and implementation",
+          "Tools: OpenAI, Hugging Face, LangChain",
+          "Project: AI-powered SaaS ideation"
+        ]
+      }
+    ]
+  },
+  {
+    number: "2",
+    title: "Frontend Foundations",
+    description: "Master modern frontend development with React and Next.js",
+    lessons: [
+      {
+        title: "HTML/CSS Basics",
+        topics: [
+          "Semantic HTML principles",
+          "Flexbox/Grid layouts",
+          "Responsive design patterns"
+        ]
+      },
+      {
+        title: "JavaScript Fundamentals",
+        topics: [
+          "DOM manipulation techniques",
+          "Async/await patterns",
+          "API integration"
+        ]
+      },
+      {
+        title: "React & Next.js",
+        topics: [
+          "Component architecture",
+          "Hooks and state management",
+          "SSR/SSG implementation"
+        ]
+      }
+    ]
+  },
+  {
+    number: "3",
+    title: "Backend & Databases",
+    description: "Build scalable backends with Supabase and Firebase",
+    lessons: [
+      {
+        title: "Supabase Introduction",
+        topics: [
+          "PostgreSQL database setup and management",
+          "Authentication and authorization",
+          "Storage and Edge Functions"
+        ]
+      },
+      {
+        title: "Firebase Deep Dive",
+        topics: [
+          "Firestore and Realtime Database",
+          "Firebase Authentication",
+          "Cloud Functions deployment"
+        ]
+      },
+      {
+        title: "Database Design for SaaS",
+        topics: [
+          "Multi-tenant architecture patterns",
+          "Row-level security implementation",
+          "Project: CRUD app with Supabase"
+        ]
+      }
+    ]
+  },
+  {
+    number: "4",
+    title: "SaaS Essentials",
+    description: "Implement core SaaS features with modern tools",
+    lessons: [
+      {
+        title: "Authentication Systems",
+        topics: [
+          "JWT implementation and OAuth flows",
+          "Session management strategies",
+          "Auth0 and Clerk integration"
+        ]
+      },
+      {
+        title: "Payment Integration",
+        topics: [
+          "Stripe subscription setup",
+          "PayPal integration",
+          "Pricing tiers implementation"
+        ]
+      },
+      {
+        title: "Security Best Practices",
+        topics: [
+          "Rate limiting implementation",
+          "Data encryption strategies",
+          "Role-based access control (RBAC)"
+        ]
+      }
+    ]
+  },
+  {
+    number: "5",
+    title: "AI Integration & Prompt Engineering",
+    description: "Master AI integration and prompt engineering",
+    lessons: [
+      {
+        title: "Prompt Engineering Basics",
+        topics: [
+          "Writing effective prompts",
+          "Few-shot learning techniques",
+          "Context optimization strategies"
+        ]
+      },
+      {
+        title: "AI APIs in SaaS",
+        topics: [
+          "ChatGPT integration patterns",
+          "Text generation optimization",
+          "Cost management strategies"
+        ]
+      },
+      {
+        title: "Advanced Prompting",
+        topics: [
+          "Chain-of-thought implementation",
+          "Temperature tuning techniques",
+          "Project: AI blog writer"
+        ]
+      }
+    ]
+  },
+  {
+    number: "6",
+    title: "Rapid Development with Bolt.new",
+    description: "Build SaaS products faster with Bolt.new",
+    lessons: [
+      {
+        title: "Bolt.new Fundamentals",
+        topics: [
+          "No-code/low-code scaffolding",
+          "Template customization",
+          "Component library usage"
+        ]
+      },
+      {
+        title: "Building with Bolt",
+        topics: [
+          "Landing page creation",
+          "CRUD app development",
+          "Database integration"
+        ]
+      },
+      {
+        title: "AI & Payments",
+        topics: [
+          "Stripe integration in Bolt",
+          "OpenAI implementation",
+          "Project: Customer feedback tool"
+        ]
+      }
+    ]
+  },
+  {
+    number: "7",
+    title: "AI-Powered Development",
+    description: "Leverage AI for faster development",
+    lessons: [
+      {
+        title: "Cursor IDE Mastery",
+        topics: [
+          "AI code completion setup",
+          "Terminal integration",
+          "Custom snippets creation"
+        ]
+      },
+      {
+        title: "AI Pair Programming",
+        topics: [
+          "Code refactoring with AI",
+          "Automated testing",
+          "Debug assistance"
+        ]
+      },
+      {
+        title: "Development Optimization",
+        topics: [
+          "Custom prompts for coding",
+          "Codebase search strategies",
+          "Project: AI-assisted refactoring"
+        ]
+      }
+    ]
+  },
+  {
+    number: "8",
+    title: "Launch & Scale",
+    description: "Successfully launch and grow your SaaS",
+    lessons: [
+      {
+        title: "SaaS Marketing",
+        topics: [
+          "Landing page optimization",
+          "SEO implementation",
+          "Cold outreach strategies"
+        ]
+      },
+      {
+        title: "Launch Strategies",
+        topics: [
+          "Product Hunt launch playbook",
+          "Twitter growth tactics",
+          "YC application tips"
+        ]
+      },
+      {
+        title: "Growth & Analytics",
+        topics: [
+          "Metrics tracking (MRR, Churn)",
+          "User feedback implementation",
+          "Project: Analytics dashboard"
+        ]
+      }
+    ]
+  },
+  {
+    number: "9",
+    title: "Final Project",
+    description: "Build and launch your own AI-powered SaaS",
+    lessons: [
+      {
+        title: "Project Planning",
+        topics: [
+          "Architecture design",
+          "Feature prioritization",
+          "Tech stack selection"
+        ]
+      },
+      {
+        title: "Implementation",
+        topics: [
+          "Frontend and backend setup",
+          "AI features integration",
+          "Payment system implementation"
+        ]
+      },
+      {
+        title: "Launch & Beyond",
+        topics: [
+          "Deployment strategy",
+          "Marketing preparation",
+          "Growth planning"
+        ]
+      }
+    ]
+  }
+];
+
+// Get course posts for the sidebar
+const coursePosts = await getCollection('course');
+const sortedPosts = coursePosts.sort((a, b) => {
+  const dateA = a.data.pubDate instanceof Date ? a.data.pubDate : new Date(a.data.pubDate);
+  const dateB = b.data.pubDate instanceof Date ? b.data.pubDate : new Date(b.data.pubDate);
+  return dateA.getTime() - dateB.getTime();
+});
+
+// Group posts by category
+const postsByCategory = sortedPosts.reduce((acc, post) => {
+  const category = post.data.category;
+  if (!acc[category]) {
+    acc[category] = [];
+  }
+  acc[category].push(post);
+  return acc;
+}, {});
+
+// Get current path for active state
+const currentPath = Astro.url.pathname;
+
+// Add state for mobile menu
+const isMobileMenuOpen = false;
+---
+
+<Layout 
+  title="Build SaaS with AI - Complete Course"
+  description="Learn to build profitable SaaS products with AI in days, not months. Complete course by Ex-Google Engineer."
+>
+  <main class="w-full py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto">
+      <!-- Hero Section -->
+      <div class="text-center mb-16">
+        <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium bg-primary-100 text-primary-800">
+          Limited Time Offer - 50% OFF
+        </span>
+        <h1 class="mt-6 text-4xl sm:text-5xl font-bold text-gray-900 leading-tight">
+          Build & Launch Your SaaS <br class="hidden sm:block" />
+          <span class="text-primary-600">10x Faster with AI</span>
+        </h1>
+        <p class="mt-6 text-xl text-gray-600">
+          Learn how to leverage AI to build profitable SaaS products in days, not months. 
+          A complete course for developers who want to ship faster.
+        </p>
+        <div class="mt-8 flex justify-center gap-4">
+          <a 
+            href="#modules" 
+            class="inline-flex items-center px-8 py-4 rounded-lg bg-primary-600 text-white font-medium hover:bg-primary-700 transition-colors"
+          >
+            Start Learning
+            <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Projects Section -->
+      <div class="mb-20">
+        <h2 class="text-3xl font-bold text-center mb-12">What You'll Build</h2>
+        <div class="grid gap-8">
+          {features.map(feature => (
+            <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6">
+              <h3 class="text-xl font-semibold mb-2">{feature.title}</h3>
+              <p class="text-gray-600 mb-4">{feature.description}</p>
+              <div class="flex flex-wrap gap-2">
+                {feature.tech.map(tech => (
+                  <span class="px-2 py-1 bg-gray-100 text-sm rounded">{tech}</span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Course Modules Section -->
+      <section id="modules" class="mt-24">
+        <h2 class="text-3xl font-bold text-center mb-16">Course Curriculum</h2>
+        
+        <div class="space-y-12">
+          {courseModules.map((module) => (
+            <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow p-8">
+              <div class="flex items-start gap-6">
+                <div class="flex-shrink-0 w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
+                  <span class="text-xl font-bold text-primary-600">{module.number}</span>
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-2xl font-bold text-gray-900 mb-2">
+                    {module.title}
+                  </h3>
+                  <p class="text-gray-600 mb-6">{module.description}</p>
+                  
+                  <div class="space-y-6">
+                    {module.lessons.map((lesson) => (
+                      <div class="bg-gray-50 rounded-xl p-6">
+                        <h4 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                          <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                          </svg>
+                          {lesson.title}
+                        </h4>
+                        <ul class="space-y-3">
+                          {lesson.topics.map((topic) => (
+                            <li class="flex items-center gap-3 text-gray-600">
+                              <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                              </svg>
+                              {topic}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- CTA Section -->
+      <section class="text-center bg-primary-50 rounded-2xl p-8 my-16">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Start Building Today</h2>
+        <p class="text-xl text-gray-600 mb-8">
+          Join hundreds of developers who are already building AI-powered SaaS products
+        </p>
+        <a 
+          href="#modules" 
+          class="inline-flex items-center px-8 py-4 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-lg font-medium"
+        >
+          Start Learning
+        </a>
+      </section>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  aside::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  aside {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  /* Add smooth transitions */
+  #course-sidebar {
+    transition: transform 0.2s ease-in-out;
+  }
+
+  #sidebar-overlay {
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  /* Show sidebar when open class is added */
+  #course-sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Show overlay when open */
+  #sidebar-overlay.open {
+    display: block;
+  }
+</style>
+
+<script>
+  // Mobile menu functionality
+  const mobileMenuButton = document.getElementById('mobile-menu-button');
+  const sidebar = document.getElementById('course-sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const menuIcon = document.getElementById('menu-icon');
+  const closeIcon = document.getElementById('close-icon');
+
+  function toggleMenu() {
+    sidebar?.classList.toggle('open');
+    overlay?.classList.toggle('open');
+    menuIcon?.classList.toggle('hidden');
+    closeIcon?.classList.toggle('hidden');
+  }
+
+  // Toggle menu when button is clicked
+  mobileMenuButton?.addEventListener('click', toggleMenu);
+
+  // Close menu when overlay is clicked
+  overlay?.addEventListener('click', toggleMenu);
+
+  // Close menu when escape key is pressed
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && sidebar?.classList.contains('open')) {
+      toggleMenu();
+    }
+  });
+
+  // Close menu when window is resized to desktop size
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 768 && sidebar?.classList.contains('open')) {
+      toggleMenu();
+    }
+  });
+
+  // Handle mobile scroll behavior
+  let lastScroll = 0;
+  const mobileNav = document.getElementById('mobile-menu-button');
+
+  window.addEventListener('scroll', () => {
+    if (!mobileNav) return;
+    
+    const currentScroll = window.pageYOffset;
+    
+    if (currentScroll <= 0) {
+      mobileNav.classList.remove('translate-y-full');
+      return;
+    }
+    
+    if (currentScroll > lastScroll && !mobileNav.classList.contains('translate-y-full')) {
+      // Scrolling down
+      mobileNav.classList.add('translate-y-full');
+    } else if (currentScroll < lastScroll && mobileNav.classList.contains('translate-y-full')) {
+      // Scrolling up
+      mobileNav.classList.remove('translate-y-full');
+    }
+    
+    lastScroll = currentScroll;
+  });
+</script> 

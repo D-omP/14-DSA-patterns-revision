@@ -3,7 +3,6 @@ import '@fontsource/inter/400.css';
 import '@fontsource/inter/500.css';
 import '@fontsource/inter/600.css';
 import '@fontsource/inter/700.css';
-import Sidebar from '../components/Sidebar.astro';
 import Navbar from '../components/Navbar.astro';
 import SEO from '../components/SEO.astro';
 
@@ -20,7 +19,7 @@ interface Props {
 
 const { 
   title,
-  description = "Tech insights from an Ex-Google Engineer covering AI, Software Engineering, and Career Growth",
+  description = "Learn to build profitable SaaS products with AI in days, not months. Complete course by Ex-Google Engineer.",
   ...seoProps
 } = Astro.props;
 ---
@@ -48,24 +47,13 @@ const {
       crossorigin 
     />
 
-    <!-- RSS Feed -->
-    <link 
-      rel="alternate" 
-      type="application/rss+xml" 
-      title="RSS Feed for Aryan Singh's Blog" 
-      href="/rss.xml"
-    />
-
     <!-- Sitemap -->
     <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
   </head>
   <body class="bg-gray-50">
     <Navbar />
-    <div class="flex min-h-screen pt-16">
-      <Sidebar />
-      <main class="flex-1 px-4 sm:px-8 py-6 md:ml-64 ml-0">
-        <slot />
-      </main>
-    </div>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <slot />
+    </main>
   </body>
 </html>
