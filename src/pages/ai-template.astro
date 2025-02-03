@@ -1,0 +1,172 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const features = [
+  {
+    title: "OpenAI Integration",
+    description: "Pre-built components for text generation, embeddings, and fine-tuning.",
+    icon: "M13 10V3L4 14h7v7l9-11h-7z"
+  },
+  {
+    title: "Prompt Management",
+    description: "Organize and version control your AI prompts with a built-in prompt library.",
+    icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+  },
+  {
+    title: "Usage Tracking",
+    description: "Monitor API usage, costs, and set up usage limits per user or team.",
+    icon: "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+  },
+  {
+    title: "Model Selection",
+    description: "Switch between different AI models and manage model-specific settings.",
+    icon: "M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"
+  },
+  {
+    title: "API Key Management",
+    description: "Securely store and rotate API keys with environment variable support.",
+    icon: "M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
+  },
+  {
+    title: "Rate Limiting",
+    description: "Built-in rate limiting and queueing system for API requests.",
+    icon: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+  }
+];
+
+const techStack = [
+  { name: "Next.js 14", description: "React framework" },
+  { name: "OpenAI SDK", description: "AI integration" },
+  { name: "LangChain", description: "AI workflows" },
+  { name: "Prisma", description: "Database ORM" },
+  { name: "tRPC", description: "Type-safe API" },
+  { name: "Tailwind CSS", description: "Styling" }
+];
+---
+
+<Layout title="BabySaaS AI Template - Build AI Apps Faster">
+  <main class="min-h-screen">
+    <!-- Hero Section -->
+    <div class="relative overflow-hidden bg-gradient-to-b from-purple-50 to-white">
+      <div class="max-w-7xl mx-auto pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+            AI-Ready
+          </span>
+          <h1 class="mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900">
+            Build AI-Powered Apps <br/>With Confidence
+          </h1>
+          <p class="mt-6 text-xl text-gray-600 max-w-3xl mx-auto">
+            A specialized template for building AI applications with OpenAI integration, prompt management, and usage tracking built-in.
+          </p>
+          <div class="mt-8 flex justify-center gap-4">
+            <a 
+              href="#pricing" 
+              class="inline-flex items-center px-8 py-4 rounded-lg bg-primary-600 text-white font-medium hover:bg-primary-700 transition-colors"
+            >
+              Get Started
+              <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </a>
+            <a 
+              href="#demo"
+              class="inline-flex items-center px-8 py-4 rounded-lg border-2 border-gray-200 text-gray-600 font-medium hover:border-gray-300 transition-colors"
+            >
+              Live Demo
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Features Grid -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl font-bold text-gray-900">Everything You Need</h2>
+        <p class="mt-4 text-xl text-gray-600">Production-ready features to launch faster</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {features.map(feature => (
+          <div class="relative group">
+            <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6">
+              <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-6">
+                <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={feature.icon}></path>
+                </svg>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-900 mb-2">{feature.title}</h3>
+              <p class="text-gray-600">{feature.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Tech Stack -->
+    <div class="bg-gray-50 py-24">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl font-bold text-gray-900">Modern Tech Stack</h2>
+          <p class="mt-4 text-xl text-gray-600">Built with the latest technologies</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+          {techStack.map(tech => (
+            <div class="text-center">
+              <h3 class="font-semibold text-gray-900">{tech.name}</h3>
+              <p class="text-sm text-gray-600">{tech.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Pricing Section -->
+    <div id="pricing" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl font-bold text-gray-900">Simple Pricing</h2>
+        <p class="mt-4 text-xl text-gray-600">Start building today</p>
+      </div>
+      <div class="max-w-lg mx-auto">
+        <div class="bg-white rounded-2xl shadow-lg p-8">
+          <div class="flex justify-between items-center mb-8">
+            <div>
+              <h3 class="text-2xl font-bold text-gray-900">Standard License</h3>
+              <p class="text-gray-600">Everything you need to get started</p>
+            </div>
+            <div class="text-right">
+              <span class="text-4xl font-bold text-gray-900">$299</span>
+              <span class="text-gray-600">/one-time</span>
+            </div>
+          </div>
+          <ul class="space-y-4 mb-8">
+            <li class="flex items-center text-gray-600">
+              <svg class="w-5 h-5 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              Full Source Code
+            </li>
+            <li class="flex items-center text-gray-600">
+              <svg class="w-5 h-5 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              6 Months Support
+            </li>
+            <li class="flex items-center text-gray-600">
+              <svg class="w-5 h-5 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              Future Updates
+            </li>
+          </ul>
+          <a 
+            href="#"
+            class="block w-full px-8 py-4 text-center bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-colors"
+          >
+            Purchase Now
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout> 

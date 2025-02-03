@@ -1,0 +1,172 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const features = [
+  {
+    title: "Authentication & User Management",
+    description: "Complete auth system with social logins, role-based access, and user profiles.",
+    icon: "M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
+  },
+  {
+    title: "Subscription Management",
+    description: "Stripe integration with multiple pricing tiers, usage tracking, and billing portal.",
+    icon: "M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
+  },
+  {
+    title: "Admin Dashboard",
+    description: "Beautiful analytics dashboard with user management, revenue tracking, and insights.",
+    icon: "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+  },
+  {
+    title: "Email Notifications",
+    description: "Automated emails for user onboarding, billing updates, and system notifications.",
+    icon: "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+  },
+  {
+    title: "Team Collaboration",
+    description: "Multi-user workspaces with roles, permissions, and real-time updates.",
+    icon: "M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+  },
+  {
+    title: "API Integration",
+    description: "RESTful API endpoints with documentation, rate limiting, and monitoring.",
+    icon: "M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+  }
+];
+
+const techStack = [
+  { name: "Next.js 14", description: "React framework with App Router" },
+  { name: "TypeScript", description: "Type-safe development" },
+  { name: "Tailwind CSS", description: "Utility-first styling" },
+  { name: "Prisma", description: "Type-safe ORM" },
+  { name: "PostgreSQL", description: "Reliable database" },
+  { name: "Stripe", description: "Payment processing" }
+];
+---
+
+<Layout title="BabySaaS Template - Production Ready SaaS Starter">
+  <main class="min-h-screen">
+    <!-- Hero Section -->
+    <div class="relative overflow-hidden bg-gradient-to-b from-primary-50 to-white">
+      <div class="max-w-7xl mx-auto pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium bg-primary-100 text-primary-800">
+            Production Ready
+          </span>
+          <h1 class="mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900">
+            Launch Your SaaS in Days, <br/>Not Months
+          </h1>
+          <p class="mt-6 text-xl text-gray-600 max-w-3xl mx-auto">
+            A complete SaaS starter template with authentication, payments, team management, and admin dashboard. Built with Next.js 14 and TypeScript.
+          </p>
+          <div class="mt-8 flex justify-center gap-4">
+            <a 
+              href="#pricing" 
+              class="inline-flex items-center px-8 py-4 rounded-lg bg-primary-600 text-white font-medium hover:bg-primary-700 transition-colors"
+            >
+              Get Started
+              <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </a>
+            <a 
+              href="#demo"
+              class="inline-flex items-center px-8 py-4 rounded-lg border-2 border-gray-200 text-gray-600 font-medium hover:border-gray-300 transition-colors"
+            >
+              Live Demo
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Features Grid -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl font-bold text-gray-900">Everything You Need</h2>
+        <p class="mt-4 text-xl text-gray-600">Production-ready features to launch faster</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {features.map(feature => (
+          <div class="relative group">
+            <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6">
+              <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-6">
+                <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={feature.icon}></path>
+                </svg>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-900 mb-2">{feature.title}</h3>
+              <p class="text-gray-600">{feature.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Tech Stack -->
+    <div class="bg-gray-50 py-24">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl font-bold text-gray-900">Modern Tech Stack</h2>
+          <p class="mt-4 text-xl text-gray-600">Built with the latest technologies</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+          {techStack.map(tech => (
+            <div class="text-center">
+              <h3 class="font-semibold text-gray-900">{tech.name}</h3>
+              <p class="text-sm text-gray-600">{tech.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Pricing Section -->
+    <div id="pricing" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl font-bold text-gray-900">Simple Pricing</h2>
+        <p class="mt-4 text-xl text-gray-600">Start building today</p>
+      </div>
+      <div class="max-w-lg mx-auto">
+        <div class="bg-white rounded-2xl shadow-lg p-8">
+          <div class="flex justify-between items-center mb-8">
+            <div>
+              <h3 class="text-2xl font-bold text-gray-900">Standard License</h3>
+              <p class="text-gray-600">Everything you need to get started</p>
+            </div>
+            <div class="text-right">
+              <span class="text-4xl font-bold text-gray-900">$299</span>
+              <span class="text-gray-600">/one-time</span>
+            </div>
+          </div>
+          <ul class="space-y-4 mb-8">
+            <li class="flex items-center text-gray-600">
+              <svg class="w-5 h-5 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              Full Source Code
+            </li>
+            <li class="flex items-center text-gray-600">
+              <svg class="w-5 h-5 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              6 Months Support
+            </li>
+            <li class="flex items-center text-gray-600">
+              <svg class="w-5 h-5 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              Future Updates
+            </li>
+          </ul>
+          <a 
+            href="#"
+            class="block w-full px-8 py-4 text-center bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-colors"
+          >
+            Purchase Now
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout> 

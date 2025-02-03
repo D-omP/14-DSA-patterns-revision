@@ -99,9 +99,51 @@ const shareUrls = {
     <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   </Fragment>
 
-  <div class="flex min-h-screen">
-    <!-- Left Sidebar - Blog Navigation -->
-    <aside class="fixed left-0 top-16 w-72 h-[calc(100vh-4rem)] overflow-y-auto border-r border-gray-200 bg-white">
+  <div class="flex min-h-screen relative">
+    <!-- Floating Action Button Menu -->
+    <div class="fixed bottom-6 right-6 flex flex-col gap-3 z-50">
+      <!-- Table of Contents Button -->
+      <button
+        id="toc-button"
+        class="md:hidden bg-white text-primary-600 p-3 rounded-full shadow-lg hover:bg-primary-50 transition-colors border-2 border-primary-200"
+        aria-label="Table of Contents"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+        </svg>
+      </button>
+
+      <!-- Navigation Button -->
+      <button
+        id="nav-button"
+        class="md:hidden bg-primary-600 text-white p-3 rounded-full shadow-lg hover:bg-primary-700 transition-colors"
+        aria-label="Navigation Menu"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path 
+            id="menu-icon"
+            stroke-linecap="round" 
+            stroke-linejoin="round" 
+            stroke-width="2" 
+            d="M4 6h16M4 12h16M4 18h16"
+          />
+          <path 
+            id="close-icon"
+            class="hidden"
+            stroke-linecap="round" 
+            stroke-linejoin="round" 
+            stroke-width="2" 
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Left Sidebar (Navigation) -->
+    <aside 
+      id="left-sidebar"
+      class="fixed left-0 top-16 w-[85vw] md:w-72 h-[calc(100vh-4rem)] overflow-y-auto border-r border-gray-200 bg-white transform -translate-x-full transition-transform duration-200 ease-in-out md:translate-x-0 z-40"
+    >
       <div class="p-6">
         <!-- Sidebar Header -->
         <div class="flex items-center gap-3 mb-6">
@@ -165,28 +207,34 @@ const shareUrls = {
       </div>
     </aside>
 
-    <!-- Main Content Area -->
-    <main class="ml-72 mr-64 flex-1 min-w-0 py-12 px-8">
+    <!-- Main Content -->
+    <main class="w-full md:ml-72 lg:mr-64 flex-1 min-w-0 py-12 px-4 sm:px-6 lg:px-8">
       <article class="prose prose-lg max-w-3xl mx-auto">
-        <h1 class="mb-8">{post.data.title}</h1>
-        <div class="flex items-center gap-4 text-sm text-gray-600 mb-8">
-          <time datetime={post.data.pubDate.toISOString()}>
-            {new Date(post.data.pubDate).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            })}
-          </time>
-          <span class="px-2 py-1 bg-primary-50 text-primary-700 rounded-full">
-            {post.data.category.replace(/-/g, ' ')}
-          </span>
-        </div>
+        <!-- Article Header -->
+        <header class="mb-8">
+          <h1 class="mb-4">{post.data.title}</h1>
+          <div class="flex flex-wrap items-center gap-3 text-sm text-gray-600">
+            <time datetime={post.data.pubDate.toISOString()}>
+              {new Date(post.data.pubDate).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}
+            </time>
+            <span class="px-2 py-1 bg-primary-50 text-primary-700 rounded-full">
+              {post.data.category.replace(/-/g, ' ')}
+            </span>
+          </div>
+        </header>
         <Content />
       </article>
     </main>
 
-    <!-- Right Sidebar - Table of Contents -->
-    <aside class="fixed right-0 top-16 w-64 h-screen overflow-y-auto border-l border-gray-200 bg-white">
+    <!-- Right Sidebar (Table of Contents) -->
+    <aside 
+      id="right-sidebar"
+      class="fixed right-0 top-16 w-[85vw] md:w-64 h-[calc(100vh-4rem)] overflow-y-auto border-l border-gray-200 bg-white transform translate-x-full transition-transform duration-200 ease-in-out lg:translate-x-0 z-40"
+    >
       <div class="p-6">
         <div class="flex items-center gap-2 mb-4">
           <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -212,6 +260,13 @@ const shareUrls = {
         </nav>
       </div>
     </aside>
+
+    <!-- Overlay -->
+    <div 
+      id="sidebar-overlay"
+      class="fixed inset-0 bg-gray-800 bg-opacity-50 z-30 hidden md:hidden"
+      aria-hidden="true"
+    ></div>
   </div>
 
   <footer class="mt-12 pt-8 border-t border-gray-200">
@@ -258,9 +313,99 @@ const shareUrls = {
   html {
     scroll-behavior: smooth;
   }
+
+  /* Add responsive styles */
+  @media (max-width: 768px) {
+    .prose {
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    
+    main {
+      margin-left: 0;
+      margin-right: 0;
+      padding-bottom: 6rem; /* Space for FAB */
+    }
+
+    /* Improve mobile typography */
+    .prose h1 {
+      font-size: 2rem;
+      line-height: 1.2;
+    }
+
+    .prose h2 {
+      font-size: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .prose p {
+      margin-bottom: 1.25rem;
+    }
+  }
 </style>
 
 <script>
+  const navButton = document.getElementById('nav-button');
+  const tocButton = document.getElementById('toc-button');
+  const leftSidebar = document.getElementById('left-sidebar');
+  const rightSidebar = document.getElementById('right-sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const menuIcon = document.getElementById('menu-icon');
+  const closeIcon = document.getElementById('close-icon');
+
+  let activeMenu = null;
+
+  function toggleMenu(side = 'left') {
+    if (activeMenu === side) {
+      // Close active menu
+      leftSidebar?.classList.remove('translate-x-0');
+      rightSidebar?.classList.remove('-translate-x-0');
+      overlay?.classList.add('hidden');
+      menuIcon?.classList.remove('hidden');
+      closeIcon?.classList.add('hidden');
+      activeMenu = null;
+    } else {
+      // Close any open menu first
+      leftSidebar?.classList.remove('translate-x-0');
+      rightSidebar?.classList.remove('-translate-x-0');
+      
+      // Open selected menu
+      if (side === 'left') {
+        leftSidebar?.classList.add('translate-x-0');
+      } else {
+        rightSidebar?.classList.add('-translate-x-0');
+      }
+      
+      overlay?.classList.remove('hidden');
+      menuIcon?.classList.add('hidden');
+      closeIcon?.classList.remove('hidden');
+      activeMenu = side;
+    }
+  }
+
+  // Navigation menu button
+  navButton?.addEventListener('click', () => toggleMenu('left'));
+
+  // Table of contents button
+  tocButton?.addEventListener('click', () => toggleMenu('right'));
+
+  // Close menu when overlay is clicked
+  overlay?.addEventListener('click', () => toggleMenu());
+
+  // Close menu when escape key is pressed
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && activeMenu) {
+      toggleMenu();
+    }
+  });
+
+  // Close menu when window is resized to desktop size
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 768 && activeMenu) {
+      toggleMenu();
+    }
+  });
+
   // Highlight current section in table of contents
   const observerOptions = {
     rootMargin: '0px 0px -66%',

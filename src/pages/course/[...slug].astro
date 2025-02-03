@@ -32,19 +32,57 @@ const postsByCategory = sortedPosts.reduce((acc, post) => {
   return acc;
 }, {});
 
-// Get current path for active state
 const currentPath = Astro.url.pathname;
 ---
 
-<Layout 
-  title={post.data.title}
-  description={post.data.description}
->
-  <div class="flex min-h-screen">
-    <!-- Left Sidebar - Course Navigation -->
-    <aside class="fixed left-0 top-16 w-72 h-[calc(100vh-4rem)] overflow-y-auto border-r border-gray-200 bg-white">
+<Layout title={post.data.title} description={post.data.description}>
+  <div class="flex min-h-screen relative">
+    <!-- Floating Action Button Menu -->
+    <div class="fixed bottom-6 right-6 flex flex-col gap-3 z-50">
+      <!-- Progress Button -->
+      <button
+        id="progress-button"
+        class="md:hidden bg-white text-primary-600 p-3 rounded-full shadow-lg hover:bg-primary-50 transition-colors border-2 border-primary-200"
+        aria-label="Course Progress"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+      </button>
+
+      <!-- Navigation Button -->
+      <button
+        id="nav-button"
+        class="md:hidden bg-primary-600 text-white p-3 rounded-full shadow-lg hover:bg-primary-700 transition-colors"
+        aria-label="Course Navigation"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path 
+            id="menu-icon"
+            stroke-linecap="round" 
+            stroke-linejoin="round" 
+            stroke-width="2" 
+            d="M4 6h16M4 12h16M4 18h16"
+          />
+          <path 
+            id="close-icon"
+            class="hidden"
+            stroke-linecap="round" 
+            stroke-linejoin="round" 
+            stroke-width="2" 
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Left Sidebar (Course Navigation) -->
+    <aside 
+      id="left-sidebar"
+      class="fixed left-0 top-16 w-[85vw] md:w-72 h-[calc(100vh-4rem)] overflow-y-auto border-r border-gray-200 bg-white transform -translate-x-full transition-transform duration-200 ease-in-out md:translate-x-0 z-40"
+    >
       <div class="p-6">
-        <!-- Sidebar Header -->
+        <!-- Course Content Header -->
         <div class="flex items-center gap-3 mb-6">
           <div class="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center">
             <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -54,7 +92,7 @@ const currentPath = Astro.url.pathname;
           <h2 class="text-lg font-bold text-gray-900">Course Content</h2>
         </div>
 
-        <!-- Course Progress Tracker -->
+        <!-- Course Progress -->
         <div class="mb-8 p-4 bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl border border-primary-200">
           <div class="flex items-center justify-between mb-3">
             <h3 class="text-sm font-medium text-primary-900">Your Progress</h3>
@@ -71,16 +109,16 @@ const currentPath = Astro.url.pathname;
           </div>
         </div>
 
-        <!-- Navigation -->
+        <!-- Course Navigation -->
         <nav class="space-y-6">
           {Object.entries(postsByCategory).map(([category, posts]) => (
             <div>
               <div class="flex items-center gap-2 mb-2">
                 <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wide">
-                  {category.replace('-', ' ')}
+                  {category.replace(/-/g, ' ')}
                 </h3>
                 <span class="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
-                  {posts.length} lessons
+                  {posts.length}
                 </span>
               </div>
               <ul class="space-y-1">
@@ -108,10 +146,7 @@ const currentPath = Astro.url.pathname;
                             stroke-linecap="round" 
                             stroke-linejoin="round" 
                             stroke-width="2" 
-                            d={isActive 
-                              ? "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                              : "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                            }
+                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
                           />
                         </svg>
                         <span class="truncate">{coursePost.data.title}</span>
@@ -126,41 +161,27 @@ const currentPath = Astro.url.pathname;
       </div>
     </aside>
 
-    <!-- Main Content Area -->
-    <main class="ml-72 mr-64 flex-1 min-w-0 py-12 px-8">
+    <!-- Main Content -->
+    <main class="w-full md:ml-72 flex-1 min-w-0 py-12 px-4 sm:px-6 lg:px-8">
       <article class="prose prose-lg max-w-3xl mx-auto">
-        <h1 class="mb-8">{post.data.title}</h1>
+        <header class="mb-8">
+          <h1 class="mb-4">{post.data.title}</h1>
+          <div class="flex flex-wrap items-center gap-3 text-sm text-gray-600">
+            <span class="px-2 py-1 bg-primary-50 text-primary-700 rounded-full">
+              {post.data.category.replace(/-/g, ' ')}
+            </span>
+          </div>
+        </header>
         <Content />
       </article>
     </main>
 
-    <!-- Right Sidebar - Table of Contents -->
-    <aside class="fixed right-0 top-16 w-64 h-screen overflow-y-auto border-l border-gray-200 bg-white">
-      <div class="p-6">
-        <div class="flex items-center gap-2 mb-4">
-          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
-          </svg>
-          <h2 class="text-sm font-semibold text-gray-900 uppercase tracking-wide">
-            Table of Contents
-          </h2>
-        </div>
-        <nav class="space-y-1">
-          {headings.map((heading) => (
-            <a
-              href={`#${heading.slug}`}
-              class={`
-                block py-2 pl-${(heading.depth - 1) * 4} text-sm
-                ${heading.depth === 1 ? 'font-medium text-gray-900' : 'text-gray-600'}
-                hover:text-primary-600 transition-colors
-              `}
-            >
-              {heading.text}
-            </a>
-          ))}
-        </nav>
-      </div>
-    </aside>
+    <!-- Overlay -->
+    <div 
+      id="sidebar-overlay"
+      class="fixed inset-0 bg-gray-800 bg-opacity-50 z-30 hidden md:hidden"
+      aria-hidden="true"
+    ></div>
   </div>
 </Layout>
 
@@ -180,31 +201,77 @@ const currentPath = Astro.url.pathname;
   html {
     scroll-behavior: smooth;
   }
+
+  @media (max-width: 768px) {
+    .prose {
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    
+    main {
+      margin-left: 0;
+      margin-right: 0;
+      padding-bottom: 6rem; /* Space for FAB */
+    }
+
+    /* Improve mobile typography */
+    .prose h1 {
+      font-size: 2rem;
+      line-height: 1.2;
+    }
+
+    .prose h2 {
+      font-size: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .prose p {
+      margin-bottom: 1.25rem;
+    }
+  }
 </style>
 
 <script>
-  // Highlight current section in table of contents
-  const observerOptions = {
-    rootMargin: '0px 0px -66%',
-    threshold: 1.0
-  };
+  const navButton = document.getElementById('nav-button');
+  const progressButton = document.getElementById('progress-button');
+  const leftSidebar = document.getElementById('left-sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const menuIcon = document.getElementById('menu-icon');
+  const closeIcon = document.getElementById('close-icon');
 
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      const id = entry.target.getAttribute('id');
-      if (entry.isIntersecting) {
-        document.querySelector(`nav a[href="#${id}"]`)
-          ?.classList.add('text-primary-600', 'font-medium');
-      } else {
-        document.querySelector(`nav a[href="#${id}"]`)
-          ?.classList.remove('text-primary-600', 'font-medium');
-      }
-    });
-  }, observerOptions);
+  let isMenuOpen = false;
 
-  // Track all sections that have an `id` applied
-  document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]')
-    .forEach((section) => {
-      observer.observe(section);
-    });
+  function toggleMenu() {
+    isMenuOpen = !isMenuOpen;
+    leftSidebar?.classList.toggle('translate-x-0');
+    overlay?.classList.toggle('hidden');
+    menuIcon?.classList.toggle('hidden');
+    closeIcon?.classList.toggle('hidden');
+  }
+
+  // Navigation menu button
+  navButton?.addEventListener('click', toggleMenu);
+
+  // Progress button (for future implementation)
+  progressButton?.addEventListener('click', () => {
+    // TODO: Implement progress tracking functionality
+    console.log('Progress tracking to be implemented');
+  });
+
+  // Close menu when overlay is clicked
+  overlay?.addEventListener('click', toggleMenu);
+
+  // Close menu when escape key is pressed
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && isMenuOpen) {
+      toggleMenu();
+    }
+  });
+
+  // Close menu when window is resized to desktop size
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 768 && isMenuOpen) {
+      toggleMenu();
+    }
+  });
 </script> 

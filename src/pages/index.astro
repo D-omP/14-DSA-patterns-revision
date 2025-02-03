@@ -135,107 +135,171 @@ const modules = [
     ]
   }
 ];
+
+const products = [
+  {
+    title: "BabySaaS Template",
+    description: "Launch your SaaS in days with our production-ready template. Includes authentication, payments, and dashboard.",
+    features: [
+      "User Authentication & Roles",
+      "Stripe Subscription",
+      "Admin Dashboard",
+      "Email Notifications",
+      "Analytics Integration"
+    ],
+    image: "/images/saas-template.png",
+    badge: "Most Popular",
+    url: "/saas-template",
+    color: "from-blue-500 to-indigo-600"
+  },
+  {
+    title: "BabySaaS AI Template",
+    description: "Build AI-powered applications faster with our specialized template. Includes OpenAI integration and prompt management.",
+    features: [
+      "OpenAI Integration",
+      "Prompt Management",
+      "Usage Tracking",
+      "Model Selection",
+      "API Key Management"
+    ],
+    image: "/images/ai-template.png",
+    badge: "New",
+    url: "/ai-template",
+    color: "from-purple-500 to-pink-600"
+  },
+  {
+    title: "Build SaaS with AI Course",
+    description: "Learn to build and launch profitable SaaS products using AI. Complete course from ideation to launch.",
+    features: [
+      "9 Comprehensive Modules",
+      "Hands-on Projects",
+      "AI Integration Guide",
+      "Launch Strategy",
+      "Lifetime Access"
+    ],
+    image: "/images/course.png",
+    badge: "Featured",
+    url: "/course",
+    color: "from-green-500 to-teal-600"
+  }
+];
 ---
 
-<Layout 
-  title="Build SaaS with AI - Complete Course"
-  description="Learn to build profitable SaaS products with AI in days, not months. Complete course by Ex-Google Engineer."
->
-  <div class="max-w-7xl mx-auto">
+<Layout title="BabySaaS - Build Better SaaS Products">
+  <main class="min-h-screen">
     <!-- Hero Section -->
-    <div class="text-center mb-16">
-      <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium bg-primary-100 text-primary-800">
-        Limited Time Offer - 50% OFF
-      </span>
-      <h1 class="mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
-        Build & Launch Your SaaS <br class="hidden sm:block" />
-        <span class="text-primary-600">10x Faster with AI</span>
-      </h1>
-      <p class="mt-6 text-xl sm:text-2xl text-gray-600 max-w-3xl mx-auto">
-        Learn how to leverage AI to build profitable SaaS products in days, not months. 
-        A complete course for developers who want to ship faster.
-      </p>
-      <div class="mt-8 flex justify-center gap-4">
-        <a 
-          href="#pricing" 
-          class="inline-flex items-center px-8 py-4 rounded-lg bg-primary-600 text-white font-medium hover:bg-primary-700 transition-colors"
-        >
-          Get Started Now
-          <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-          </svg>
-        </a>
-        <a 
-          href="#curriculum" 
-          class="inline-flex items-center px-8 py-4 rounded-lg bg-white text-primary-600 font-medium border-2 border-primary-600 hover:bg-primary-50 transition-colors"
-        >
-          View Curriculum
-        </a>
+    <div class="relative overflow-hidden bg-gray-50">
+      <div class="max-w-7xl mx-auto pt-16 pb-24 px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight">
+            Build Better SaaS Products
+            <span class="block text-primary-600 mt-2">Faster Than Ever</span>
+          </h1>
+          <p class="mt-6 text-xl text-gray-600 max-w-3xl mx-auto">
+            Everything you need to build, launch, and scale your SaaS product. Choose from our templates or learn from our comprehensive course.
+          </p>
+        </div>
       </div>
-      <div class="mt-8 flex justify-center items-center gap-8 text-sm text-gray-500">
-        {['Lifetime Access', '30-Day Money Back', 'Community Access'].map(item => (
-          <span class="flex items-center">
-            <svg class="w-5 h-5 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-            </svg>
-            {item}
-          </span>
-        ))}
-      </div>
+      <div class="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-white"></div>
     </div>
 
-    <!-- Projects Section -->
-    <div class="mb-20">
-      <h2 class="text-3xl font-bold text-center mb-12">What You'll Build</h2>
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {features.map(feature => (
-          <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow p-6">
-            <h3 class="text-xl font-semibold mb-2">{feature.title}</h3>
-            <p class="text-gray-600 mb-4">{feature.description}</p>
-            <div class="flex flex-wrap gap-2">
-              {feature.tech.map(tech => (
-                <span class="px-2 py-1 bg-gray-100 text-sm rounded">{tech}</span>
-              ))}
+    <!-- Products Grid -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+      <div class="grid md:grid-cols-3 gap-8">
+        {products.map(product => (
+          <div class="relative group">
+            <div class="absolute -inset-0.5 bg-gradient-to-r {product.color} rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-200"></div>
+            <div class="relative bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow p-8">
+              {product.badge && (
+                <span class="absolute top-4 right-4 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-800">
+                  {product.badge}
+                </span>
+              )}
+              <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">{product.title}</h2>
+                <p class="text-gray-600">{product.description}</p>
+              </div>
+              <ul class="space-y-3 mb-8">
+                {product.features.map(feature => (
+                  <li class="flex items-center text-gray-600">
+                    <svg class="w-5 h-5 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                    </svg>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+              <a 
+                href={product.url}
+                class="inline-flex items-center justify-center w-full px-6 py-3 text-base font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors"
+              >
+                Learn More
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                </svg>
+              </a>
             </div>
           </div>
         ))}
       </div>
     </div>
 
-    <!-- Course Modules -->
-    <div class="mb-20">
-      <h2 class="text-3xl font-bold text-center mb-12">Course Curriculum</h2>
-      <div class="max-w-3xl mx-auto space-y-6">
-        {modules.map(module => (
-          <div class="bg-white rounded-lg p-6 shadow-sm">
-            <h3 class="text-xl font-semibold mb-4">{module.title}</h3>
-            <ul class="space-y-3 text-gray-600">
-              {module.items.map(item => (
-                <li class="flex items-center">
-                  <svg class="w-5 h-5 mr-3 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                  </svg>
-                  {item}
-                </li>
-              ))}
-            </ul>
+    <!-- Why Choose Us Section -->
+    <div class="bg-gray-50 py-24">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl font-bold text-gray-900">Why Choose BabySaaS?</h2>
+          <p class="mt-4 text-xl text-gray-600">Built by developers, for developers</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-12">
+          <div class="text-center">
+            <div class="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Lightning Fast Setup</h3>
+            <p class="text-gray-600">Get your SaaS up and running in minutes, not months</p>
           </div>
-        ))}
+          <div class="text-center">
+            <div class="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Production Ready</h3>
+            <p class="text-gray-600">Enterprise-grade security and scalability built-in</p>
+          </div>
+          <div class="text-center">
+            <div class="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">AI-Powered</h3>
+            <p class="text-gray-600">Built-in AI capabilities to supercharge your SaaS</p>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- CTA Section -->
-    <section class="text-center bg-primary-50 rounded-2xl p-8 mb-16">
-      <h2 class="text-3xl font-bold text-gray-900 mb-4">Start Building Today</h2>
-      <p class="text-xl text-gray-600 mb-8">
-        Join hundreds of developers who are already building AI-powered SaaS products
-      </p>
-      <a 
-        href="#pricing" 
-        class="inline-flex items-center px-8 py-4 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-lg font-medium"
-      >
-        Get Started Now
-      </a>
-    </section>
-  </div>
+    <div class="bg-primary-600">
+      <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <h2 class="text-3xl font-bold text-white mb-4">Ready to Build Your SaaS?</h2>
+          <p class="text-xl text-primary-100 mb-8">Choose your path and start building today</p>
+          <a 
+            href="/course"
+            class="inline-flex items-center px-8 py-4 border-2 border-white text-white font-medium rounded-lg hover:bg-white hover:text-primary-600 transition-colors"
+          >
+            Get Started
+            <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
 </Layout>
