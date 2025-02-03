@@ -19,7 +19,8 @@ const course = defineCollection({
     pubDate: z.date(),
     category: z.string(),
     author: z.string().default('Aryan Singh'),
-    tags: z.array(z.string()).default([])
+    tags: z.array(z.string()).default([]),
+    priority: z.number().default(100)
   })
 });
 
