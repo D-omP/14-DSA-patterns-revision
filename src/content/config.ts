@@ -20,7 +20,8 @@ const course = defineCollection({
     category: z.string(),
     author: z.string().default('Aryan Singh'),
     tags: z.array(z.string()).default([]),
-    priority: z.number().default(100)
+    priority: z.number().default(100),
+    moduleNumber: z.number().default(999)
   })
 });
 

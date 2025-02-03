@@ -1,0 +1,442 @@
+---
+title: "Next.js for SaaS"
+description: "Learn how to build modern SaaS applications with Next.js"
+pubDate: 2024-01-01
+category: "frontend"
+author: "Aryan Singh"
+tags: ["nextjs", "react", "frontend"]
+priority: 1
+moduleNumber: 5  # Fifth module
+---
+
+### Next.js for SaaS: A Comprehensive Guide to SSR/SSG, API Routes, and File-Based Routing  
+
+Next.js is a powerful React framework that enables developers to build fast, scalable, and SEO-friendly web applications. For SaaS (Software as a Service) applications, Next.js is an excellent choice due to its support for **Server-Side Rendering (SSR)**, **Static Site Generation (SSG)**, **API routes**, and **file-based routing**. In this guide, we'll explore how to leverage these features to build a modern SaaS application.  
+
+---
+
+### 1. Setting Up a Next.js Project  
+
+To get started, create a new Next.js project:  
+
+```bash
+npx create-next-app my-saas-app
+cd my-saas-app
+npm run dev
+```
+
+This will set up a new Next.js project and start a development server at `http://localhost:3000`.  
+
+---
+
+### 2. File-Based Routing  
+
+Next.js uses a file-based routing system, where the file structure in the `pages` directory determines the routes of your application.  
+
+#### Example: Basic Routing  
+- `pages/index.js` → `/`  
+- `pages/about.js` → `/about`  
+- `pages/blog/[slug].js` → `/blog/:slug` (dynamic route)  
+
+```javascript
+// pages/index.js
+export default function Home() {
+  return <h1>Welcome to My SaaS App</h1>;
+}
+```
+
+```javascript
+// pages/about.js
+export default function About() {
+  return <h1>About Us</h1>;
+}
+```
+
+```javascript
+// pages/blog/[slug].js
+import { useRouter } from "next/router";
+
+export default function BlogPost() {
+  const router = useRouter();
+  const { slug } = router.query;
+
+  return <h1>Blog Post: {slug}</h1>;
+}
+```
+
+---
+
+### 3. Server-Side Rendering (SSR)  
+
+SSR allows you to render pages on the server at runtime, which is useful for dynamic content that changes frequently.  
+
+#### Example: SSR with `getServerSideProps`  
+```javascript
+// pages/users/[id].js
+export default function User({ user }) {
+  return (
+    <div>
+      <h1>User Details</h1>
+      <p>Name: {user.name}</p>
+      <p>Email: {user.email}</p>
+    </div>
+  );
+}
+
+export async function getServerSideProps(context) {
+  const { id } = context.params;
+  const res = await fetch(`https://jsonplaceholder.typicode.com/users/${id}`);
+  const user = await res.json();
+
+  return {
+    props: {
+      user,
+    },
+  };
+}
+```
+
+---
+
+### 4. Static Site Generation (SSG)  
+
+SSG allows you to generate static HTML pages at build time, which is ideal for content that doesn't change often.  
+
+#### Example: SSG with `getStaticProps` and `getStaticPaths`  
+```javascript
+// pages/posts/[id].js
+export default function Post({ post }) {
+  return (
+    <div>
+      <h1>{post.title}</h1>
+      <p>{post.body}</p>
+    </div>
+  );
+}
+
+export async function getStaticPaths() {
+  const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+  const posts = await res.json();
+
+  const paths = posts.map((post) => ({
+    params: { id: post.id.toString() },
+  }));
+
+  return {
+    paths,
+    fallback: false, // Show 404 for paths not generated at build time
+  };
+}
+
+export async function getStaticProps({ params }) {
+  const res = await fetch(
+    `https://jsonplaceholder.typicode.com/posts/${params.id}`
+  );
+  const post = await res.json();
+
+  return {
+    props: {
+      post,
+    },
+  };
+}
+```
+
+---
+
+### 5. API Routes  
+
+Next.js allows you to create API endpoints within your application using the `pages/api` directory. These endpoints can be used to handle backend logic, such as database operations or third-party API integrations.  
+
+#### Example: Creating an API Route  
+```javascript
+// pages/api/hello.js
+export default function handler(req, res) {
+  res.status(200).json({ message: "Hello, world!" });
+}
+```
+
+You can now access this API endpoint at `http://localhost:3000/api/hello`.  
+
+#### Example: Fetching Data from an API Route  
+```javascript
+// pages/index.js
+import { useEffect, useState } from "react";
+
+export default function Home() {
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    fetch("/api/hello")
+      .then((res) => res.json())
+      .then((data) => setMessage(data.message));
+  }, []);
+
+  return (
+    <div>
+      <h1>Welcome to My SaaS App</h1>
+      <p>Message from API: {message}</p>
+    </div>
+  );
+}
+```
+
+---
+
+### 6. Building a SaaS Application with Next.js  
+
+Let's put everything together to build a simple SaaS application with:  
+- File-based routing for pages.  
+- SSR for dynamic user profiles.  
+- SSG for blog posts.  
+- API routes for backend logic.  
+
+#### Example: SaaS Application Structure  
+```
+my-saas-app/
+├── pages/
+│   ├── index.js
+│   ├── about.js
+│   ├── users/[id].js
+│   ├── posts/[id].js
+│   ├── api/
+│   │   ├── hello.js
+│   │   └── users.js
+├── styles/
+│   └── globals.css
+└── package.json
+```
+
+#### Example: Complete Code  
+
+```javascript
+// pages/index.js
+import { useEffect, useState } from "react";
+
+export default function Home() {
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    fetch("/api/hello")
+      .then((res) => res.json())
+      .then((data) => setMessage(data.message));
+  }, []);
+
+  return (
+    <div>
+      <h1>Welcome to My SaaS App</h1>
+      <p>Message from API: {message}</p>
+    </div>
+  );
+}
+```
+
+```javascript
+// pages/users/[id].js
+export default function User({ user }) {
+  return (
+    <div>
+      <h1>User Details</h1>
+      <p>Name: {user.name}</p>
+      <p>Email: {user.email}</p>
+    </div>
+  );
+}
+
+export async function getServerSideProps(context) {
+  const { id } = context.params;
+  const res = await fetch(`https://jsonplaceholder.typicode.com/users/${id}`);
+  const user = await res.json();
+
+  return {
+    props: {
+      user,
+    },
+  };
+}
+```
+
+```javascript
+// pages/posts/[id].js
+export default function Post({ post }) {
+  return (
+    <div>
+      <h1>{post.title}</h1>
+      <p>{post.body}</p>
+    </div>
+  );
+}
+
+export async function getStaticPaths() {
+  const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+  const posts = await res.json();
+
+  const paths = posts.map((post) => ({
+    params: { id: post.id.toString() },
+  }));
+
+  return {
+    paths,
+    fallback: false,
+  };
+}
+
+export async function getStaticProps({ params }) {
+  const res = await fetch(
+    `https://jsonplaceholder.typicode.com/posts/${params.id}`
+  );
+  const post = await res.json();
+
+  return {
+    props: {
+      post,
+    },
+  };
+}
+```
+
+```javascript
+// pages/api/hello.js
+export default function handler(req, res) {
+  res.status(200).json({ message: "Hello, world!" });
+}
+```
+
+```javascript
+// pages/api/users.js
+export default function handler(req, res) {
+  const users = [
+    { id: 1, name: "John Doe", email: "john@example.com" },
+    { id: 2, name: "Jane Smith", email: "jane@example.com" },
+  ];
+
+  res.status(200).json(users);
+}
+```
+
+---
+
+### Conclusion  
+
+Next.js is a powerful framework for building SaaS applications, offering features like **SSR**, **SSG**, **API routes**, and **file-based routing**. By leveraging these features, you can create fast, scalable, and SEO-friendly applications that meet the demands of modern users.  
+
+Here's a quick recap of what we covered:  
+1. **File-Based Routing**: Automatically generate routes based on the `pages` directory structure.  
+2. **SSR**: Render dynamic content on the server at runtime.  
+3. **SSG**: Generate static pages at build time for better performance.  
+4. **API Routes**: Create backend endpoints within your application.  
+
+With these tools, you're ready to build your own SaaS application using Next.js. Happy coding!  
+
+---
+
+### Final Code Example  
+
+Here's the complete code for a simple SaaS application with Next.js:  
+
+```javascript
+// pages/index.js
+import { useEffect, useState } from "react";
+
+export default function Home() {
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    fetch("/api/hello")
+      .then((res) => res.json())
+      .then((data) => setMessage(data.message));
+  }, []);
+
+  return (
+    <div>
+      <h1>Welcome to My SaaS App</h1>
+      <p>Message from API: {message}</p>
+    </div>
+  );
+}
+```
+
+```javascript
+// pages/users/[id].js
+export default function User({ user }) {
+  return (
+    <div>
+      <h1>User Details</h1>
+      <p>Name: {user.name}</p>
+      <p>Email: {user.email}</p>
+    </div>
+  );
+}
+
+export async function getServerSideProps(context) {
+  const { id } = context.params;
+  const res = await fetch(`https://jsonplaceholder.typicode.com/users/${id}`);
+  const user = await res.json();
+
+  return {
+    props: {
+      user,
+    },
+  };
+}
+```
+
+```javascript
+// pages/posts/[id].js
+export default function Post({ post }) {
+  return (
+    <div>
+      <h1>{post.title}</h1>
+      <p>{post.body}</p>
+    </div>
+  );
+}
+
+export async function getStaticPaths() {
+  const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+  const posts = await res.json();
+
+  const paths = posts.map((post) => ({
+    params: { id: post.id.toString() },
+  }));
+
+  return {
+    paths,
+    fallback: false,
+  };
+}
+
+export async function getStaticProps({ params }) {
+  const res = await fetch(
+    `https://jsonplaceholder.typicode.com/posts/${params.id}`
+  );
+  const post = await res.json();
+
+  return {
+    props: {
+      post,
+    },
+  };
+}
+```
+
+```javascript
+// pages/api/hello.js
+export default function handler(req, res) {
+  res.status(200).json({ message: "Hello, world!" });
+}
+```
+
+```javascript
+// pages/api/users.js
+export default function handler(req, res) {
+  const users = [
+    { id: 1, name: "John Doe", email: "john@example.com" },
+    { id: 2, name: "Jane Smith", email: "jane@example.com" },
+  ];
+
+  res.status(200).json(users);
+}
+```
+
+This example demonstrates how to build a SaaS application with Next.js, combining file-based routing, SSR, SSG, and API routes. Use it as a starting point for your own projects!
