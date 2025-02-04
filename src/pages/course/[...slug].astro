@@ -15,20 +15,18 @@ const { post } = Astro.props;
 const { Content, headings } = await post.render();
 
 // Get all posts for sidebar
-const allPosts = await getCollection('course');
-const sortedPosts = allPosts.sort((a, b) => {
+const coursePosts = await getCollection('course');
+const sortedPosts = coursePosts.sort((a, b) => {
   // First sort by moduleNumber
   if (a.data.moduleNumber !== b.data.moduleNumber) {
     return a.data.moduleNumber - b.data.moduleNumber;
   }
-  // Then by priority within modules
+  // Then sort by priority
   if (a.data.priority !== b.data.priority) {
     return a.data.priority - b.data.priority;
   }
-  // Finally by date if everything else is the same
-  const dateA = a.data.pubDate instanceof Date ? a.data.pubDate : new Date(a.data.pubDate);
-  const dateB = b.data.pubDate instanceof Date ? b.data.pubDate : new Date(b.data.pubDate);
-  return dateA.getTime() - dateB.getTime();
+  // Finally sort by date if needed
+  return new Date(a.data.pubDate).getTime() - new Date(b.data.pubDate).getTime();
 });
 
 // Group posts by category

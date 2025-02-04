@@ -1,0 +1,371 @@
+---
+title: "Supabase Mastery"
+description: "Learn how to build a backend with Supabase"
+pubDate: 2024-01-01
+category: "backend"
+author: "Aryan Singh"
+tags: ["supabase", "backend"]
+priority: 2
+moduleNumber: 3  # First module after intro-to-saas
+---
+
+### Supabase Intro and Mastery: PostgreSQL Database, Auth, Storage, and Edge Functions  
+
+Supabase is an open-source alternative to Firebase that provides a suite of tools for building modern applications. It includes a **PostgreSQL database**, **authentication**, **storage**, and **Edge Functions**, making it a powerful backend-as-a-service (BaaS) platform. In this guide, we’ll explore how to master Supabase by diving into its core features and building a simple project.  
+
+---
+
+### 1. What is Supabase?  
+
+Supabase is a backend platform that simplifies the development of web and mobile applications. It offers:  
+- **PostgreSQL Database**: A fully managed, scalable relational database.  
+- **Authentication**: Built-in user management with email/password, social logins, and more.  
+- **Storage**: File storage with support for large files and CDN integration.  
+- **Edge Functions**: Serverless functions that run at the edge for low-latency operations.  
+
+---
+
+### 2. Setting Up Supabase  
+
+#### Step 1: Create a Supabase Project  
+1. Go to [Supabase](https://supabase.com/) and sign up.  
+2. Create a new project and wait for it to initialize.  
+
+#### Step 2: Install Supabase Client  
+Install the Supabase client library in your project:  
+
+```bash
+npm install @supabase/supabase-js
+```
+
+#### Step 3: Initialize Supabase  
+Get your project URL and public API key from the Supabase dashboard and initialize the client:  
+
+```javascript
+// src/supabaseClient.js
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl = "https://your-project-ref.supabase.co";
+const supabaseKey = "your-public-api-key";
+export const supabase = createClient(supabaseUrl, supabaseKey);
+```
+
+---
+
+### 3. PostgreSQL Database  
+
+Supabase provides a fully managed PostgreSQL database with a user-friendly interface.  
+
+#### Step 1: Create a Table  
+1. Go to the **Table Editor** in the Supabase dashboard.  
+2. Create a new table, e.g., `todos`, with columns:  
+   - `id` (UUID, primary key)  
+   - `task` (text)  
+   - `is_complete` (boolean)  
+
+#### Step 2: Insert Data  
+Use the Supabase client to insert data into the table:  
+
+```javascript
+import { supabase } from "./supabaseClient";
+
+async function addTodo(task) {
+  const { data, error } = await supabase
+    .from("todos")
+    .insert([{ task, is_complete: false }]);
+
+  if (error) console.error("Error adding todo:", error);
+  else console.log("Todo added:", data);
+}
+
+addTodo("Learn Supabase");
+```
+
+#### Step 3: Query Data  
+Fetch data from the table:  
+
+```javascript
+async function fetchTodos() {
+  const { data, error } = await supabase.from("todos").select("*");
+
+  if (error) console.error("Error fetching todos:", error);
+  else console.log("Todos:", data);
+}
+
+fetchTodos();
+```
+
+---
+
+### 4. Authentication  
+
+Supabase provides built-in authentication with support for email/password, social logins, and more.  
+
+#### Step 1: Enable Auth Providers  
+1. Go to the **Authentication** section in the Supabase dashboard.  
+2. Enable providers like email/password, Google, GitHub, etc.  
+
+#### Step 2: Sign Up and Login  
+```javascript
+// Sign up with email/password
+async function signUp(email, password) {
+  const { user, error } = await supabase.auth.signUp({ email, password });
+
+  if (error) console.error("Error signing up:", error);
+  else console.log("User signed up:", user);
+}
+
+signUp("user@example.com", "password");
+
+// Login with email/password
+async function login(email, password) {
+  const { user, error } = await supabase.auth.signIn({ email, password });
+
+  if (error) console.error("Error logging in:", error);
+  else console.log("User logged in:", user);
+}
+
+login("user@example.com", "password");
+```
+
+#### Step 3: Manage User Session  
+Check the current user session:  
+
+```javascript
+const { user } = supabase.auth.session();
+console.log("Current user:", user);
+```
+
+---
+
+### 5. Storage  
+
+Supabase Storage allows you to store and serve files like images, videos, and documents.  
+
+#### Step 1: Create a Bucket  
+1. Go to the **Storage** section in the Supabase dashboard.  
+2. Create a new bucket, e.g., `avatars`.  
+
+#### Step 2: Upload a File  
+```javascript
+async function uploadFile(file) {
+  const { data, error } = await supabase.storage
+    .from("avatars")
+    .upload("user-1-avatar.png", file);
+
+  if (error) console.error("Error uploading file:", error);
+  else console.log("File uploaded:", data);
+}
+
+const file = new File(["file content"], "avatar.png", { type: "image/png" });
+uploadFile(file);
+```
+
+#### Step 3: Retrieve a File  
+Get the public URL of the uploaded file:  
+
+```javascript
+const { publicURL, error } = supabase.storage
+  .from("avatars")
+  .getPublicUrl("user-1-avatar.png");
+
+if (error) console.error("Error retrieving file:", error);
+else console.log("Public URL:", publicURL);
+```
+
+---
+
+### 6. Edge Functions  
+
+Edge Functions are serverless functions that run at the edge, enabling low-latency operations.  
+
+#### Step 1: Create an Edge Function  
+1. Go to the **Edge Functions** section in the Supabase dashboard.  
+2. Create a new function, e.g., `hello-world`.  
+
+#### Step 2: Deploy the Function  
+Write the function code:  
+
+```javascript
+// functions/hello-world/index.js
+export default async (req, res) => {
+  return new Response("Hello, world!", { status: 200 });
+};
+```
+
+Deploy the function:  
+
+```bash
+supabase functions deploy hello-world
+```
+
+#### Step 3: Invoke the Function  
+Call the function from your application:  
+
+```javascript
+async function callEdgeFunction() {
+  const { data, error } = await supabase.functions.invoke("hello-world");
+
+  if (error) console.error("Error calling function:", error);
+  else console.log("Function response:", data);
+}
+
+callEdgeFunction();
+```
+
+---
+
+### 7. Building a Simple Project  
+
+Let’s build a simple **To-Do App** using Supabase:  
+
+#### Step 1: Create the Database Table  
+Create a `todos` table with columns: `id`, `task`, `is_complete`, and `user_id`.  
+
+#### Step 2: Add Authentication  
+Allow users to sign up, log in, and manage their to-dos.  
+
+#### Step 3: Fetch and Display To-Dos  
+Fetch and display the user’s to-dos:  
+
+```javascript
+import { useEffect, useState } from "react";
+import { supabase } from "./supabaseClient";
+
+function TodoApp() {
+  const [todos, setTodos] = useState([]);
+  const [task, setTask] = useState("");
+
+  const fetchTodos = async () => {
+    const { data, error } = await supabase
+      .from("todos")
+      .select("*")
+      .eq("user_id", supabase.auth.session()?.user?.id);
+
+    if (error) console.error("Error fetching todos:", error);
+    else setTodos(data);
+  };
+
+  const addTodo = async () => {
+    const { data, error } = await supabase
+      .from("todos")
+      .insert([{ task, user_id: supabase.auth.session()?.user?.id }]);
+
+    if (error) console.error("Error adding todo:", error);
+    else {
+      setTask("");
+      fetchTodos();
+    }
+  };
+
+  useEffect(() => {
+    fetchTodos();
+  }, []);
+
+  return (
+    <div>
+      <h1>My To-Dos</h1>
+      <input
+        type="text"
+        value={task}
+        onChange={(e) => setTask(e.target.value)}
+      />
+      <button onClick={addTodo}>Add Todo</button>
+      <ul>
+        {todos.map((todo) => (
+          <li key={todo.id}>{todo.task}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default TodoApp;
+```
+
+---
+
+### Conclusion  
+
+Supabase is a powerful backend platform that simplifies the development of modern applications. By mastering its core features—**PostgreSQL database**, **authentication**, **storage**, and **Edge Functions**—you can build scalable and feature-rich applications with ease.  
+
+Here’s a quick recap of what we covered:  
+1. **PostgreSQL Database**: Manage relational data with ease.  
+2. **Authentication**: Handle user sign-up, login, and session management.  
+3. **Storage**: Store and serve files like images and videos.  
+4. **Edge Functions**: Run serverless functions at the edge for low-latency operations.  
+
+With these skills, you’re ready to build and deploy your own applications using Supabase. Happy coding!  
+
+---
+
+### Final Code Example  
+
+Here’s the complete code for the **To-Do App** using Supabase:  
+
+```javascript
+// src/supabaseClient.js
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl = "https://your-project-ref.supabase.co";
+const supabaseKey = "your-public-api-key";
+export const supabase = createClient(supabaseUrl, supabaseKey);
+```
+
+```javascript
+// src/TodoApp.js
+import { useEffect, useState } from "react";
+import { supabase } from "./supabaseClient";
+
+function TodoApp() {
+  const [todos, setTodos] = useState([]);
+  const [task, setTask] = useState("");
+
+  const fetchTodos = async () => {
+    const { data, error } = await supabase
+      .from("todos")
+      .select("*")
+      .eq("user_id", supabase.auth.session()?.user?.id);
+
+    if (error) console.error("Error fetching todos:", error);
+    else setTodos(data);
+  };
+
+  const addTodo = async () => {
+    const { data, error } = await supabase
+      .from("todos")
+      .insert([{ task, user_id: supabase.auth.session()?.user?.id }]);
+
+    if (error) console.error("Error adding todo:", error);
+    else {
+      setTask("");
+      fetchTodos();
+    }
+  };
+
+  useEffect(() => {
+    fetchTodos();
+  }, []);
+
+  return (
+    <div>
+      <h1>My To-Dos</h1>
+      <input
+        type="text"
+        value={task}
+        onChange={(e) => setTask(e.target.value)}
+      />
+      <button onClick={addTodo}>Add Todo</button>
+      <ul>
+        {todos.map((todo) => (
+          <li key={todo.id}>{todo.task}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default TodoApp;
+```
+
+This example demonstrates how to build a simple to-do app using Supabase. Use it as a starting point for your own projects!

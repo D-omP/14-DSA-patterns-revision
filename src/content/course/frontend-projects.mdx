@@ -1,0 +1,322 @@
+---
+title: "Frontend Projects"
+description: "Build real-world frontend projects with HTML, CSS, and JavaScript"
+pubDate: 2024-01-01
+category: "frontend"
+author: "Aryan Singh"
+tags: ["html", "css", "javascript", "frontend"]
+priority: 5  # Fifth in Module 2
+moduleNumber: 2  # HTML/CSS Module
+---
+
+### Frontend Projects Roadmap: From Landing Page to Deployment  
+
+Building a frontend project from scratch is an excellent way to solidify your skills and create a portfolio piece. In this roadmap, we'll guide you through building a **landing page with HTML/CSS**, enhancing it with **React hooks, context, and authentication**, integrating **Next.js for API and backend functionality**, and finally **deploying the app to Vercel**.  
+
+---
+
+### 1. Build a Landing Page with HTML/CSS  
+
+A landing page is the first step in creating a frontend project. It's a simple, static page that introduces your application or product.  
+
+#### Example: Landing Page  
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My SaaS App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+    .hero {
+      padding: 50px 20px;
+      text-align: center;
+    }
+    .cta-button {
+      background-color: #007BFF;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    footer {
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Welcome to My SaaS App</h1>
+  </header>
+
+  <div class="hero">
+    <h2>Your Solution for [Problem]</h2>
+    <p>Sign up today to get started!</p>
+    <button class="cta-button">Get Started</button>
+  </div>
+
+  <footer>
+    <p>&copy; 2023 My SaaS App. All rights reserved.</p>
+  </footer>
+</body>
+</html>
+```
+
+---
+
+### 2. Use React Hooks, Context, and Authentication  
+
+Once your landing page is ready, you can enhance it with React to make it dynamic and interactive.  
+
+#### Step 1: Set Up a React Project  
+```bash
+npx create-react-app my-saas-app
+cd my-saas-app
+npm start
+```
+
+#### Step 2: Add React Hooks and Context  
+Create a `UserContext` to manage authentication state.  
+
+```javascript
+// src/context/UserContext.js
+import React, { createContext, useState } from "react";
+
+export const UserContext = createContext();
+
+export const UserProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+
+  const login = (email, password) => {
+    // Simulate login logic
+    setUser({ email });
+  };
+
+  const logout = () => {
+    setUser(null);
+  };
+
+  return (
+    <UserContext.Provider value={{ user, login, logout }}>
+      {children}
+    </UserContext.Provider>
+  );
+};
+```
+
+#### Step 3: Create a Login Component  
+```javascript
+// src/components/Login.js
+import React, { useState, useContext } from "react";
+import { UserContext } from "../context/UserContext";
+
+function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { login } = useContext(UserContext);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    login(email, password);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button type="submit">Login</button>
+    </form>
+  );
+}
+
+export default Login;
+```
+
+#### Step 4: Update the Landing Page  
+```javascript
+// src/App.js
+import React, { useContext } from "react";
+import { UserProvider, UserContext } from "./context/UserContext";
+import Login from "./components/Login";
+
+function App() {
+  const { user, logout } = useContext(UserContext);
+
+  return (
+    <div>
+      <header>
+        <h1>Welcome to My SaaS App</h1>
+        {user ? (
+          <button onClick={logout}>Logout</button>
+        ) : (
+          <p>Please log in to continue.</p>
+        )}
+      </header>
+
+      <div className="hero">
+        {user ? (
+          <h2>Hello, {user.email}!</h2>
+        ) : (
+          <>
+            <h2>Your Solution for [Problem]</h2>
+            <Login />
+          </>
+        )}
+      </div>
+
+      <footer>
+        <p>&copy; 2023 My SaaS App. All rights reserved.</p>
+      </footer>
+    </div>
+  );
+}
+
+export default function AppWrapper() {
+  return (
+    <UserProvider>
+      <App />
+    </UserProvider>
+  );
+}
+```
+
+---
+
+### 3. Use Next.js for API and Backend  
+
+Next.js allows you to create API routes and handle backend logic seamlessly.  
+
+#### Step 1: Set Up a Next.js Project  
+```bash
+npx create-next-app my-saas-app
+cd my-saas-app
+npm run dev
+```
+
+#### Step 2: Create an API Route for Authentication  
+```javascript
+// pages/api/login.js
+export default function handler(req, res) {
+  const { email, password } = req.body;
+
+  // Simulate authentication logic
+  if (email === "user@example.com" && password === "password") {
+    res.status(200).json({ email });
+  } else {
+    res.status(401).json({ message: "Invalid credentials" });
+  }
+}
+```
+
+#### Step 3: Update the Login Component to Use the API  
+```javascript
+// src/components/Login.js
+import React, { useState, useContext } from "react";
+import { UserContext } from "../context/UserContext";
+
+function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { login } = useContext(UserContext);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const response = await fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      login(data.email);
+    } else {
+      alert("Invalid credentials");
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button type="submit">Login</button>
+    </form>
+  );
+}
+
+export default Login;
+```
+
+---
+
+### 4. Deploy the App to Vercel  
+
+Vercel is the best platform for deploying Next.js applications.  
+
+#### Step 1: Install Vercel CLI  
+```bash
+npm install -g vercel
+```
+
+#### Step 2: Deploy the App  
+```bash
+vercel
+```
+
+Follow the prompts to deploy your app. Once deployed, you'll receive a live URL for your application.  
+
+---
+
+### Conclusion  
+
+By following this roadmap, you've built a frontend project from scratch, starting with a **landing page**, enhancing it with **React hooks, context, and authentication**, integrating **Next.js for backend functionality**, and finally **deploying it to Vercel**.  
+
+Here's a quick recap of the steps:  
+1. **Landing Page**: Create a static page with HTML/CSS.  
+2. **React**: Add interactivity with React hooks and context.  
+3. **Next.js**: Handle backend logic with API routes.  
+4. **Deployment**: Deploy your app to Vercel for a live demo.  
+
+This project is a great addition to your portfolio and demonstrates your ability to build and deploy modern web applications. Happy coding!
