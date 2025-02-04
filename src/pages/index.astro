@@ -188,7 +188,7 @@ const showcaseApps = [
   {
     title: "AI Content Generator",
     description: "Generate blog posts, social media content, and marketing copy using GPT-4.",
-    image: "/images/showcase/ai-content.png",
+    image: "https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?auto=format&fit=crop&q=80&w=800",
     tags: ["OpenAI", "Next.js", "Supabase"],
     demoUrl: "#",
     category: "AI Tools"
@@ -196,7 +196,7 @@ const showcaseApps = [
   {
     title: "SaaS Analytics Dashboard",
     description: "Track revenue, user engagement, and key metrics with beautiful visualizations.",
-    image: "/images/showcase/analytics.png",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800",
     tags: ["React", "Chart.js", "Firebase"],
     demoUrl: "#",
     category: "Analytics"
@@ -204,7 +204,7 @@ const showcaseApps = [
   {
     title: "Team Collaboration Platform",
     description: "Real-time document editing, task management, and team chat.",
-    image: "/images/showcase/collaboration.png",
+    image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&q=80&w=800",
     tags: ["Vue.js", "Socket.io", "MongoDB"],
     demoUrl: "#",
     category: "Productivity"
@@ -212,7 +212,7 @@ const showcaseApps = [
   {
     title: "AI Image Generator",
     description: "Create unique images and artwork using DALL-E and Stable Diffusion.",
-    image: "/images/showcase/ai-image.png",
+    image: "https://images.unsplash.com/photo-1580927752452-89d86da3fa0a?auto=format&fit=crop&q=80&w=800",
     tags: ["Next.js", "DALL-E", "AWS"],
     demoUrl: "#",
     category: "AI Tools"
@@ -220,7 +220,7 @@ const showcaseApps = [
   {
     title: "Customer Support Portal",
     description: "Ticketing system with AI-powered responses and knowledge base.",
-    image: "/images/showcase/support.png",
+    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&q=80&w=800",
     tags: ["React", "GPT-4", "PostgreSQL"],
     demoUrl: "#",
     category: "Support"
@@ -228,7 +228,7 @@ const showcaseApps = [
   {
     title: "AI Code Assistant",
     description: "Generate, review, and optimize code using AI models.",
-    image: "/images/showcase/code-assistant.png",
+    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&q=80&w=800",
     tags: ["Next.js", "OpenAI", "Redis"],
     demoUrl: "#",
     category: "AI Tools"
@@ -240,7 +240,7 @@ const testimonials = [
     content: "BabySaaS helped us launch our AI writing assistant in just 2 weeks. The templates and course were invaluable.",
     author: "Sarah Chen",
     role: "CTO at WriteMind AI",
-    image: "/images/testimonials/sarah.jpg",
+    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200",
     logo: "/images/companies/writemind.svg",
     rating: 5
   },
@@ -248,7 +248,7 @@ const testimonials = [
     content: "The AI integration guides saved us months of development time. We built our image generation platform faster than we thought possible.",
     author: "Michael Torres",
     role: "Founder at PixelMagic",
-    image: "/images/testimonials/michael.jpg",
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=200",
     logo: "/images/companies/pixelmagic.svg",
     rating: 5
   },
@@ -256,7 +256,7 @@ const testimonials = [
     content: "As a solo developer, BabySaaS gave me everything I needed to build and launch my SaaS. The community support is amazing.",
     author: "Emma Watson",
     role: "Creator of TaskFlow",
-    image: "/images/testimonials/emma.jpg",
+    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=200",
     logo: "/images/companies/taskflow.svg",
     rating: 5
   }
@@ -283,8 +283,27 @@ const testimonials = [
               </span>
             </h1>
             <p class="mt-8 text-xl text-gray-600 max-w-3xl mx-auto">
-              Join 500+ developers who have already launched successful SaaS products using our battle-tested templates and courses
+              Join 500+ founders who have already launched successful SaaS products using our battle-tested templates and courses
             </p>
+
+            <!-- Video Section -->
+            <div class="mt-12 max-w-4xl mx-auto">
+              <div class="relative w-full aspect-video rounded-2xl overflow-hidden shadow-2xl">
+                <iframe
+                  class="absolute inset-0 w-full h-full"
+                  src="https://www.youtube.com/embed/your-video-id-here"
+                  title="Build AI-Powered SaaS Products"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                ></iframe>
+              </div>
+              
+              <!-- Video Caption -->
+              <p class="mt-4 text-sm text-gray-600">
+                Watch how developers are building successful SaaS products with our platform
+              </p>
+            </div>
           </div>
         </div>
         <div class="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-white"></div>
@@ -314,7 +333,8 @@ const testimonials = [
                   <img 
                     src={app.image} 
                     alt={app.title}
-                    class="object-cover"
+                    class="object-cover w-full h-full rounded-t-2xl"
+                    loading="lazy"
                   />
                 </div>
                 <div class="p-6">
@@ -540,8 +560,9 @@ const testimonials = [
                 <div class="flex items-center gap-4">
                   <img 
                     src={testimonial.image} 
-                    alt={testimonial.author}
+                    alt={`Photo of ${testimonial.author}`}
                     class="w-12 h-12 rounded-full object-cover"
+                    loading="lazy"
                   />
                   <div>
                     <div class="font-semibold text-gray-900">{testimonial.author}</div>
@@ -557,13 +578,43 @@ const testimonials = [
             <p class="text-center text-sm font-semibold text-gray-600 uppercase tracking-wide mb-8">
               Trusted by developers from
             </p>
-            <div class="grid grid-cols-2 md:grid-cols-6 gap-8 items-center opacity-75">
-              <img src="/images/companies/google.svg" alt="Google" class="h-8" />
-              <img src="/images/companies/microsoft.svg" alt="Microsoft" class="h-8" />
-              <img src="/images/companies/amazon.svg" alt="Amazon" class="h-8" />
-              <img src="/images/companies/meta.svg" alt="Meta" class="h-8" />
-              <img src="/images/companies/stripe.svg" alt="Stripe" class="h-8" />
-              <img src="/images/companies/netflix.svg" alt="Netflix" class="h-8" />
+            <div class="grid grid-cols-2 md:grid-cols-6 gap-8 items-center">
+              <img 
+                src="https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?auto=format&fit=crop&q=80&w=200" 
+                alt="Modern tech workspace"
+                class="h-12 w-full object-cover rounded-lg grayscale hover:grayscale-0 transition-all"
+                loading="lazy"
+              />
+              <img 
+                src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&q=80&w=200" 
+                alt="Developer workspace"
+                class="h-12 w-full object-cover rounded-lg grayscale hover:grayscale-0 transition-all"
+                loading="lazy"
+              />
+              <img 
+                src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&q=80&w=200" 
+                alt="Tech office"
+                class="h-12 w-full object-cover rounded-lg grayscale hover:grayscale-0 transition-all"
+                loading="lazy"
+              />
+              <img 
+                src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=200" 
+                alt="Startup office"
+                class="h-12 w-full object-cover rounded-lg grayscale hover:grayscale-0 transition-all"
+                loading="lazy"
+              />
+              <img 
+                src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=200" 
+                alt="Modern office space"
+                class="h-12 w-full object-cover rounded-lg grayscale hover:grayscale-0 transition-all"
+                loading="lazy"
+              />
+              <img 
+                src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=200" 
+                alt="Developer setup"
+                class="h-12 w-full object-cover rounded-lg grayscale hover:grayscale-0 transition-all"
+                loading="lazy"
+              />
             </div>
           </div>
         </div>
