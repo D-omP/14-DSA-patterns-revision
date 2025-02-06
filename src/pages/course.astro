@@ -334,33 +334,116 @@ const isMobileMenuOpen = false;
   <main class="w-full py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-4xl mx-auto">
       <!-- Hero Section -->
-      <div class="text-center mb-16">
-        <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium bg-primary-100 text-primary-800">
-          Limited Time Offer - 50% OFF
-        </span>
+      <div class="text-center">
+        <!-- Sale Badge -->
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-gradient-to-r from-red-500 to-pink-500 text-white mb-6 animate-pulse">
+          <span class="flex h-2 w-2 relative">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+          </span>
+          Limited Time Launch Offer - 50% OFF (Ends Soon)
+        </div>
+
         <h1 class="mt-6 text-4xl sm:text-5xl font-bold text-gray-900 leading-tight">
-          Build & Launch Your SaaS <br class="hidden sm:block" />
-          <span class="text-primary-600">10x Faster with AI</span>
+          The Ultimate
+          <span class="relative inline-block px-2">
+            AI SaaS Building Course
+            <div class="absolute inset-x-0 bottom-0 h-3 bg-primary-100 -z-10 transform -rotate-1"></div>
+          </span>
         </h1>
-        <p class="mt-6 text-xl text-gray-600">
-          Learn how to leverage AI to build profitable SaaS products in days, not months. 
-          A complete course for developers who want to ship faster.
-        </p>
-        <div class="mt-8 flex justify-center gap-4">
+
+        <div class="mt-6 text-xl text-gray-600 space-y-4">
+          <p class="max-w-3xl mx-auto">
+            Learn how to build and launch profitable AI-powered SaaS products in days, not months. 
+            A complete, battle-tested system for developers who want to become successful founders.
+          </p>
+
+          <!-- Social Proof -->
+          <div class="flex flex-wrap justify-center gap-8 mt-8">
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              <span class="font-semibold">4.9/5</span>
+              <span class="text-gray-500">(500+ reviews)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              <span>100+ Successful Launches</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd" />
+              </svg>
+              <span>$10K-50K MRR</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CTA Buttons -->
+        <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4">
           <a 
             href="/course/intro-to-saas" 
-            class="inline-flex items-center px-8 py-4 rounded-lg bg-primary-600 text-white font-medium hover:bg-primary-700 transition-colors group"
+            class="inline-flex items-center px-8 py-4 rounded-lg bg-primary-600 text-white font-medium hover:bg-primary-700 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl group"
           >
-            Start Learning
-            <svg 
-              class="ml-2 w-5 h-5 transform group-hover:translate-x-1 transition-transform" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
+            Start Learning Now
+            <span class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
           </a>
+          <a 
+            href="#curriculum" 
+            class="inline-flex items-center px-8 py-4 rounded-lg bg-gray-100 text-gray-700 font-medium hover:bg-gray-200 transition-all"
+          >
+            View Full Curriculum
+          </a>
+        </div>
+
+        <!-- Featured In -->
+        <div class="mt-16">
+          <p class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-8">
+            Our Students Work At
+          </p>
+          <div class="flex flex-wrap justify-center gap-x-12 gap-y-6 opacity-75">
+            <img src="/logos/google.svg" alt="Google" class="h-8" />
+            <img src="/logos/meta.svg" alt="Meta" class="h-8" />
+            <img src="/logos/amazon.svg" alt="Amazon" class="h-8" />
+            <img src="/logos/microsoft.svg" alt="Microsoft" class="h-8" />
+          </div>
+        </div>
+
+        <!-- What You'll Get -->
+        <div class="mt-20 grid md:grid-cols-3 gap-8 text-left">
+          <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+            <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
+              <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Production-Ready Code</h3>
+            <p class="text-gray-600">Get access to battle-tested code that's powering real SaaS businesses. No theory - just practical, working solutions.</p>
+          </div>
+
+          <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Launch in Days</h3>
+            <p class="text-gray-600">Skip months of development with our proven templates and step-by-step guides. Launch your SaaS faster than ever.</p>
+          </div>
+
+          <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Community Support</h3>
+            <p class="text-gray-600">Join a community of founders building in public. Get feedback, share wins, and grow together.</p>
+          </div>
         </div>
       </div>
 
@@ -470,36 +553,94 @@ const isMobileMenuOpen = false;
         </div>
       </section>
 
-      <!-- Course Modules Section -->
-      <section id="modules" class="mt-24">
-        <h2 class="text-3xl font-bold text-center mb-16">Course Curriculum</h2>
-        
-        <div class="space-y-12">
-          {courseModules.map((module) => (
-            <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow p-8">
-              <div class="flex items-start gap-6">
-                <div class="flex-shrink-0 w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
-                  <span class="text-xl font-bold text-primary-600">{module.number}</span>
+      <!-- Course Curriculum Section -->
+      <section id="curriculum" class="mt-24">
+        <div class="text-center mb-16">
+          <span class="text-sm font-semibold text-primary-600 tracking-wide uppercase font-mono">
+            Complete Roadmap
+          </span>
+          <h2 class="mt-2 text-4xl font-bold text-gray-900 font-display">
+            From Zero to 
+            <span class="relative inline-block px-2">
+              SaaS Founder
+              <div class="absolute inset-x-0 bottom-0 h-3 bg-primary-100 -z-10 transform -rotate-1"></div>
+            </span>
+          </h2>
+          <p class="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
+            A proven, step-by-step system to build and launch profitable AI SaaS products
+          </p>
+
+          <!-- Course Stats -->
+          <div class="mt-8 flex flex-wrap justify-center gap-8">
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+              <span>9 Modules</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              <span>50+ Video Lessons</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+              <span>15+ Projects</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-8 md:space-y-12">
+          {courseModules.map((module, index) => (
+            <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 md:p-8 relative overflow-hidden group">
+              {/* Animated gradient background on hover */}
+              <div class="absolute inset-0 bg-gradient-to-r from-primary-50 to-primary-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+              {/* Module content */}
+              <div class="relative">
+                {/* Module number badge */}
+                <div class="absolute -top-3 -left-3 w-16 h-16">
+                  <div class="absolute inset-0 bg-primary-600 transform rotate-12 rounded"></div>
+                  <div class="absolute inset-0 flex items-center justify-center text-white font-bold text-xl">
+                    {module.number}
+                  </div>
                 </div>
-                <div class="flex-1">
-                  <h3 class="text-2xl font-bold text-gray-900 mb-2">
-                    {module.title}
-                  </h3>
+
+                <div class="pl-16">
+                  <div class="flex items-center gap-4 mb-4">
+                    <h3 class="text-2xl font-bold text-gray-900">
+                      {module.title}
+                    </h3>
+                    {index === 0 && (
+                      <span class="px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                        Start Here
+                      </span>
+                    )}
+                    {index === courseModules.length - 1 && (
+                      <span class="px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+                        Final Project
+                      </span>
+                    )}
+                  </div>
                   <p class="text-gray-600 mb-6">{module.description}</p>
-                  
-                  <div class="space-y-6">
+
+                  {/* Lessons grid with adjusted spacing */}
+                  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 ml-2">
                     {module.lessons.map((lesson) => (
-                      <div class="bg-gray-50 rounded-xl p-6">
-                        <h4 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                          <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div class="bg-white rounded-xl border border-gray-100 p-4 hover:border-primary-200 transition-colors">
+                        <h4 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                          <svg class="w-5 h-5 text-primary-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                           </svg>
                           {lesson.title}
                         </h4>
-                        <ul class="space-y-3">
+                        <ul class="space-y-2">
                           {lesson.topics.map((topic) => (
-                            <li class="flex items-center gap-3 text-gray-600">
-                              <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <li class="flex items-start gap-2 text-sm text-gray-600">
+                              <svg class="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                               </svg>
                               {topic}
@@ -511,31 +652,63 @@ const isMobileMenuOpen = false;
                   </div>
                 </div>
               </div>
+
+              {/* Progress indicator */}
+              <div class="absolute left-0 top-0 bottom-0 w-1 bg-primary-100">
+                <div class="w-full bg-primary-500 transition-all duration-300" style={`height: ${(index + 1) * (100 / courseModules.length)}%`}></div>
+              </div>
             </div>
           ))}
         </div>
-      </section>
 
-      <!-- CTA Section -->
-      <section class="text-center bg-primary-50 rounded-2xl p-8 my-16">
-        <h2 class="text-3xl font-bold text-gray-900 mb-4">Start Building Today</h2>
-        <p class="text-xl text-gray-600 mb-8">
-          Join hundreds of developers who are already building AI-powered SaaS products
-        </p>
-        <a 
-          href="/course/intro-to-saas" 
-          class="inline-flex items-center px-8 py-4 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-lg font-medium group"
-        >
-          Start Learning
-          <svg 
-            class="ml-2 w-5 h-5 transform group-hover:translate-x-1 transition-transform" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
+        {/* Value Props */}
+        <div class="mt-16 grid md:grid-cols-3 gap-8 text-center">
+          <div class="p-6">
+            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">Learn at Your Pace</h3>
+            <p class="text-gray-600">Lifetime access to all content. Learn and review whenever you want.</p>
+          </div>
+          <div class="p-6">
+            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">Active Community</h3>
+            <p class="text-gray-600">Get help from instructors and other students in our private Discord.</p>
+          </div>
+          <div class="p-6">
+            <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">Regular Updates</h3>
+            <p class="text-gray-600">Course content is updated monthly with new AI features and best practices.</p>
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div class="mt-16 text-center">
+          <div class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-primary-100 text-primary-800 mb-4">
+            <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clip-rule="evenodd" />
+            </svg>
+            Limited Time Offer
+          </div>
+          <h3 class="text-3xl font-bold mb-4">Ready to Start Building?</h3>
+          <p class="text-xl text-gray-600 mb-8">Join 500+ founders who have already launched their SaaS</p>
+          <a 
+            href="#pricing" 
+            class="inline-flex items-center px-8 py-4 text-lg font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors"
           >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-          </svg>
-        </a>
+            Enroll Now - 50% OFF
+          </a>
+        </div>
       </section>
     </div>
   </main>
@@ -570,6 +743,17 @@ const isMobileMenuOpen = false;
   /* Show overlay when open */
   #sidebar-overlay.open {
     display: block;
+  }
+
+  /* Smooth scrolling for lesson cards */
+  .snap-x {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+  }
+  
+  .snap-x::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
   }
 </style>
 
