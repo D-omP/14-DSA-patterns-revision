@@ -1,0 +1,222 @@
+---
+import { courseContent } from '../data/course-content';
+
+interface Problem {
+  title: string;
+  difficulty: 'Easy' | 'Medium' | 'Hard';
+  platform: 'LeetCode' | 'GeeksforGeeks' | 'AlgoExpert';
+  url: string;
+  description: string;
+}
+
+interface Video {
+  title: string;
+  url: string;
+  duration: string;
+  platform: string;
+}
+
+interface Article {
+  title: string;
+  url: string;
+  author: string;
+  platform: string;
+}
+
+interface Visualization {
+  title: string;
+  url: string;
+  description: string;
+}
+
+interface Props {
+  content: any;
+  slug: string;
+}
+
+const { content, slug } = Astro.props;
+
+// Add logging to debug
+console.log('Received slug:', slug);
+console.log('Available patterns:', Object.keys(courseContent));
+
+// Get the pattern data based on the slug
+const patternData = courseContent[slug];
+
+if (!patternData) {
+  // Make error message more helpful
+  throw new Error(
+    `No content found for pattern: ${slug}. Available patterns: ${Object.keys(courseContent).join(', ')}`
+  );
+}
+
+const { practice, resources } = patternData;
+---
+
+<div class="mt-8">
+  <!-- Tab Navigation -->
+  <div class="border-b border-gray-200">
+    <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+      <button
+        id="content-tab"
+        class="whitespace-nowrap py-4 px-1 border-b-2 border-primary-500 text-primary-600 font-medium text-sm"
+      >
+        Content
+      </button>
+      <button
+        id="practice-tab"
+        class="whitespace-nowrap py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium text-sm"
+      >
+        Practice
+      </button>
+      <button
+        id="resources-tab"
+        class="whitespace-nowrap py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium text-sm"
+      >
+        Resources
+      </button>
+    </nav>
+  </div>
+
+  <!-- Tab Content -->
+  <div class="mt-8">
+    <div id="content-panel" class="prose max-w-none">
+      <slot />
+    </div>
+
+    <div id="practice-panel" class="space-y-8 hidden">
+      {
+        practice.problems.map((problem) => (
+          <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+            <div class="flex justify-between items-start">
+              <h3 class="text-lg font-semibold text-gray-900">{problem.title}</h3>
+              <span
+                class:list={[
+                  'px-2 py-1 text-sm rounded-full',
+                  {
+                    'bg-green-100 text-green-800': problem.difficulty === 'Easy',
+                    'bg-yellow-100 text-yellow-800': problem.difficulty === 'Medium',
+                    'bg-red-100 text-red-800': problem.difficulty === 'Hard',
+                  },
+                ]}
+              >
+                {problem.difficulty}
+              </span>
+            </div>
+            <p class="mt-2 text-gray-600">{problem.description}</p>
+            <div class="mt-4 flex items-center justify-between">
+              <span class="text-sm text-gray-500">{problem.platform}</span>
+              <a
+                href={problem.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-primary-600 hover:text-primary-700 font-medium text-sm"
+              >
+                Solve Problem →
+              </a>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <div id="resources-panel" class="space-y-12 hidden">
+      <!-- Videos -->
+      <div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Video Tutorials</h3>
+        <div class="grid gap-6 md:grid-cols-2">
+          {
+            resources.videos.map((video) => (
+              <a
+                href={video.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="block bg-white p-6 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+              >
+                <h4 class="font-medium text-gray-900">{video.title}</h4>
+                <div class="mt-2 flex items-center text-sm text-gray-500">
+                  <span>{video.platform}</span>
+                  <span class="mx-2">•</span>
+                  <span>{video.duration}</span>
+                </div>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Articles -->
+      <div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Articles & Tutorials</h3>
+        <div class="space-y-4">
+          {
+            resources.articles.map((article) => (
+              <a
+                href={article.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="block bg-white p-6 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+              >
+                <h4 class="font-medium text-gray-900">{article.title}</h4>
+                <div class="mt-2 text-sm text-gray-500">
+                  By {article.author} on {article.platform}
+                </div>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Visualizations -->
+      <div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Visualizations</h3>
+        <div class="grid gap-6 md:grid-cols-2">
+          {
+            resources.visualizations.map((viz) => (
+              <a
+                href={viz.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="block bg-white p-6 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+              >
+                <h4 class="font-medium text-gray-900">{viz.title}</h4>
+                <p class="mt-2 text-sm text-gray-600">{viz.description}</p>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function setupTabs() {
+    const tabs = ['content', 'practice', 'resources'];
+    
+    tabs.forEach(tabId => {
+      const tab = document.getElementById(`${tabId}-tab`);
+      const panel = document.getElementById(`${tabId}-panel`);
+      
+      tab?.addEventListener('click', () => {
+        // Reset all tabs and panels
+        tabs.forEach(t => {
+          document.getElementById(`${t}-tab`)?.classList.remove('border-primary-500', 'text-primary-600');
+          document.getElementById(`${t}-tab`)?.classList.add('border-transparent', 'text-gray-500');
+          document.getElementById(`${t}-panel`)?.classList.add('hidden');
+        });
+        
+        // Activate clicked tab and panel
+        tab.classList.remove('border-transparent', 'text-gray-500');
+        tab.classList.add('border-primary-500', 'text-primary-600');
+        panel?.classList.remove('hidden');
+      });
+    });
+  }
+
+  // Setup tabs on initial load
+  setupTabs();
+
+  // Setup tabs again after view transitions
+  document.addEventListener('astro:page-load', setupTabs);
+</script> 

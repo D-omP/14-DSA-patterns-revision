@@ -1,0 +1,16 @@
+---
+import BaseLayout from './Layout.astro';
+import { ViewTransitions } from 'astro:transitions';
+
+const { frontmatter } = Astro.props;
+---
+
+<BaseLayout title={frontmatter.title} description={frontmatter.description}>
+  <ViewTransitions />
+  
+  <main class="max-w-4xl mx-auto px-4 py-8">
+    <article>
+      <slot />
+    </article>
+  </main>
+</BaseLayout> 

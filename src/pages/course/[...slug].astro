@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import type { GetStaticPaths } from 'astro';
+import CourseTabs from '../../components/CourseTabs.astro';
 
 export async function getStaticPaths() {
   const coursePosts = await getCollection('course');
@@ -17,72 +18,19 @@ const { Content, headings } = await post.render();
 // Get all posts for sidebar
 const coursePosts = await getCollection('course');
 const sortedPosts = coursePosts.sort((a, b) => {
-  // First sort by moduleNumber
-  if (a.data.moduleNumber !== b.data.moduleNumber) {
-    return a.data.moduleNumber - b.data.moduleNumber;
-  }
-  // Then sort by priority
+  // Sort by priority
   if (a.data.priority !== b.data.priority) {
     return a.data.priority - b.data.priority;
   }
-  // Finally sort by date if needed
+  // Then sort by date if needed
   return new Date(a.data.pubDate).getTime() - new Date(b.data.pubDate).getTime();
 });
-
-// Group posts by category
-const postsByCategory = sortedPosts.reduce((acc, post) => {
-  const category = post.data.category;
-  if (!acc[category]) {
-    acc[category] = [];
-  }
-  acc[category].push(post);
-  return acc;
-}, {});
 
 const currentPath = Astro.url.pathname;
 ---
 
 <Layout title={post.data.title} description={post.data.description}>
   <div class="flex min-h-screen relative">
-    <!-- Floating Action Button Menu -->
-    <div class="fixed bottom-6 right-6 flex flex-col gap-3 z-50">
-      <!-- Progress Button -->
-      <button
-        id="progress-button"
-        class="md:hidden bg-white text-primary-600 p-3 rounded-full shadow-lg hover:bg-primary-50 transition-colors border-2 border-primary-200"
-        aria-label="Course Progress"
-      >
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-        </svg>
-      </button>
-
-      <!-- Navigation Button -->
-      <button
-        id="nav-button"
-        class="md:hidden bg-primary-600 text-white p-3 rounded-full shadow-lg hover:bg-primary-700 transition-colors"
-        aria-label="Course Navigation"
-      >
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path 
-            id="menu-icon"
-            stroke-linecap="round" 
-            stroke-linejoin="round" 
-            stroke-width="2" 
-            d="M4 6h16M4 12h16M4 18h16"
-          />
-          <path 
-            id="close-icon"
-            class="hidden"
-            stroke-linecap="round" 
-            stroke-linejoin="round" 
-            stroke-width="2" 
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
-      </button>
-    </div>
-
     <!-- Left Sidebar (Course Navigation) -->
     <aside 
       id="left-sidebar"
@@ -96,91 +44,56 @@ const currentPath = Astro.url.pathname;
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
           </div>
-          <h2 class="text-lg font-bold text-gray-900">Course Content</h2>
-        </div>
-
-        <!-- Course Progress -->
-        <div class="mb-8 p-4 bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl border border-primary-200">
-          <div class="flex items-center justify-between mb-3">
-            <h3 class="text-sm font-medium text-primary-900">Your Progress</h3>
-            <span class="text-xs font-medium bg-white text-primary-700 px-2 py-1 rounded-full">
-              2 of 9 Modules
-            </span>
-          </div>
-          <div class="relative w-full h-2 bg-white rounded-full overflow-hidden">
-            <div class="absolute top-0 left-0 h-full bg-primary-600 rounded-full" style="width: 22%"></div>
-          </div>
-          <div class="mt-3 flex items-center justify-between text-xs text-primary-700">
-            <span>22% Complete</span>
-            <span>7 hours left</span>
-          </div>
+          <h2 class="text-lg font-bold text-gray-900">DSA Patterns</h2>
         </div>
 
         <!-- Course Navigation -->
-        <nav class="space-y-6">
-          {Object.entries(postsByCategory).map(([category, posts]) => (
-            <div>
-              <div class="flex items-center gap-2 mb-2">
-                <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wide">
-                  {category.replace(/-/g, ' ')}
-                </h3>
-                <span class="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
-                  {posts.length}
-                </span>
-              </div>
-              <ul class="space-y-1">
-                {posts.map((coursePost) => {
-                  const isActive = currentPath === `/course/${coursePost.slug}`;
-                  return (
-                    <li>
-                      <a
-                        href={`/course/${coursePost.slug}`}
-                        class={`
-                          flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors
-                          ${isActive 
-                            ? 'bg-primary-50 text-primary-700 font-medium' 
-                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                          }
-                        `}
-                      >
-                        <svg 
-                          class={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-primary-600' : 'text-gray-400'}`}
-                          fill="none" 
-                          stroke="currentColor" 
-                          viewBox="0 0 24 24"
-                        >
-                          <path 
-                            stroke-linecap="round" 
-                            stroke-linejoin="round" 
-                            stroke-width="2" 
-                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                          />
-                        </svg>
-                        <span class="truncate">{coursePost.data.title}</span>
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          ))}
+        <nav>
+          <ul class="space-y-1">
+            {sortedPosts.map((coursePost) => {
+              const isActive = currentPath === `/course/${coursePost.slug}`;
+              return (
+                <li>
+                  <a
+                    href={`/course/${coursePost.slug}`}
+                    class={`
+                      flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors
+                      ${isActive 
+                        ? 'bg-primary-50 text-primary-700 font-medium' 
+                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      }
+                    `}
+                  >
+                    <svg 
+                      class={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-primary-600' : 'text-gray-400'}`}
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path 
+                        stroke-linecap="round" 
+                        stroke-linejoin="round" 
+                        stroke-width="2" 
+                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                      />
+                    </svg>
+                    <span class="truncate">{coursePost.data.title}</span>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
         </nav>
       </div>
     </aside>
 
     <!-- Main Content -->
     <main class="w-full md:ml-72 lg:mr-64 flex-1 min-w-0 py-12 px-4 sm:px-6 lg:px-8">
-      <article class="prose prose-lg max-w-3xl mx-auto">
-        <header class="mb-8">
-          <h1 class="mb-4">{post.data.title}</h1>
-          <div class="flex flex-wrap items-center gap-3 text-sm text-gray-600">
-            <span class="px-2 py-1 bg-primary-50 text-primary-700 rounded-full">
-              {post.data.category.replace(/-/g, ' ')}
-            </span>
-          </div>
-        </header>
-        <Content />
-      </article>
+      <div class="max-w-4xl mx-auto px-4 py-8">
+        <CourseTabs slug={post.slug}>
+          <Content />
+        </CourseTabs>
+      </div>
     </main>
 
     <!-- Right Sidebar - Table of Contents -->
@@ -213,13 +126,6 @@ const currentPath = Astro.url.pathname;
         </nav>
       </div>
     </aside>
-
-    <!-- Overlay -->
-    <div 
-      id="sidebar-overlay"
-      class="fixed inset-0 bg-gray-800 bg-opacity-50 z-30 hidden md:hidden"
-      aria-hidden="true"
-    ></div>
   </div>
 </Layout>
 

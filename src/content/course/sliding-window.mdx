@@ -1,15 +1,46 @@
 ---
 title: "Sliding Window"
-description: "Learn how to build basic ai apps"
+description: "Master the sliding window pattern for array and string problems"
 pubDate: 2024-01-01
 category: "sliding window"
 author: "Aryan Singh"
 tags: ["sliding window"]
 priority: 3
-moduleNumber: 1  # First module after intro-to-saas
+moduleNumber: 1
 ---
 
-## Sliding Window
+## Sliding Window Pattern
 
-Sliding Window is a technique used to solve problems that involve arrays or linked lists. It involves using two pointers to traverse the array or linked list and find a solution.
+The Sliding Window pattern is used to perform operations on arrays or strings using a window that slides through the data structure. This technique is particularly useful for solving problems that involve contiguous sequences.
 
+### When to use Sliding Window?
+- Finding subarrays/substrings that satisfy certain conditions
+- Calculating running averages
+- Finding max/min sum subarrays of fixed size
+- Finding longest/shortest substring with certain properties
+
+### Types of Sliding Window
+1. **Fixed Window Size**
+    - Window size remains constant throughout
+    - Example: Find max sum subarray of size K
+
+2. **Variable Window Size**
+    - Window size changes based on conditions
+    - Example: Longest substring without repeating characters
+
+### Basic Template
+```python
+def slidingWindow(arr):
+    window_start = 0
+    for window_end in range(len(arr)):
+        # Add element to window
+        
+        # Process window if needed
+        
+        # Remove elements from window start if needed
+        while condition:
+            # Remove element from window
+            window_start += 1
+    
+    return result
+```
