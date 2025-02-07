@@ -1,0 +1,116 @@
+---
+title: "Dynamic Programming"
+description: "Master the art of solving complex problems by breaking them into simpler subproblems"
+pubDate: 2024-01-13
+category: "patterns"
+author: "Aryan Singh"
+tags: ["dp", "optimization", "recursion"]
+priority: 13
+---
+
+## Dynamic Programming Pattern
+
+Dynamic Programming (DP) is a method for solving complex problems by breaking them down into simpler subproblems. It solves each subproblem only once and stores the results for future use.
+
+### When to use Dynamic Programming?
+
+* Optimization problems
+* Counting problems
+* Path finding problems
+* String matching
+* Resource allocation
+* Games and puzzles
+
+### How it Works
+
+1. **Basic Concept**
+    * Break into subproblems
+    * Store subproblem solutions
+    * Build up to larger problems
+    * Avoid recalculation
+
+2. **Key Steps**
+    * Identify subproblems
+    * Define state clearly
+    * Write recurrence relation
+    * Determine base cases
+
+### Basic Template
+
+```python
+def fibonacci_dp(n):
+    # Initialize dp array
+    dp = [0] * (n + 1)
+    dp[1] = 1  # Base case
+    
+    # Build up solution
+    for i in range(2, n + 1):
+        dp[i] = dp[i-1] + dp[i-2]
+    
+    return dp[n]
+```
+
+### Common Variations
+
+1. **0/1 Knapsack**
+
+```python
+def knapsack(values, weights, capacity):
+    n = len(values)
+    dp = [[0] * (capacity + 1) for _ in range(n + 1)]
+    
+    for i in range(1, n + 1):
+        for w in range(capacity + 1):
+            if weights[i-1] <= w:
+                dp[i][w] = max(
+                    values[i-1] + dp[i-1][w-weights[i-1]],
+                    dp[i-1][w]
+                )
+            else:
+                dp[i][w] = dp[i-1][w]
+    
+    return dp[n][capacity]
+```
+
+2. **Longest Common Subsequence**
+
+```python
+def lcs(text1, text2):
+    m, n = len(text1), len(text2)
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
+    
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if text1[i-1] == text2[j-1]:
+                dp[i][j] = dp[i-1][j-1] + 1
+            else:
+                dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+    
+    return dp[m][n]
+```
+
+### Edge Cases to Consider
+
+1. Empty input
+2. Single element
+3. No solution exists
+4. Multiple solutions
+5. Overlapping subproblems
+6. Maximum recursion depth
+7. Memory constraints
+
+### Tips
+
+1. Draw recursion tree
+2. Identify overlapping subproblems
+3. Choose appropriate state representation
+4. Consider space optimization
+5. Handle base cases carefully
+
+### Time & Space Complexity
+
+* Time: Usually O(n²) or O(n*m)
+* Space: Can often be optimized
+* Consider state space size
+* Trade-off between time and space
+* Bottom-up vs Top-down approach 

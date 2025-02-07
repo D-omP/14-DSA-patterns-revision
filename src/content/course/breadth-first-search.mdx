@@ -1,0 +1,131 @@
+---
+title: "Breadth First Search"
+description: "Master the BFS traversal technique for trees and graphs"
+pubDate: 2024-01-07
+category: "patterns"
+author: "Aryan Singh"
+tags: ["bfs", "trees", "graphs"]
+priority: 7
+---
+
+## Breadth First Search Pattern
+
+BFS is a traversal technique that explores all nodes at the present depth before moving to nodes at the next depth level. It's particularly useful for finding shortest paths and level-wise traversals.
+
+### When to use BFS?
+
+* Level-wise tree traversal
+* Shortest path in unweighted graphs
+* Finding nearest/farthest nodes
+* Connected components
+* Graph validation problems
+
+### How it Works
+
+1. **Basic Concept**
+    * Use a queue for traversal
+    * Process nodes level by level
+    * Keep track of visited nodes
+
+2. **Key Steps**
+    * Start with root/source node
+    * Process current level completely
+    * Move to next level
+
+### Basic Template
+
+```python
+from collections import deque
+
+def bfs(root):
+    if not root:
+        return []
+    
+    result = []
+    queue = deque([root])
+    
+    while queue:
+        level_size = len(queue)
+        current_level = []
+        
+        for _ in range(level_size):
+            node = queue.popleft()
+            current_level.append(node.val)
+            
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+                
+        result.append(current_level)
+    
+    return result
+```
+
+### Common Variations
+
+1. **Graph BFS**
+
+```python
+def bfsGraph(graph, start):
+    visited = set([start])
+    queue = deque([start])
+    result = []
+    
+    while queue:
+        node = queue.popleft()
+        result.append(node)
+        
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
+    
+    return result
+```
+
+2. **Shortest Path**
+
+```python
+def shortestPath(graph, start, end):
+    visited = set([start])
+    queue = deque([(start, [start])])
+    
+    while queue:
+        node, path = queue.popleft()
+        
+        if node == end:
+            return path
+            
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append((neighbor, path + [neighbor]))
+    
+    return []  # No path found
+```
+
+### Edge Cases to Consider
+
+1. Empty tree/graph
+2. Single node
+3. Disconnected components
+4. Cycles in graph
+5. Multiple valid paths
+6. No valid path
+7. Binary vs n-ary trees
+
+### Tips
+
+1. Always mark nodes as visited in graphs
+2. Use queue for level order processing
+3. Consider space complexity
+4. Handle cycles carefully
+5. Track additional state when needed
+
+### Time & Space Complexity
+
+* Time Complexity: O(V + E) for graphs, O(n) for trees
+* Space Complexity: O(W) where W is maximum width
+* Queue can grow large for wide trees/graphs
+* Visited set needed for graphs 

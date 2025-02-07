@@ -1,0 +1,163 @@
+---
+title: "Topological Sort"
+description: "Master the technique of sorting vertices in a directed acyclic graph"
+pubDate: 2024-01-10
+category: "patterns"
+author: "Aryan Singh"
+tags: ["topological-sort", "graphs", "dfs"]
+priority: 10
+---
+
+## Topological Sort Pattern
+
+Topological Sort orders vertices in a directed acyclic graph (DAG) such that for every directed edge (u, v), vertex u comes before v in the ordering.
+
+### When to use Topological Sort?
+
+* Course scheduling problems
+* Build system dependencies
+* Task scheduling
+* Pipeline processing
+* Package management
+* Workflow sequencing
+
+### How it Works
+
+1. **Basic Concept**
+    * Works only on DAGs
+    * Uses DFS or BFS (Kahn's algorithm)
+    * Tracks visited and processing states
+    * Detects cycles if present
+
+2. **Key Steps**
+    * Track in-degrees or use DFS
+    * Process nodes with no dependencies
+    * Remove processed edges
+    * Build ordering gradually
+
+### Basic Template (Kahn's Algorithm)
+
+```python
+from collections import defaultdict, deque
+
+def topologicalSort(vertices, edges):
+    # Build adjacency list and in-degree count
+    graph = defaultdict(list)
+    in_degree = {i: 0 for i in range(vertices)}
+    
+    for src, dst in edges:
+        graph[src].append(dst)
+        in_degree[dst] += 1
+    
+    # Add all vertices with 0 in-degree to queue
+    queue = deque([v for v in range(vertices) if in_degree[v] == 0])
+    result = []
+    
+    while queue:
+        vertex = queue.popleft()
+        result.append(vertex)
+        
+        # Reduce in-degree of neighbors
+        for neighbor in graph[vertex]:
+            in_degree[neighbor] -= 1
+            if in_degree[neighbor] == 0:
+                queue.append(neighbor)
+    
+    # If result length != vertices, there's a cycle
+    return result if len(result) == vertices else []
+```
+
+### Common Variations
+
+1. **DFS-based Implementation**
+
+```python
+def topologicalSortDFS(vertices, edges):
+    def dfs(node, visited, temp, order):
+        if node in temp:  # Cycle detected
+            return False
+        if node in visited:
+            return True
+            
+        temp.add(node)
+        
+        for neighbor in graph[node]:
+            if not dfs(neighbor, visited, temp, order):
+                return False
+                
+        temp.remove(node)
+        visited.add(node)
+        order.append(node)
+        return True
+    
+    # Build graph
+    graph = defaultdict(list)
+    for src, dst in edges:
+        graph[src].append(dst)
+    
+    visited = set()
+    temp = set()
+    order = []
+    
+    # Process all vertices
+    for vertex in range(vertices):
+        if vertex not in visited:
+            if not dfs(vertex, visited, temp, order):
+                return []  # Cycle detected
+    
+    return order[::-1]
+```
+
+2. **Course Schedule**
+
+```python
+def canFinish(numCourses, prerequisites):
+    # Build graph
+    graph = defaultdict(list)
+    in_degree = [0] * numCourses
+    
+    for course, prereq in prerequisites:
+        graph[prereq].append(course)
+        in_degree[course] += 1
+    
+    # Find courses with no prerequisites
+    queue = deque([i for i in range(numCourses) if in_degree[i] == 0])
+    taken = []
+    
+    while queue:
+        course = queue.popleft()
+        taken.append(course)
+        
+        for next_course in graph[course]:
+            in_degree[next_course] -= 1
+            if in_degree[next_course] == 0:
+                queue.append(next_course)
+    
+    return len(taken) == numCourses
+```
+
+### Edge Cases to Consider
+
+1. Empty graph
+2. Single vertex
+3. Disconnected components
+4. Multiple valid orderings
+5. Cycle detection
+6. All vertices independent
+7. Linear chain of dependencies
+
+### Tips
+
+1. Always check for cycles
+2. Consider both BFS and DFS approaches
+3. Track visited states carefully
+4. Handle disconnected components
+5. Consider using adjacency list representation
+
+### Time & Space Complexity
+
+* Time Complexity: O(V + E)
+* Space Complexity: O(V)
+* Additional space for queue/stack
+* Graph representation space: O(E)
+* Visited set space: O(V) 

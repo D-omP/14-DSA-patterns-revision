@@ -1,0 +1,83 @@
+---
+title: "Fast & Slow Pointers"
+description: "Master Floyd's Cycle Detection algorithm and its variations"
+pubDate: 2024-01-03
+category: "patterns"
+author: "Aryan Singh"
+tags: ["fast-slow-pointers", "linked-list", "cycle-detection"]
+priority: 3
+---
+
+## Fast & Slow Pointers Pattern
+
+The Fast & Slow pointers pattern (also known as Floyd's Cycle Detection) uses two pointers moving at different speeds to solve problems involving cyclic data structures. This technique is particularly useful for detecting cycles in linked lists and arrays.
+
+### When to use Fast & Slow Pointers?
+- Detecting cycles in a linked list or array
+- Finding the middle element of a linked list
+- Finding the start of a cycle
+- Determining if a number is happy (cycles in number sequences)
+
+### How it Works
+1. Initialize two pointers (slow and fast) at the start
+2. Move slow pointer one step at a time
+3. Move fast pointer two steps at a time
+4. If they meet, there's a cycle
+5. If fast reaches null, there's no cycle
+
+### Common Variations
+1. **Cycle Detection**
+   - Basic cycle finding in linked list
+   - Finding cycle length
+   - Finding cycle start point
+
+2. **Middle Finding**
+   - Finding middle of linked list
+   - Splitting linked list in half
+
+### Basic Template
+```python
+def findCycle(head):
+    if not head or not head.next:
+        return False
+        
+    slow = head
+    fast = head
+    
+    while fast and fast.next:
+        slow = slow.next           # Move one step
+        fast = fast.next.next      # Move two steps
+        
+        if slow == fast:           # Found cycle
+            return True
+            
+    return False                   # No cycle found
+```
+
+### Finding Cycle Start
+```python
+def findCycleStart(head):
+    if not head or not head.next:
+        return None
+        
+    # Find meeting point
+    slow = head
+    fast = head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        if slow == fast:
+            break
+    
+    # No cycle found
+    if not fast or not fast.next:
+        return None
+        
+    # Move slow to head and keep fast at meeting point
+    slow = head
+    while slow != fast:
+        slow = slow.next
+        fast = fast.next
+        
+    return slow  # This is the start of cycle
+``` 

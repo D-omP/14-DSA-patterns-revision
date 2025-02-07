@@ -30,53 +30,46 @@ const currentPath = Astro.url.pathname;
 ---
 
 <Layout title={post.data.title} description={post.data.description}>
-  <div class="flex min-h-screen relative">
-    <!-- Left Sidebar (Course Navigation) -->
+  <div class="flex min-h-screen relative bg-gray-50">
+    <!-- Left Sidebar -->
     <aside 
       id="left-sidebar"
       class="fixed left-0 top-16 w-[85vw] md:w-72 h-[calc(100vh-4rem)] overflow-y-auto border-r border-gray-200 bg-white transform -translate-x-full transition-transform duration-200 ease-in-out md:translate-x-0 z-40"
     >
-      <div class="p-6">
-        <!-- Course Content Header -->
-        <div class="flex items-center gap-3 mb-6">
-          <div class="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center">
-            <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="p-8">
+        <!-- Header -->
+        <div class="flex items-center gap-3 mb-8">
+          <div class="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center">
+            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
           </div>
-          <h2 class="text-lg font-bold text-gray-900">DSA Patterns</h2>
+          <h2 class="text-xl font-bold text-gray-900">DSA Patterns</h2>
         </div>
 
-        <!-- Course Navigation -->
+        <!-- Navigation -->
         <nav>
-          <ul class="space-y-1">
-            {sortedPosts.map((coursePost) => {
+          <ul class="space-y-2">
+            {sortedPosts.map((coursePost, index) => {
               const isActive = currentPath === `/course/${coursePost.slug}`;
               return (
                 <li>
                   <a
                     href={`/course/${coursePost.slug}`}
                     class={`
-                      flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors
+                      flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-all
                       ${isActive 
-                        ? 'bg-primary-50 text-primary-700 font-medium' 
+                        ? 'bg-primary-50 text-primary-700 font-medium shadow-sm' 
                         : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                       }
                     `}
                   >
-                    <svg 
-                      class={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-primary-600' : 'text-gray-400'}`}
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path 
-                        stroke-linecap="round" 
-                        stroke-linejoin="round" 
-                        stroke-width="2" 
-                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                      />
-                    </svg>
+                    <span class={`
+                      w-6 h-6 flex items-center justify-center rounded-lg text-sm
+                      ${isActive ? 'bg-primary-100 text-primary-700' : 'bg-gray-100 text-gray-600'}
+                    `}>
+                      {index + 1}
+                    </span>
                     <span class="truncate">{coursePost.data.title}</span>
                   </a>
                 </li>
@@ -88,36 +81,36 @@ const currentPath = Astro.url.pathname;
     </aside>
 
     <!-- Main Content -->
-    <main class="w-full md:ml-72 lg:mr-64 flex-1 min-w-0 py-12 px-4 sm:px-6 lg:px-8">
-      <div class="max-w-4xl mx-auto px-4 py-8">
+    <main class="w-full md:ml-72 lg:mr-64 flex-1 min-w-0">
+      <div class="max-w-3xl mx-auto px-6 py-12">
         <CourseTabs slug={post.slug}>
           <Content />
         </CourseTabs>
       </div>
     </main>
 
-    <!-- Right Sidebar - Table of Contents -->
+    <!-- Right Sidebar - TOC -->
     <aside 
       id="right-sidebar"
       class="fixed right-0 top-16 w-[85vw] md:w-64 h-[calc(100vh-4rem)] overflow-y-auto border-l border-gray-200 bg-white transform translate-x-full transition-transform duration-200 ease-in-out lg:translate-x-0 z-40"
     >
-      <div class="p-6">
-        <div class="flex items-center gap-2 mb-4">
+      <div class="p-8">
+        <div class="flex items-center gap-3 mb-6">
           <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
           </svg>
-          <h2 class="text-sm font-semibold text-gray-900 uppercase tracking-wide">
+          <h2 class="text-sm font-bold text-gray-900 uppercase tracking-wide">
             Table of Contents
           </h2>
         </div>
-        <nav class="space-y-1">
+        <nav class="space-y-2">
           {headings.map((heading) => (
             <a
               href={`#${heading.slug}`}
               class={`
-                block py-2 pl-${(heading.depth - 1) * 4} text-sm
+                block py-2 pl-${(heading.depth - 1) * 4} text-sm transition-colors
                 ${heading.depth === 1 ? 'font-medium text-gray-900' : 'text-gray-600'}
-                hover:text-primary-600 transition-colors
+                hover:text-primary-600 hover:bg-gray-50 rounded-lg
               `}
             >
               {heading.text}
@@ -172,6 +165,42 @@ const currentPath = Astro.url.pathname;
     .prose p {
       margin-bottom: 1.25rem;
     }
+  }
+
+  /* Add new styles */
+  .prose {
+    max-width: 65ch;
+    margin: 0 auto;
+  }
+
+  .prose h1 {
+    margin-top: 0;
+    margin-bottom: 2rem;
+  }
+
+  .prose h2 {
+    margin-top: 2.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .prose h3 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .prose p {
+    margin-bottom: 1.5rem;
+    line-height: 1.75;
+  }
+
+  .prose ul {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .prose li {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
   }
 </style>
 

@@ -1,44 +1,50 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-import SearchBar from '../../components/SearchBar.astro';
 
-// Get all blog posts
 const posts = await getCollection('blog');
-const sortedPosts = posts.sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime());
+const sortedPosts = posts.sort((a, b) => {
+  return new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime();
+});
 
-// Group posts by category
-const groupedPosts = sortedPosts.reduce((acc, post) => {
-  const category = post.data.category;
-  if (!acc[category]) acc[category] = [];
-  acc[category].push(post);
+// Group posts by year and month
+const postsByDate = sortedPosts.reduce((acc, post) => {
+  const date = new Date(post.data.pubDate);
+  const year = date.getFullYear();
+  const month = date.toLocaleString('default', { month: 'long' });
+  
+  if (!acc[year]) {
+    acc[year] = {};
+  }
+  if (!acc[year][month]) {
+    acc[year][month] = [];
+  }
+  
+  acc[year][month].push(post);
   return acc;
-}, {});
+}, {} as Record<number, Record<string, typeof posts>>);
 
 // SEO metadata
 const seoMetadata = {
-  title: "BabySaaS Blog - AI & SaaS Development Guides",
-  description: "Learn how to build and launch successful AI-powered SaaS products. Practical guides, tutorials, and insights from experienced founders.",
+  title: "DSA Blog - Data Structures and Algorithms",
+  description: "Learn data structures, algorithms, and problem-solving patterns through our comprehensive guides and tutorials.",
   keywords: [
-    "saas development",
-    "ai saas tutorials",
-    "build saas product",
-    "saas founder guides",
-    "ai integration guide",
-    "saas development blog",
-    "startup tutorials",
-    "nextjs saas guide",
-    "ai development",
-    "saas best practices",
-    "launch saas product",
-    "saas architecture",
-    "ai tools guide",
-    "saas monetization",
-    "tech startup blog"
+    "data structures",
+    "algorithms",
+    "problem-solving",
+    "comprehensive guides",
+    "tutorials",
+    "software engineering",
+    "tech blog",
+    "coding tutorials",
+    "data structures and algorithms",
+    "problem-solving patterns",
+    "comprehensive guides and tutorials",
+    "software engineering blog"
   ].join(", "),
-  ogImage: "https://babysaas.com/blog-og-image.png",
+  ogImage: "/blog-og-image.png",
   twitterHandle: "@babysaas",
-  siteUrl: "https://babysaas.com/blog",
+  siteUrl: "https://yoursite.com/blog",
   type: "blog",
   author: {
     "@type": "Person",
@@ -83,65 +89,82 @@ const structuredData = {
   twitterHandle={seoMetadata.twitterHandle}
   structuredData={structuredData}
 >
-  <main class="bg-gray-50">
-    <!-- Hero Section -->
-    <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
-      <div class="text-center">
-        <h1 class="text-4xl font-bold text-gray-900 sm:text-5xl font-display">
-          Build Better 
-          <span class="relative inline-block">
-            SaaS Products
-            <div class="absolute inset-x-0 bottom-0 h-3 bg-primary-100 -z-10 transform -rotate-1"></div>
-          </span>
-        </h1>
-        <p class="mt-4 text-xl text-gray-600 max-w-2xl mx-auto">
-          Practical guides and insights to help you build and launch successful AI-powered SaaS products
-        </p>
-      </div>
+  <main class="max-w-4xl mx-auto px-4 py-12">
+    <div class="mb-12">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">Blog</h1>
+      <p class="text-lg text-gray-600">
+        Insights and tutorials about Data Structures, Algorithms, and Software Engineering
+      </p>
+    </div>
 
-      <!-- Featured Posts Grid -->
-      <div class="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {sortedPosts.map(post => (
-          <article class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow overflow-hidden">
-            <a href={`/blog/${post.slug}`}>
-              <img 
-                src={post.data.image || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800"} 
-                alt={post.data.title}
-                class="w-full h-48 object-cover"
-                loading="lazy"
-              />
-              <div class="p-6">
-                <div class="flex items-center gap-4 mb-4">
-                  <span class="px-3 py-1 text-sm font-medium text-primary-700 bg-primary-50 rounded-full">
-                    {post.data.category}
-                  </span>
-                  <time class="text-sm text-gray-500" datetime={post.data.pubDate}>
-                    {new Date(post.data.pubDate).toLocaleDateString('en-US', {
-                      month: 'long',
-                      day: 'numeric',
-                      year: 'numeric'
-                    })}
-                  </time>
-                </div>
-                <h2 class="text-xl font-bold text-gray-900 mb-2">
-                  {post.data.title}
-                </h2>
-                <p class="text-gray-600 mb-4">
-                  {post.data.description}
-                </p>
-                <div class="flex items-center gap-2">
-                  <img 
-                    src={post.data.authorImage || "https://babysaas.com/team/default-avatar.png"}
-                    alt={post.data.author}
-                    class="w-8 h-8 rounded-full"
-                  />
-                  <span class="text-sm text-gray-600">{post.data.author}</span>
-                </div>
+    <div class="space-y-16">
+      {Object.entries(postsByDate).map(([year, months]) => (
+        <div>
+          <h2 class="text-2xl font-bold text-gray-900 mb-8">{year}</h2>
+          <div class="space-y-12">
+            {Object.entries(months).map(([month, monthPosts]) => (
+              <div>
+                <h3 class="text-xl font-semibold text-gray-700 mb-6">{month}</h3>
+                <ul class="space-y-6">
+                  {monthPosts.map((post) => (
+                    <li>
+                      <a 
+                        href={`/blog/${post.slug}`}
+                        class="group block"
+                      >
+                        <article class="flex items-start justify-between">
+                          <div>
+                            <h4 class="text-lg font-medium text-gray-900 group-hover:text-primary-600 mb-2">
+                              {post.data.title}
+                            </h4>
+                            <p class="text-gray-600 line-clamp-2 mb-3">
+                              {post.data.description}
+                            </p>
+                            <div class="flex items-center gap-4">
+                              <time 
+                                datetime={post.data.pubDate}
+                                class="text-sm text-gray-500"
+                              >
+                                {new Date(post.data.pubDate).toLocaleDateString('en-US', {
+                                  day: 'numeric',
+                                  month: 'long',
+                                  year: 'numeric'
+                                })}
+                              </time>
+                              <div class="flex gap-2">
+                                {post.data.tags.map((tag) => (
+                                  <span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">
+                                    {tag}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                          <div class="ml-4">
+                            <svg 
+                              class="w-5 h-5 text-gray-400 group-hover:text-primary-600"
+                              fill="none" 
+                              stroke="currentColor" 
+                              viewBox="0 0 24 24"
+                            >
+                              <path 
+                                stroke-linecap="round" 
+                                stroke-linejoin="round" 
+                                stroke-width="2" 
+                                d="M9 5l7 7-7 7"
+                              />
+                            </svg>
+                          </div>
+                        </article>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </a>
-          </article>
-        ))}
-      </div>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   </main>
 </Layout> 

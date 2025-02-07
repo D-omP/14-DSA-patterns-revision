@@ -1,0 +1,140 @@
+---
+title: "In-place Reversal of a Linked List"
+description: "Master the technique of reversing linked lists and its variations"
+pubDate: 2024-01-06
+category: "patterns"
+author: "Aryan Singh"
+tags: ["linked-list", "in-place", "reversal"]
+priority: 6
+---
+
+## In-place Reversal Pattern
+
+The in-place reversal pattern is used to reverse linked lists without using extra space. This pattern is particularly useful for problems involving linked list manipulation.
+
+### When to use In-place Reversal?
+
+* Reversing a linked list or parts of it
+* Rotating a linked list
+* Reordering linked list nodes
+* K-group reversals
+* Palindrome linked list detection
+
+### How it Works
+
+1. **Basic Concept**
+    * Use three pointers: prev, curr, next
+    * Iterate through list, reversing links
+    * Handle edge cases carefully
+
+2. **Key Steps**
+    * Save next pointer
+    * Reverse current link
+    * Move pointers forward
+
+### Basic Template
+
+```python
+def reverseList(head):
+    prev = None
+    curr = head
+    
+    while curr:
+        # Save next pointer
+        next_node = curr.next
+        
+        # Reverse the link
+        curr.next = prev
+        
+        # Move prev and curr forward
+        prev = curr
+        curr = next_node
+    
+    return prev  # New head
+```
+
+### Common Variations
+
+1. **Reverse Sublist**
+
+```python
+def reverseBetween(head, left, right):
+    if not head or left == right:
+        return head
+        
+    dummy = ListNode(0)
+    dummy.next = head
+    prev = dummy
+    
+    # Move to the position before reversal starts
+    for _ in range(left - 1):
+        prev = prev.next
+    
+    curr = prev.next
+    
+    # Reverse the sublist
+    for _ in range(right - left):
+        next_node = curr.next
+        curr.next = next_node.next
+        next_node.next = prev.next
+        prev.next = next_node
+    
+    return dummy.next
+```
+
+2. **K Groups Reversal**
+
+```python
+def reverseKGroup(head, k):
+    if not head or k == 1:
+        return head
+    
+    # Count nodes
+    count = 0
+    curr = head
+    while curr and count < k:
+        curr = curr.next
+        count += 1
+    
+    # If we don't have k nodes, return as is
+    if count < k:
+        return head
+    
+    # Reverse k nodes
+    curr = head
+    prev = None
+    for _ in range(k):
+        next_node = curr.next
+        curr.next = prev
+        prev = curr
+        curr = next_node
+    
+    # Recursively reverse next group
+    head.next = reverseKGroup(curr, k)
+    
+    return prev
+```
+
+### Edge Cases to Consider
+
+1. Empty list
+2. Single node
+3. Two nodes
+4. Even vs odd length
+5. K value greater than list length
+6. Invalid positions for sublist reversal
+
+### Tips
+
+1. Always handle null checks first
+2. Use dummy node for easier head manipulation
+3. Draw the pointers while solving
+4. Test with small examples
+5. Consider using recursion for complex cases
+
+### Time & Space Complexity
+
+* Time Complexity: O(n)
+* Space Complexity: O(1) for iterative, O(n) for recursive
+* Most variations maintain O(n) time complexity
+* In-place means constant extra space 

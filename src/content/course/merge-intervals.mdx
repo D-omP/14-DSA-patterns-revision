@@ -1,0 +1,147 @@
+---
+title: "Merge Intervals"
+description: "Learn to solve interval-based problems efficiently"
+pubDate: 2024-01-04
+category: "patterns"
+author: "Aryan Singh"
+tags: ["merge-intervals", "arrays", "sorting"]
+priority: 4
+---
+
+## Merge Intervals Pattern
+
+The Merge Intervals pattern deals with problems involving overlapping intervals. This pattern is useful for scheduling, resource allocation, and time management problems.
+
+### When to use Merge Intervals?
+
+* Merging overlapping intervals
+* Finding meeting time slots
+* Finding free time slots
+* Interval scheduling problems
+* Resource allocation problems
+
+### Key Concepts
+
+1. **Interval Representation**
+    * Usually as pairs: `[start, end]`
+    * Sometimes as objects: `{start: x, end: y}`
+
+2. **Interval Relationships**
+    * Overlapping: intervals share common time
+    * Non-overlapping: no common time
+    * Contained: one interval inside another
+    * Adjacent: intervals touch but don't overlap
+
+### Time Complexity
+
+* Most interval problems require sorting: O(n log n)
+* Linear scan after sorting: O(n)
+* Overall complexity: O(n log n)
+* Space complexity: Usually O(n) for output
+
+### Basic Template
+
+```python
+def mergeIntervals(intervals):
+    if not intervals:
+        return []
+        
+    # Sort intervals by start time
+    intervals.sort(key=lambda x: x[0])
+    
+    merged = [intervals[0]]
+    
+    for current in intervals[1:]:
+        previous = merged[-1]
+        
+        # Check if current interval overlaps with previous
+        if current[0] <= previous[1]:
+            # Merge intervals by updating end time
+            previous[1] = max(previous[1], current[1])
+        else:
+            # Add non-overlapping interval
+            merged.append(current)
+            
+    return merged
+
+# Example usage:
+intervals = [[1,3], [2,6], [8,10], [15,18]]
+# Returns: [[1,6], [8,10], [15,18]]
+```
+
+### Common Variations
+
+1. **Insert Interval**
+
+```python
+def insertInterval(intervals, newInterval):
+    result = []
+    i = 0
+    n = len(intervals)
+    
+    # Add all intervals before newInterval
+    while i < n and intervals[i][1] < newInterval[0]:
+        result.append(intervals[i])
+        i += 1
+    
+    # Merge overlapping intervals
+    while i < n and intervals[i][0] <= newInterval[1]:
+        newInterval[0] = min(newInterval[0], intervals[i][0])
+        newInterval[1] = max(newInterval[1], intervals[i][1])
+        i += 1
+    
+    result.append(newInterval)
+    
+    # Add remaining intervals
+    while i < n:
+        result.append(intervals[i])
+        i += 1
+        
+    return result
+```
+
+2. **Meeting Rooms**
+
+```python
+def minMeetingRooms(intervals):
+    if not intervals:
+        return 0
+        
+    # Separate start and end times
+    start = sorted([i[0] for i in intervals])
+    end = sorted([i[1] for i in intervals])
+    
+    rooms = 0
+    max_rooms = 0
+    s = e = 0
+    
+    while s < len(intervals):
+        if start[s] < end[e]:
+            rooms += 1
+            s += 1
+        else:
+            rooms -= 1
+            e += 1
+        max_rooms = max(max_rooms, rooms)
+    
+    return max_rooms
+```
+
+### Edge Cases to Consider
+
+1. Empty input
+2. Single interval
+3. No overlapping intervals
+4. All intervals overlapping
+5. Adjacent intervals
+6. Negative time values
+7. Equal start times
+8. Equal end times
+
+### Tips
+
+1. Always sort intervals first (usually by start time)
+2. Consider using separate arrays for start/end times
+3. Use min/max functions for merging
+4. Handle edge cases explicitly
+5. Consider using priority queues for complex scheduling

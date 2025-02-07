@@ -1,0 +1,129 @@
+---
+title: "Union-Find (Disjoint Set)"
+description: "Master the technique of managing disjoint sets efficiently"
+pubDate: 2024-01-14
+category: "patterns"
+author: "Aryan Singh"
+tags: ["union-find", "disjoint-set", "graphs"]
+priority: 14
+---
+
+## Union-Find Pattern
+
+Union-Find (Disjoint Set) is a data structure that keeps track of elements split into one or more disjoint sets. It provides near-constant-time operations to add new sets, merge existing sets, and determine whether elements are in the same set.
+
+### When to use Union-Find?
+
+* Connected components in graphs
+* Cycle detection
+* Minimum spanning trees
+* Network connectivity
+* Image segmentation
+* Friend circles problems
+
+### How it Works
+
+1. **Basic Concept**
+    * Maintain disjoint sets
+    * Use tree structure
+    * Path compression
+    * Union by rank/size
+
+2. **Key Operations**
+    * Find: Determine set
+    * Union: Merge sets
+    * MakeSet: Create new set
+    * Connected: Check if in same set
+
+### Basic Template
+
+```python
+class UnionFind:
+    def __init__(self, size):
+        self.root = list(range(size))
+        self.rank = [1] * size
+    
+    def find(self, x):
+        if x == self.root[x]:
+            return x
+        self.root[x] = self.find(self.root[x])  # Path compression
+        return self.root[x]
+    
+    def union(self, x, y):
+        rootX = self.find(x)
+        rootY = self.find(y)
+        
+        if rootX != rootY:
+            if self.rank[rootX] > self.rank[rootY]:
+                self.root[rootY] = rootX
+            elif self.rank[rootX] < self.rank[rootY]:
+                self.root[rootX] = rootY
+            else:
+                self.root[rootY] = rootX
+                self.rank[rootX] += 1
+    
+    def connected(self, x, y):
+        return self.find(x) == self.find(y)
+```
+
+### Common Variations
+
+1. **Number of Connected Components**
+
+```python
+def countComponents(n, edges):
+    uf = UnionFind(n)
+    count = n
+    
+    for x, y in edges:
+        if not uf.connected(x, y):
+            uf.union(x, y)
+            count -= 1
+    
+    return count
+```
+
+2. **Friend Circles**
+
+```python
+def findCircleNum(isConnected):
+    n = len(isConnected)
+    uf = UnionFind(n)
+    
+    for i in range(n):
+        for j in range(i + 1, n):
+            if isConnected[i][j]:
+                uf.union(i, j)
+    
+    circles = set()
+    for i in range(n):
+        circles.add(uf.find(i))
+    
+    return len(circles)
+```
+
+### Edge Cases to Consider
+
+1. Empty graph
+2. Single node
+3. All nodes connected
+4. No connections
+5. Cycles present
+6. Large number of operations
+7. Path compression depth
+
+### Tips
+
+1. Use path compression
+2. Implement union by rank
+3. Keep track of set sizes
+4. Consider iterative find
+5. Handle invalid inputs
+
+### Time & Space Complexity
+
+* Almost O(1) amortized operations
+* Space complexity O(n)
+* Path compression optimization
+* Union by rank optimization
+* Inverse Ackermann function 

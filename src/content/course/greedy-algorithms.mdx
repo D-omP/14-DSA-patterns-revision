@@ -1,0 +1,119 @@
+---
+title: "Greedy Algorithms"
+description: "Master the technique of making locally optimal choices"
+pubDate: 2024-01-11
+category: "patterns"
+author: "Aryan Singh"
+tags: ["greedy", "optimization", "algorithms"]
+priority: 11
+---
+
+## Greedy Algorithms Pattern
+
+Greedy algorithms make locally optimal choices at each step, hoping to find a global optimum. While not always optimal, they often provide efficient solutions to optimization problems.
+
+### When to use Greedy Algorithms?
+
+* Scheduling problems
+* Resource allocation
+* Huffman coding
+* Minimum spanning trees
+* Activity selection
+* Coin change problems
+
+### How it Works
+
+1. **Basic Concept**
+    * Make locally optimal choice
+    * Never reconsider choices
+    * Build solution incrementally
+    * Hope for global optimum
+
+2. **Key Steps**
+    * Sort or organize input
+    * Make best choice at each step
+    * Add to solution
+    * Move to next step
+
+### Basic Template
+
+```python
+def activitySelection(start, finish):
+    # Sort activities by finish time
+    activities = sorted(zip(start, finish), key=lambda x: x[1])
+    selected = [activities[0]]  # Select first activity
+    
+    # Consider rest of activities
+    for current in activities[1:]:
+        # If this activity starts after last selected
+        if current[0] >= selected[-1][1]:
+            selected.append(current)
+    
+    return selected
+```
+
+### Common Variations
+
+1. **Fractional Knapsack**
+
+```python
+def fractionalKnapsack(values, weights, capacity):
+    # Calculate value/weight ratio
+    items = sorted(zip(values, weights),
+                  key=lambda x: x[0]/x[1],
+                  reverse=True)
+    
+    total_value = 0
+    for value, weight in items:
+        if capacity >= weight:
+            # Take whole item
+            capacity -= weight
+            total_value += value
+        else:
+            # Take fraction of item
+            total_value += value * (capacity / weight)
+            break
+    
+    return total_value
+```
+
+2. **Minimum Coins**
+
+```python
+def minCoins(coins, amount):
+    coins.sort(reverse=True)  # Sort in descending order
+    result = []
+    
+    for coin in coins:
+        while amount >= coin:
+            result.append(coin)
+            amount -= coin
+    
+    return result if amount == 0 else []
+```
+
+### Edge Cases to Consider
+
+1. Empty input
+2. Single element
+3. All elements same
+4. No solution exists
+5. Multiple solutions
+6. Extreme values
+7. Negative numbers
+
+### Tips
+
+1. Sort input when needed
+2. Consider the optimal substructure
+3. Prove greedy choice property
+4. Handle edge cases
+5. Consider counter-examples
+
+### Time & Space Complexity
+
+* Usually O(n log n) due to sorting
+* Sometimes O(n) with special input
+* Space complexity often O(1)
+* Output space varies by problem
+* Consider preprocessing time

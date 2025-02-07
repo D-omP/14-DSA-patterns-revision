@@ -1,0 +1,127 @@
+---
+title: "Binary Search"
+description: "Master the binary search technique for efficient searching"
+pubDate: 2024-01-09
+category: "patterns"
+author: "Aryan Singh"
+tags: ["binary-search", "searching", "arrays"]
+priority: 9
+---
+
+## Binary Search Pattern
+
+Binary Search is a divide-and-conquer algorithm that efficiently finds a target value in a sorted array. It's also useful for optimization problems with monotonic search spaces.
+
+### When to use Binary Search?
+
+* Searching in sorted arrays
+* Finding insertion points
+* Optimization problems
+* Finding peak elements
+* Range queries
+* Finding boundaries
+
+### How it Works
+
+1. **Basic Concept**
+    * Divide search space in half
+    * Compare target with middle
+    * Eliminate half of search space
+    * Repeat until found or space exhausted
+
+2. **Key Steps**
+    * Calculate middle point
+    * Compare with target
+    * Adjust search boundaries
+    * Handle duplicates carefully
+
+### Basic Template
+
+```python
+def binarySearch(nums, target):
+    left, right = 0, len(nums) - 1
+    
+    while left <= right:
+        mid = left + (right - left) // 2
+        
+        if nums[mid] == target:
+            return mid
+        elif nums[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    
+    return -1  # Not found
+```
+
+### Common Variations
+
+1. **Finding Leftmost Position**
+
+```python
+def findLeftmost(nums, target):
+    left, right = 0, len(nums)
+    
+    while left < right:
+        mid = left + (right - left) // 2
+        
+        if nums[mid] < target:
+            left = mid + 1
+        else:
+            right = mid
+    
+    return left if left < len(nums) and nums[left] == target else -1
+```
+
+2. **Search in Rotated Array**
+
+```python
+def searchRotated(nums, target):
+    left, right = 0, len(nums) - 1
+    
+    while left <= right:
+        mid = left + (right - left) // 2
+        
+        if nums[mid] == target:
+            return mid
+            
+        # Left half is sorted
+        if nums[left] <= nums[mid]:
+            if nums[left] <= target < nums[mid]:
+                right = mid - 1
+            else:
+                left = mid + 1
+        # Right half is sorted
+        else:
+            if nums[mid] < target <= nums[right]:
+                left = mid + 1
+            else:
+                right = mid - 1
+    
+    return -1
+```
+
+### Edge Cases to Consider
+
+1. Empty array
+2. Single element
+3. Target not present
+4. Duplicate elements
+5. Target at boundaries
+6. Rotated array
+7. All elements same
+
+### Tips
+
+1. Use `left + (right - left) // 2` to avoid overflow
+2. Consider inclusive vs exclusive bounds
+3. Handle duplicates carefully
+4. Check boundary conditions
+5. Consider binary search on answer space
+
+### Time & Space Complexity
+
+* Time Complexity: O(log n)
+* Space Complexity: O(1)
+* Reduces search space by half each time
+* Very efficient for large sorted datasets 
