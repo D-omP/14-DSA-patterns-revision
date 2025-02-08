@@ -1,47 +1,114 @@
 ---
-const navItems = [
-  {
-    title: "Blog",
-    path: "/blog"
-  },
-  {
-    title: "Course",
-    path: "/course"
-  }
-];
-
 const currentPath = Astro.url.pathname;
+
+const navigation = [
+  { name: 'Patterns', href: '/course/two-pointer' },
+  { name: 'Blog', href: '/blog' },
+  { name: 'About', href: '/about' },
+];
 ---
 
-<nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200">
-  <div class="px-3 py-3 lg:px-5 lg:pl-3">
-    <div class="flex items-center justify-between">
-      <div class="flex items-center justify-start">
-        <a href="/" class="flex ml-2 md:mr-24">
-          <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap text-gray-900">BabySaaS</span>
+<nav class="bg-white shadow-sm">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16">
+      <div class="flex">
+        <!-- Logo -->
+        <div class="flex-shrink-0 flex items-center">
+          <a href="/" class="flex items-center gap-2">
+            <span class="text-2xl font-bold text-primary-600">14</span>
+            <span class="text-2xl font-bold text-gray-900">DSA</span>
+          </a>
+        </div>
+
+        <!-- Navigation Links -->
+        <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
+          {navigation.map((item) => (
+            <a
+              href={item.href}
+              class={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                currentPath.startsWith(item.href)
+                  ? 'border-primary-500 text-gray-900'
+                  : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+              }`}
+            >
+              {item.name}
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <!-- Right side buttons -->
+      <div class="hidden sm:flex sm:items-center sm:space-x-4">
+        <a
+          href="/course/two-pointer"
+          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+        >
+          Start Learning
         </a>
       </div>
-      <div class="flex items-center space-x-4">
-        {navItems.map(item => (
-          <a
-            href={item.path}
-            class={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-              currentPath.startsWith(item.path)
-                ? 'bg-primary-50 text-primary-700'
-                : 'text-gray-600 hover:bg-gray-50'
-            }`}
-          >
-            {item.title}
-          </a>
-        ))}
-        <!-- Login Button -->
-        <a
-          href="/login"
-          class="ml-4 px-4 py-2 rounded-lg text-sm font-medium bg-primary-600 text-white hover:bg-primary-700 transition-colors"
+
+      <!-- Mobile menu button -->
+      <div class="flex items-center sm:hidden">
+        <button
+          type="button"
+          class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500"
+          aria-controls="mobile-menu"
+          aria-expanded="false"
         >
-          Login
-        </a>
+          <span class="sr-only">Open main menu</span>
+          <svg
+            class="block h-6 w-6"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+        </button>
       </div>
     </div>
   </div>
-</nav> 
+
+  <!-- Mobile menu -->
+  <div class="sm:hidden hidden" id="mobile-menu">
+    <div class="pt-2 pb-3 space-y-1">
+      {navigation.map((item) => (
+        <a
+          href={item.href}
+          class={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
+            currentPath.startsWith(item.href)
+              ? 'bg-primary-50 border-primary-500 text-primary-700'
+              : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'
+          }`}
+        >
+          {item.name}
+        </a>
+      ))}
+      <a
+        href="/course/two-pointer"
+        class="block w-full text-center px-4 py-2 mx-2 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
+      >
+        Start Learning
+      </a>
+    </div>
+  </div>
+</nav>
+
+<script>
+  // Mobile menu toggle
+  const button = document.querySelector('[aria-controls="mobile-menu"]');
+  const menu = document.getElementById('mobile-menu');
+
+  button?.addEventListener('click', () => {
+    const expanded = button.getAttribute('aria-expanded') === 'true';
+    button.setAttribute('aria-expanded', (!expanded).toString());
+    menu?.classList.toggle('hidden');
+  });
+</script> 

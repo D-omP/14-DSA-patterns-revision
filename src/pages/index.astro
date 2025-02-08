@@ -2,209 +2,373 @@
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
-const posts = await getCollection('blog');
-const recentPosts = posts
-  .sort((a, b) => {
-    // Handle potential undefined or invalid dates
-    const dateA = a.data.pubDate instanceof Date ? a.data.pubDate : new Date(a.data.pubDate);
-    const dateB = b.data.pubDate instanceof Date ? b.data.pubDate : new Date(b.data.pubDate);
-    return dateB.getTime() - dateA.getTime();
-  })
-  .slice(0, 7);
-
-const projects = [
-        {
-          category: "Featured Projects",
-          projects: [
-            {
-              title: "Skillset Master",
-              url: "https://skillsetmaster.com",
-              description: "Level up with trending skills",
-              status: "launched"
-            },
-            {
-              title: "Simple investings",
-              url: "https://simpleinvestings.com",
-              description: "Simple investing for beginners",
-              status: "launched"
-            }, 
-            {
-              title: "Immigrant Job Help",
-              url: "https://immigrantjobhelp.com",
-              description: "Job search for immigrants",
-              status: "launched"
-            },
-      {
-        title: "Coder Aryan",
-        url: "https://coderaryan.com",
-        description: "Personal blog where I share everything",
-        status: "launched"
-      }, 
-      {
-        title: "My Instagram Page",
-        url: "https://instagram.com/singh.aryan.45",
-        description: "450k+ followers on Instagram",
-        status: "launched"
-      },
-      {
-        title: "My YouTube Channel",
-        url: "https://www.youtube.com/@singh1aryan",
-        description: "Tech tutorials and career guidance",
-        status: "launched"
-      }
-          ]
-        },
-        {
-          category: "In Progress",
-          projects: [
-            {
-              title: "Build in minutes",
-              url: "https://buildinminutes.com",
-              description: "Build any app in minutes",
-              status: "in-progress"
-            }, 
-            {
-              title: "Baby SaaS",
-              url: "https://babysaas.com",
-              description: "Build your own SaaS in minutes",
-              status: "in-progress"
-            }, 
-            {
-              title: "Get AI News",
-              url: "https://getainews.com",
-              description: "Stay updated with AI developments",
-              status: "in-progress"
-            }, 
-            {
-              title: "Get Startup News",
-              url: "https://getstartupnews.com",
-              description: "Latest in the startup ecosystem",
-              status: "in-progress"
-            }, 
-            {
-              title: "Career tools AI",
-              url: "https://careertoolsai.com",
-              description: "AI tools for your career",
-              status: "in-progress"
-            }, 
-          ]
-        },
-      ];
-
 const features = [
   {
-    title: "Hand-Picked Problems",
-    description: "Carefully selected problems that teach core concepts and common variations",
-    icon: "📝"
+    title: "AI-Powered SaaS Dashboard",
+    description: "Build a complete admin dashboard with AI-powered analytics, user management, and real-time insights.",
+    tech: ["Next.js", "OpenAI", "Prisma"]
   },
-  {
-    title: "Detailed Solutions",
-    description: "Step-by-step explanations with time/space complexity analysis",
-    icon: "✨"
-  },
-  {
-    title: "Pattern Recognition",
-    description: "Learn to identify which pattern to apply for any given problem",
-    icon: "🎯"
-  }
-];
-
-const modules = [
-  {
-    title: "1. Foundation & Setup",
-    items: [
-      "Modern SaaS Architecture & Tech Stack Selection",
-      "AI Integration Fundamentals",
-      "Development Environment Setup"
-    ]
-  },
-  {
-    title: "2. Core Development",
-    items: [
-      "Authentication & User Management",
-      "Database Design & Implementation",
-      "API Development & Integration"
-    ]
-  },
-  {
-    title: "3. AI Integration & Advanced Features",
-    items: [
-      "OpenAI API Implementation",
-      "Real-time Features & WebSockets",
-      "Payment Integration & Subscriptions"
-    ]
-  }
-];
-
-const showcaseApps = [
   {
     title: "AI Content Generator",
-    description: "Generate blog posts, social media content, and marketing copy using GPT-4.",
-    image: "https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?auto=format&fit=crop&q=80&w=800",
-    tags: ["OpenAI", "Next.js", "Supabase"],
-    demoUrl: "#",
-    category: "AI Tools"
+    description: "Create a SaaS that generates SEO-optimized content, social media posts, and marketing copy using AI.",
+    tech: ["React", "GPT-4", "MongoDB"]
   },
   {
-    title: "SaaS Analytics Dashboard",
-    description: "Track revenue, user engagement, and key metrics with beautiful visualizations.",
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800",
-    tags: ["React", "Chart.js", "Firebase"],
-    demoUrl: "#",
-    category: "Analytics"
-  },
-  {
-    title: "Team Collaboration Platform",
-    description: "Real-time document editing, task management, and team chat.",
-    image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&q=80&w=800",
-    tags: ["Vue.js", "Socket.io", "MongoDB"],
-    demoUrl: "#",
-    category: "Productivity"
-  },
-  {
-    title: "AI Image Generator",
-    description: "Create unique images and artwork using DALL-E and Stable Diffusion.",
-    image: "https://images.unsplash.com/photo-1580927752452-89d86da3fa0a?auto=format&fit=crop&q=80&w=800",
-    tags: ["Next.js", "DALL-E", "AWS"],
-    demoUrl: "#",
-    category: "AI Tools"
-  },
-  {
-    title: "Customer Support Portal",
-    description: "Ticketing system with AI-powered responses and knowledge base.",
-    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&q=80&w=800",
-    tags: ["React", "GPT-4", "PostgreSQL"],
-    demoUrl: "#",
-    category: "Support"
-  },
-  {
-    title: "AI Code Assistant",
-    description: "Generate, review, and optimize code using AI models.",
-    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&q=80&w=800",
-    tags: ["Next.js", "OpenAI", "Redis"],
-    demoUrl: "#",
-    category: "AI Tools"
+    title: "AI Task Manager",
+    description: "Develop a smart task management system that uses AI to prioritize and categorize tasks.",
+    tech: ["Vue.js", "Node.js", "PostgreSQL"]
   }
 ];
 
-const testimonials = [
+const courseModules = [
   {
-    content: "The pattern-based approach helped me crack my Google interview. Much better than solving random problems.",
-    author: "Alex Chen",
-    role: "Software Engineer at Google",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=200",
-    company: "Google",
-    rating: 5
+    number: "1",
+    title: "Two Pointer Pattern",
+    description: "Master efficient array manipulation with two pointers",
+    lessons: [
+      {
+        title: "Core Concepts",
+        topics: [
+          "Two pointer technique fundamentals",
+          "When to use two pointers",
+          "Common variations and templates"
+        ]
+      },
+      {
+        title: "Problem Solving",
+        topics: [
+          "Two Sum variations",
+          "Three Sum problems",
+          "Sliding window vs Two pointers"
+        ]
+      }
+    ]
   },
   {
-    content: "Finally understood how to approach DSA problems systematically. Got offers from Meta and Amazon!",
-    author: "Sarah Miller",
-    role: "Senior Developer at Meta",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200",
-    company: "Meta",
-    rating: 5
+    number: "2",
+    title: "Sliding Window",
+    description: "Solve substring and subarray problems efficiently",
+    lessons: [
+      {
+        title: "Window Technique",
+        topics: [
+          "Fixed vs Dynamic windows",
+          "Window size manipulation",
+          "Optimization techniques"
+        ]
+      },
+      {
+        title: "Common Applications",
+        topics: [
+          "Maximum sum subarrays",
+          "String pattern matching",
+          "Minimum window substring"
+        ]
+      }
+    ]
+  },
+  {
+    number: "3",
+    title: "Fast & Slow Pointers",
+    description: "Detect cycles and find middle elements",
+    lessons: [
+      {
+        title: "Floyd's Algorithm",
+        topics: [
+          "Cycle detection in arrays",
+          "Linked list cycles",
+          "Finding cycle start"
+        ]
+      },
+      {
+        title: "Pattern Applications",
+        topics: [
+          "Middle of linked list",
+          "Happy number problem",
+          "Palindrome linked list"
+        ]
+      }
+    ]
+  },
+  {
+    number: "4",
+    title: "Merge Intervals",
+    description: "Handle interval-based problems effectively",
+    lessons: [
+      {
+        title: "Interval Basics",
+        topics: [
+          "Sorting intervals",
+          "Overlapping detection",
+          "Interval merging logic"
+        ]
+      },
+      {
+        title: "Advanced Topics",
+        topics: [
+          "Meeting rooms problems",
+          "Insert interval variations",
+          "Interval list intersections"
+        ]
+      }
+    ]
+  },
+  {
+    number: "5",
+    title: "Cyclic Sort",
+    description: "Optimize sorting for numbers in range",
+    lessons: [
+      {
+        title: "Pattern Recognition",
+        topics: [
+          "When to use cyclic sort",
+          "Array number properties",
+          "In-place sorting technique"
+        ]
+      },
+      {
+        title: "Problem Types",
+        topics: [
+          "Missing number variations",
+          "Duplicate number finding",
+          "Array permutations"
+        ]
+      }
+    ]
+  },
+  {
+    number: "6",
+    title: "In-place Reversal",
+    description: "Reverse linked lists with O(1) space",
+    lessons: [
+      {
+        title: "Reversal Technique",
+        topics: [
+          "Basic list reversal",
+          "Partial list reversal",
+          "Memory optimization"
+        ]
+      },
+      {
+        title: "Advanced Problems",
+        topics: [
+          "K groups reversal",
+          "Alternating reversal",
+          "Sublist reversal"
+        ]
+      }
+    ]
+  },
+  {
+    number: "7",
+    title: "Tree BFS",
+    description: "Level-order tree traversal patterns",
+    lessons: [
+      {
+        title: "BFS Fundamentals",
+        topics: [
+          "Queue-based traversal",
+          "Level tracking",
+          "Node connections"
+        ]
+      },
+      {
+        title: "Common Problems",
+        topics: [
+          "Level averages",
+          "Zigzag traversal",
+          "Level order successor"
+        ]
+      }
+    ]
+  },
+  {
+    number: "8",
+    title: "Tree DFS",
+    description: "Solve tree problems using recursion",
+    lessons: [
+      {
+        title: "DFS Patterns",
+        topics: [
+          "Preorder traversal",
+          "Inorder traversal",
+          "Postorder traversal"
+        ]
+      },
+      {
+        title: "Path Problems",
+        topics: [
+          "Path sum variations",
+          "Tree diameter",
+          "Binary tree paths"
+        ]
+      }
+    ]
+  },
+  {
+    number: "9",
+    title: "Two Heaps",
+    description: "Manage data streams with dual heaps",
+    lessons: [
+      {
+        title: "Heap Basics",
+        topics: [
+          "Max-heap vs Min-heap",
+          "Median maintenance",
+          "Stream processing"
+        ]
+      },
+      {
+        title: "Applications",
+        topics: [
+          "Find median from stream",
+          "Schedule tasks",
+          "Interval scheduling"
+        ]
+      }
+    ]
+  },
+  {
+    number: "10",
+    title: "Subsets",
+    description: "Generate combinations and permutations",
+    lessons: [
+      {
+        title: "Subset Pattern",
+        topics: [
+          "Iterative generation",
+          "Recursive approach",
+          "Duplicate handling"
+        ]
+      },
+      {
+        title: "Variations",
+        topics: [
+          "Permutations",
+          "Combinations",
+          "String permutations"
+        ]
+      }
+    ]
+  },
+  {
+    number: "11",
+    title: "Modified Binary Search",
+    description: "Advanced binary search variations",
+    lessons: [
+      {
+        title: "Search Patterns",
+        topics: [
+          "Order-agnostic search",
+          "Rotated array search",
+          "Bitonic array search"
+        ]
+      },
+      {
+        title: "Complex Problems",
+        topics: [
+          "Search range",
+          "Search insert position",
+          "Peak element"
+        ]
+      }
+    ]
+  },
+  {
+    number: "12",
+    title: "Greedy Algorithms",
+    description: "Make locally optimal choices",
+    lessons: [
+      {
+        title: "Greedy Approach",
+        topics: [
+          "Optimal substructure",
+          "Greedy choice property",
+          "Solution building"
+        ]
+      },
+      {
+        title: "Classic Problems",
+        topics: [
+          "Activity selection",
+          "Fractional knapsack",
+          "Huffman coding"
+        ]
+      }
+    ]
+  },
+  {
+    number: "13",
+    title: "Backtracking",
+    description: "Systematic solution search with pruning",
+    lessons: [
+      {
+        title: "Core Concepts",
+        topics: [
+          "State space tree",
+          "Constraint satisfaction",
+          "Pruning techniques"
+        ]
+      },
+      {
+        title: "Famous Problems",
+        topics: [
+          "N-Queens",
+          "Sudoku solver",
+          "Word search"
+        ]
+      }
+    ]
+  },
+  {
+    number: "14",
+    title: "Dynamic Programming",
+    description: "Optimize solutions with memoization",
+    lessons: [
+      {
+        title: "DP Fundamentals",
+        topics: [
+          "Optimal substructure",
+          "State definition",
+          "Memoization technique"
+        ]
+      },
+      {
+        title: "Common Patterns",
+        topics: [
+          "0/1 Knapsack",
+          "Longest sequences",
+          "Grid traversal"
+        ]
+      }
+    ]
   }
 ];
+
+// Get course posts for the sidebar
+const coursePosts = await getCollection('course');
+const sortedPosts = coursePosts.sort((a, b) => {
+  if (a.data.priority !== b.data.priority) {
+    return a.data.priority - b.data.priority;
+  }
+  return new Date(a.data.pubDate).getTime() - new Date(b.data.pubDate).getTime();
+});
+
+// Group posts by category
+const postsByCategory = sortedPosts.reduce((acc, post) => {
+  const category = post.data.category;
+  if (!acc[category]) {
+    acc[category] = [];
+  }
+  acc[category].push(post);
+  return acc;
+}, {});
+
+// Get current path for active state
+const currentPath = Astro.url.pathname;
+
+// Add state for mobile menu
+const isMobileMenuOpen = false;
 
 // SEO metadata
 const seoMetadata = {
@@ -232,250 +396,396 @@ const seoMetadata = {
   siteUrl: "https://14dsa.com"
 };
 
-const patterns = [
-  {
-    title: "Two Pointers",
-    description: "Master the art of solving array problems with two pointers technique",
-    problems: 15,
-    difficulty: "Easy/Medium"
-  },
-  {
-    title: "Sliding Window",
-    description: "Efficiently process arrays/strings with sliding window pattern",
-    problems: 12,
-    difficulty: "Medium"
-  },
-  {
-    title: "Fast & Slow Pointers",
-    description: "Detect cycles and solve linked list problems",
-    problems: 8,
-    difficulty: "Medium"
-  },
-  {
-    title: "Binary Search",
-    description: "Beyond sorted arrays - master all variations",
-    problems: 12,
-    difficulty: "Medium/Hard"
-  },
-  {
-    title: "BFS",
-    description: "Traverse trees and graphs level by level",
-    problems: 10,
-    difficulty: "Medium"
-  },
-  {
-    title: "DFS",
-    description: "Deep dive into trees and graph structures",
-    problems: 12,
-    difficulty: "Medium"
-  }
-];
 ---
 
-<Layout 
-  title={seoMetadata.title}
-  description={seoMetadata.description}
-  ogImage={seoMetadata.ogImage}
-  twitterHandle={seoMetadata.twitterHandle}
->
-  <div class="flex flex-col min-h-screen bg-gray-50">
-    <main class="flex-1">
+<Layout title={seoMetadata.title} description={seoMetadata.description}>
+  <main class="w-full pb-4 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto">
       <!-- Hero Section -->
-      <div class="relative overflow-hidden bg-gray-50">
-        <div class="max-w-7xl mx-auto pt-16 pb-16 px-4 sm:px-6 lg:px-8">
-          <div class="text-center">
-            <span class="text-lg font-semibold text-primary-600 mb-4 block font-mono">
-              The Only DSA Course You Need
-            </span>
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight font-display">
-              Master the 14 Core
-              <span class="block text-primary-600 mt-2">
-                DSA Patterns
-                <svg class="absolute w-full h-3 -bottom-2 left-0 text-primary-200" viewBox="0 0 300 12" fill="currentColor">
-                  <path d="M3,7 Q150,0 297,7" stroke="currentColor" stroke-width="3" fill="none"/>
-                </svg>
-              </span>
-            </h1>
-            <p class="mt-8 text-xl text-gray-600 max-w-3xl mx-auto">
-              Join 10,000+ developers who have mastered coding interviews using our pattern-based approach:
-            </p>
-            
-            <!-- Feature Pills -->
-            <div class="flex flex-wrap justify-center gap-4 mt-6">
-              <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-blue-50 text-blue-700">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                </svg>
-                14 Core Patterns
-              </span>
-              <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-green-50 text-green-700">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-                100+ Hand-Picked Problems
-              </span>
-              <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-purple-50 text-purple-700">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
-                </svg>
-                Pattern Recognition
-              </span>
-            </div>
+      <div class="text-center px-4 sm:px-6 lg:px-8">
+        <!-- Launch Badge -->
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-gradient-to-r from-primary-500 to-primary-600 text-white mb-6 animate-bounce">
+          <span class="flex h-2 w-2 relative">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+          </span>
+          Just Launched 🚀
+        </div>
 
-            <!-- CTA Button -->
-            <div class="mt-12">
-              <a 
-                href="/course"
-                class="inline-flex items-center px-8 py-4 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-lg font-medium"
-              >
-                Start Learning
-                <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                </svg>
-              </a>
+        <!-- Mobile-optimized heading -->
+        <h1 class="mt-6 text-4xl sm:text-5xl font-bold text-gray-900 leading-tight">
+          <span class="block mb-2">Crack FAANG with</span>
+          <span class="relative inline-block px-2 text-primary-600">
+            14 DSA Patterns
+            <div class="absolute inset-x-0 bottom-0 h-3 bg-primary-100 -z-10 transform -rotate-1"></div>
+          </span>
+        </h1>
+
+        <!-- Mobile-optimized subheading -->
+        <div class="mt-6 space-y-4">
+          <p class="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
+            <span class="font-semibold text-gray-800">Stop solving random problems.</span> Master the patterns that appear in 
+            <span class="font-semibold text-primary-600">90% of FAANG interviews</span>
+          </p>
+          
+          <!-- Quick Stats - Mobile Optimized -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-8 max-w-lg mx-auto">
+            <div class="bg-white rounded-xl p-3 shadow-sm border border-gray-100">
+              <div class="text-2xl font-bold text-primary-600">14</div>
+              <div class="text-sm text-gray-600">Core Patterns</div>
             </div>
+            <div class="bg-white rounded-xl p-3 shadow-sm border border-gray-100">
+              <div class="text-2xl font-bold text-green-600">100+</div>
+              <div class="text-sm text-gray-600">Practice Problems</div>
+            </div>
+            <div class="col-span-2 sm:col-span-1 bg-white rounded-xl p-3 shadow-sm border border-gray-100">
+              <div class="text-2xl font-bold text-blue-600">500+</div>
+              <div class="text-sm text-gray-600">Success Stories</div>
+            </div>
+          </div>
+
+          <!-- Trust Indicators -->
+          <div class="flex flex-wrap justify-center items-center gap-4 mt-8">
+            <div class="flex items-center gap-1 bg-yellow-50 px-3 py-1 rounded-full">
+              <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              <span class="text-sm font-medium">4.9/5 Rating</span>
+            </div>
+            <div class="flex items-center gap-1 bg-green-50 px-3 py-1 rounded-full">
+              <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              <span class="text-sm font-medium">FAANG Tested</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Video Section - Mobile Optimized -->
+        <div class="mt-8 -mx-4 sm:mx-0">
+          <div class="relative w-full rounded-none sm:rounded-2xl overflow-hidden bg-gray-900 shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-primary-600/20 to-primary-900/20 z-10"></div>
+            <div class="relative pb-[56.25%] h-0">
+              <iframe 
+                class="absolute top-0 left-0 w-full h-full"
+                src="https://www.youtube.com/embed/URzDznuB2NI?rel=0"
+                title="Master DSA Patterns - Introduction"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>
+            </div>
+            <!-- Play Button Overlay -->
+            <!-- <div class="absolute inset-0 flex items-center justify-center z-20">
+              <div class="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center shadow-lg">
+                <svg class="w-8 h-8 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M6.3 2.841A1.5 1.5 0 004 4.11v11.78a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                </svg>
+              </div>
+            </div> -->
+          </div>
+          <p class="mt-4 text-sm text-gray-600 italic">
+            Watch how our students crack FAANG interviews
+          </p>
+        </div>
+
+        <!-- CTA Buttons - Mobile Optimized -->
+        <div class="mt-8 flex flex-col gap-4 px-4">
+          <a 
+            href="/course/two-pointer" 
+            class="w-full py-4 px-6 rounded-lg bg-primary-600 text-white font-medium hover:bg-primary-700 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+          >
+            Start Learning Free
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
+          <a 
+            href="#patterns" 
+            class="w-full py-4 px-6 rounded-lg bg-gray-100 text-gray-700 font-medium hover:bg-gray-200 transition-all flex items-center justify-center gap-2"
+          >
+            Explore All Patterns
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </a>
+        </div>
+
+        <!-- Company Logos - Mobile Optimized -->
+        <div class="mt-12 -mx-4 px-4 py-8 bg-gray-50 sm:rounded-2xl">
+          <p class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-6">
+            Our Students Work At
+          </p>
+          <div class="flex flex-wrap justify-center gap-x-8 gap-y-4">
+            <img src="/logos/google.svg" alt="Google" class="h-6 sm:h-8 opacity-75" />
+            <img src="/logos/meta.svg" alt="Meta" class="h-6 sm:h-8 opacity-75" />
+            <img src="/logos/amazon.svg" alt="Amazon" class="h-6 sm:h-8 opacity-75" />
+            <img src="/logos/microsoft.svg" alt="Microsoft" class="h-6 sm:h-8 opacity-75" />
           </div>
         </div>
       </div>
 
-      <!-- Patterns Grid -->
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl font-bold text-gray-900">The 14 Essential Patterns</h2>
-          <p class="mt-4 text-xl text-gray-600">
-            Master these patterns to solve any coding interview question
+      <!-- Pattern List Section -->
+      <section id="patterns" class="mt-24">
+        <div class="text-center mb-16">
+          <span class="text-sm font-semibold text-primary-600 tracking-wide uppercase font-mono">
+            14 Essential Patterns
+          </span>
+          <h2 class="mt-2 text-4xl font-bold text-gray-900 font-display">
+            Master the Core 
+            <span class="relative inline-block px-2">
+              Interview Patterns
+              <div class="absolute inset-x-0 bottom-0 h-3 bg-primary-100 -z-10 transform -rotate-1"></div>
+            </span>
+          </h2>
+          <p class="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
+            A structured approach to mastering the patterns that appear in 90% of FAANG interview questions
           </p>
+
+          <!-- Course Stats -->
+          <div class="mt-8 flex flex-wrap justify-center gap-8">
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+              <span>14 Core Patterns</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              <span>100+ Practice Problems</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+              <span>FAANG-Style Solutions</span>
+            </div>
+          </div>
         </div>
-        
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {patterns.map(pattern => (
-            <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow p-6">
-              <h3 class="text-xl font-bold text-gray-900 mb-2">{pattern.title}</h3>
-              <p class="text-gray-600 mb-4">{pattern.description}</p>
-              <div class="flex justify-between text-sm">
-                <span class="text-primary-600">{pattern.problems} Problems</span>
-                <span class="text-gray-500">{pattern.difficulty}</span>
+
+        <div class="space-y-8 md:space-y-12">
+          {courseModules.map((module, index) => (
+            <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 md:p-8 relative overflow-hidden group">
+              {/* Animated gradient background on hover */}
+              <div class="absolute inset-0 bg-gradient-to-r from-primary-50 to-primary-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+              {/* Module content */}
+              <div class="relative">
+                {/* Module number badge */}
+                <div class="absolute -top-3 -left-3 w-16 h-16">
+                  <div class="absolute inset-0 bg-primary-600 transform rotate-12 rounded"></div>
+                  <div class="absolute inset-0 flex items-center justify-center text-white font-bold text-xl">
+                    {module.number}
+                  </div>
+                </div>
+
+                <div class="pl-16">
+                  <div class="flex items-center gap-4 mb-4">
+                    <h3 class="text-2xl font-bold text-gray-900">
+                      {module.title}
+                    </h3>
+                    {index === 0 && (
+                      <span class="px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                        Start Here
+                      </span>
+                    )}
+                    {index === courseModules.length - 1 && (
+                      <span class="px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+                        Final Project
+                      </span>
+                    )}
+                  </div>
+                  <p class="text-gray-600 mb-6">{module.description}</p>
+
+                  {/* Lessons grid with adjusted spacing */}
+                  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 ml-2">
+                    {module.lessons.map((lesson) => (
+                      <div class="bg-white rounded-xl border border-gray-100 p-4 hover:border-primary-200 transition-colors">
+                        <h4 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                          <svg class="w-5 h-5 text-primary-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                          </svg>
+                          {lesson.title}
+                        </h4>
+                        <ul class="space-y-2">
+                          {lesson.topics.map((topic) => (
+                            <li class="flex items-start gap-2 text-sm text-gray-600">
+                              <svg class="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                              </svg>
+                              {topic}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Progress indicator */}
+              <div class="absolute left-0 top-0 bottom-0 w-1 bg-primary-100">
+                <div class="w-full bg-primary-500 transition-all duration-300" style={`height: ${(index + 1) * (100 / courseModules.length)}%`}></div>
               </div>
             </div>
           ))}
         </div>
-      </div>
 
-      <!-- Features Section -->
-      <div class="bg-white py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-900">Why Our Pattern-Based Approach Works</h2>
-            <p class="mt-4 text-xl text-gray-600">
-              Learn smarter, not harder with our proven methodology
-            </p>
+        {/* Value Props */}
+        <div class="mt-16 grid md:grid-cols-3 gap-8 text-center">
+          <div class="p-6">
+            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">Pattern Recognition</h3>
+            <p class="text-gray-600">Learn to identify and apply the right pattern for any coding problem.</p>
           </div>
-          
-          <div class="grid md:grid-cols-3 gap-8">
-            {features.map(feature => (
-              <div class="text-center">
-                <div class="text-4xl mb-4">{feature.icon}</div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">{feature.title}</h3>
-                <p class="text-gray-600">{feature.description}</p>
-              </div>
-            ))}
+          <div class="p-6">
+            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">Interview Strategies</h3>
+            <p class="text-gray-600">Master proven techniques to solve problems under pressure.</p>
+          </div>
+          <div class="p-6">
+            <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">Structured Learning</h3>
+            <p class="text-gray-600">Follow a proven roadmap from basics to advanced patterns.</p>
           </div>
         </div>
-      </div>
 
-      <!-- Testimonials Section -->
-      <section class="bg-gradient-to-b from-white to-gray-50 pb-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="text-center mb-12">
-            <span class="text-sm font-semibold text-primary-600 tracking-wide uppercase font-mono">Success Stories</span>
-            <h2 class="mt-2 text-3xl font-bold text-gray-900 sm:text-4xl font-display">
-              Trusted by
-              <span class="relative inline-block px-2">
-                Founders and Developers
-                <div class="absolute inset-x-0 bottom-0 h-3 bg-blue-100 -z-10 transform -rotate-1"></div>
-              </span>
-            </h2>
-            <p class="mt-4 text-xl text-gray-600">
-              See how developers are building six-figure SaaS businesses with BabySaaS
-            </p>
+        {/* CTA */}
+        <div class="mt-16 text-center">
+          <div class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-primary-100 text-primary-800 mb-4">
+            <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clip-rule="evenodd" />
+            </svg>
+            Start Learning Today
           </div>
-
-          <!-- Testimonial Cards -->
-          <div class="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial) => (
-              <div class="bg-white rounded-2xl shadow-lg p-8 relative">
-                <!-- Company Logo -->
-                <div class="absolute -top-6 right-8">
-                  <div class="w-12 h-12 bg-white rounded-xl shadow-md flex items-center justify-center p-2">
-                    <img 
-                      src={testimonial.image} 
-                      alt={testimonial.author} 
-                      class="w-full h-full object-contain"
-                    />
-                  </div>
-                </div>
-
-                <!-- Rating Stars -->
-                <div class="flex gap-1 mb-4">
-                  {Array.from({ length: testimonial.rating }).map(() => (
-                    <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
-
-                <!-- Testimonial Content -->
-                <blockquote class="text-gray-600 mb-6">
-                  "{testimonial.content}"
-                </blockquote>
-
-                <!-- Author Info -->
-                <div class="flex items-center gap-4">
-                  <img 
-                    src={testimonial.image} 
-                    alt={`Photo of ${testimonial.author}`}
-                    class="w-12 h-12 rounded-full object-cover"
-                    loading="lazy"
-                  />
-                  <div>
-                    <div class="font-semibold text-gray-900">{testimonial.author}</div>
-                    <div class="text-sm text-gray-600">{testimonial.role}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <h3 class="text-3xl font-bold mb-4">Ready to Master DSA?</h3>
+          <p class="text-xl text-gray-600 mb-8">Join 1000+ engineers who cracked FAANG interviews using our patterns</p>
+          <a 
+            href="/course/two-pointer" 
+            class="inline-flex items-center px-8 py-4 text-lg font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors"
+          >
+            Start Free Trial
+          </a>
         </div>
       </section>
-
-  </div>
+    </div>
+  </main>
 </Layout>
 
 <style>
-  /* Reset margins and paddings */
-  :global(body) {
-    margin: 0;
-    padding: 0;
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  aside::-webkit-scrollbar {
+    display: none;
   }
 
-  main {
+  /* Hide scrollbar for IE, Edge and Firefox */
+  aside {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  /* Add smooth transitions */
+  #course-sidebar {
+    transition: transform 0.2s ease-in-out;
+  }
+
+  #sidebar-overlay {
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  /* Show sidebar when open class is added */
+  #course-sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Show overlay when open */
+  #sidebar-overlay.open {
     display: block;
-    margin: 0;
-    padding: 0;
   }
 
-  section {
-    margin: 0;
-    padding: 4rem 0;
+  /* Smooth scrolling for lesson cards */
+  .snap-x {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
   }
-
-  @media (max-width: 768px) {
-    section {
-      padding: 3rem 0;
-    }
-  }
-
-  footer {
-    margin: 0;
+  
+  .snap-x::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
   }
 </style>
+
+<script>
+  // Mobile menu functionality
+  const mobileMenuButton = document.getElementById('mobile-menu-button');
+  const sidebar = document.getElementById('course-sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const menuIcon = document.getElementById('menu-icon');
+  const closeIcon = document.getElementById('close-icon');
+
+  function toggleMenu() {
+    sidebar?.classList.toggle('open');
+    overlay?.classList.toggle('open');
+    menuIcon?.classList.toggle('hidden');
+    closeIcon?.classList.toggle('hidden');
+  }
+
+  // Toggle menu when button is clicked
+  mobileMenuButton?.addEventListener('click', toggleMenu);
+
+  // Close menu when overlay is clicked
+  overlay?.addEventListener('click', toggleMenu);
+
+  // Close menu when escape key is pressed
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && sidebar?.classList.contains('open')) {
+      toggleMenu();
+    }
+  });
+
+  // Close menu when window is resized to desktop size
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 768 && sidebar?.classList.contains('open')) {
+      toggleMenu();
+    }
+  });
+
+  // Handle mobile scroll behavior
+  let lastScroll = 0;
+  const mobileNav = document.getElementById('mobile-menu-button');
+
+  window.addEventListener('scroll', () => {
+    if (!mobileNav) return;
+    
+    const currentScroll = window.pageYOffset;
+    
+    if (currentScroll <= 0) {
+      mobileNav.classList.remove('translate-y-full');
+      return;
+    }
+    
+    if (currentScroll > lastScroll && !mobileNav.classList.contains('translate-y-full')) {
+      // Scrolling down
+      mobileNav.classList.add('translate-y-full');
+    } else if (currentScroll < lastScroll && mobileNav.classList.contains('translate-y-full')) {
+      // Scrolling up
+      mobileNav.classList.remove('translate-y-full');
+    }
+    
+    lastScroll = currentScroll;
+  });
+</script> 

@@ -26,42 +26,40 @@ const postsByDate = sortedPosts.reduce((acc, post) => {
 
 // SEO metadata
 const seoMetadata = {
-  title: "DSA Blog - Data Structures and Algorithms",
-  description: "Learn data structures, algorithms, and problem-solving patterns through our comprehensive guides and tutorials.",
+  title: "14DSA Blog - Data Structures and Algorithms",
+  description: "Learn data structures and algorithms through our comprehensive patterns-based approach. Master coding interviews with practical examples.",
   keywords: [
     "data structures",
     "algorithms",
-    "problem-solving",
-    "comprehensive guides",
-    "tutorials",
-    "software engineering",
-    "tech blog",
-    "coding tutorials",
-    "data structures and algorithms",
-    "problem-solving patterns",
-    "comprehensive guides and tutorials",
-    "software engineering blog"
+    "coding patterns",
+    "interview preparation",
+    "leetcode solutions",
+    "dsa patterns",
+    "algorithm tutorials",
+    "coding interview",
+    "programming patterns",
+    "problem solving"
   ].join(", "),
-  ogImage: "/blog-og-image.png",
-  twitterHandle: "@babysaas",
-  siteUrl: "https://yoursite.com/blog",
+  ogImage: "https://14dsa.com/blog-og-image.png",
+  twitterHandle: "@14dsa",
+  siteUrl: "https://14dsa.com/blog",
   type: "blog",
   author: {
     "@type": "Person",
-    name: "BabySaaS Team",
-    url: "https://babysaas.com",
+    name: "14DSA Team",
+    url: "https://14dsa.com",
     sameAs: [
-      "https://twitter.com/babysaas",
-      "https://github.com/babysaas",
-      "https://discord.gg/babysaas"
+      "https://twitter.com/14dsa",
+      "https://github.com/14dsa",
+      "https://discord.gg/14dsa"
     ]
   },
   publisher: {
     "@type": "Organization",
-    name: "BabySaaS",
+    name: "14DSA",
     logo: {
       "@type": "ImageObject",
-      url: "https://babysaas.com/logo.png"
+      url: "https://14dsa.com/logo.png"
     }
   }
 };
@@ -70,7 +68,7 @@ const seoMetadata = {
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "Blog",
-  "name": "BabySaaS Blog",
+  "name": "14DSA Blog",
   "description": seoMetadata.description,
   "url": seoMetadata.siteUrl,
   "author": seoMetadata.author,
