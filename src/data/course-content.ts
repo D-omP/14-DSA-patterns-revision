@@ -712,5 +712,64 @@ export const courseContent: CourseContent = {
         }
       ]
     }
+  },
+  "topological-sort": {
+    practice: {
+      problems: [
+        {
+          title: "Course Schedule",
+          difficulty: "Medium",
+          platform: "LeetCode",
+          url: "https://leetcode.com/problems/course-schedule/",
+          description: "Determine if it's possible to finish all courses given prerequisites."
+        },
+        {
+          title: "Alien Dictionary",
+          difficulty: "Hard",
+          platform: "LeetCode",
+          url: "https://leetcode.com/problems/alien-dictionary/",
+          description: "Find the order of characters in an alien alphabet."
+        },
+        {
+          title: "Minimum Height Trees",
+          difficulty: "Medium",
+          platform: "LeetCode",
+          url: "https://leetcode.com/problems/minimum-height-trees/",
+          description: "Find all the MHT root nodes in a tree."
+        },
+        {
+          title: "Course Schedule II",
+          difficulty: "Medium",
+          platform: "LeetCode",
+          url: "https://leetcode.com/problems/course-schedule-ii/",
+          description: "Return the ordering of courses you should take to finish all courses."
+        }
+      ]
+    },
+    resources: {
+      videos: [
+        {
+          title: "Topological Sort Algorithm",
+          url: "https://youtu.be/example-topo",
+          duration: "22:15",
+          platform: "YouTube"
+        }
+      ],
+      articles: [
+        {
+          title: "Understanding Topological Sort",
+          url: "https://medium.com/example-topo",
+          author: "Alice Chen",
+          platform: "Medium"
+        }
+      ],
+      visualizations: [
+        {
+          title: "Topological Sort Visualizer",
+          url: "https://visualgo.net/example-topo",
+          description: "Interactive visualization of topological sorting algorithm"
+        }
+      ]
+    }
   }
-}; 
+} as const; 

@@ -8,51 +8,68 @@ tags: ["topological-sort", "graphs", "dfs"]
 priority: 10
 ---
 
-## Topological Sort Pattern
+# Topological Sort Pattern
 
-Topological Sort orders vertices in a directed acyclic graph (DAG) such that for every directed edge (u, v), vertex u comes before v in the ordering.
+Topological Sort is a crucial pattern for solving problems involving dependencies and ordering in directed acyclic graphs (DAGs).
 
-### When to use Topological Sort?
+## When to Use Topological Sort
 
-* Course scheduling problems
-* Build system dependencies
-* Task scheduling
-* Pipeline processing
-* Package management
-* Workflow sequencing
+Use this pattern when you need to:
+- Find a linear ordering of elements that have dependencies
+- Schedule tasks with prerequisites
+- Detect cycles in directed graphs
+- Determine build order or compilation sequence
 
-### How it Works
+## Core Concepts
 
-1. **Basic Concept**
-    * Works only on DAGs
-    * Uses DFS or BFS (Kahn's algorithm)
-    * Tracks visited and processing states
-    * Detects cycles if present
+1. **Graph Representation**
+   - Adjacency list for storing dependencies
+   - In-degree tracking for each node
+   - Queue for processing nodes
 
 2. **Key Steps**
-    * Track in-degrees or use DFS
-    * Process nodes with no dependencies
-    * Remove processed edges
-    * Build ordering gradually
+   - Build the adjacency list
+   - Calculate in-degree for each node
+   - Process nodes with 0 in-degree
+   - Update in-degrees as nodes are processed
 
-### Basic Template (Kahn's Algorithm)
+## Common Problems
+
+1. **Course Schedule**
+   - Given prerequisites, determine if courses can be completed
+   - Detect cycles in course dependencies
+   - Find valid course ordering
+
+2. **Build Order**
+   - Determine valid build sequence for projects
+   - Handle build dependencies
+   - Identify circular dependencies
+
+3. **Task Scheduling**
+   - Schedule tasks with dependencies
+   - Find minimum completion time
+   - Parallel task execution
+
+## Implementation Template
 
 ```python
 from collections import defaultdict, deque
 
-def topologicalSort(vertices, edges):
-    # Build adjacency list and in-degree count
+def topological_sort(vertices, edges):
+    # Create adjacency list
     graph = defaultdict(list)
     in_degree = {i: 0 for i in range(vertices)}
     
-    for src, dst in edges:
-        graph[src].append(dst)
-        in_degree[dst] += 1
+    # Build the graph
+    for prereq, course in edges:
+        graph[prereq].append(course)
+        in_degree[course] += 1
     
     # Add all vertices with 0 in-degree to queue
     queue = deque([v for v in range(vertices) if in_degree[v] == 0])
     result = []
     
+    # Process until queue is empty
     while queue:
         vertex = queue.popleft()
         result.append(vertex)
@@ -63,101 +80,66 @@ def topologicalSort(vertices, edges):
             if in_degree[neighbor] == 0:
                 queue.append(neighbor)
     
-    # If result length != vertices, there's a cycle
+    # Check if valid topological sort exists
     return result if len(result) == vertices else []
 ```
 
-### Common Variations
+## Problem-Solving Tips
 
-1. **DFS-based Implementation**
+1. **Graph Building**
+   - Carefully construct the adjacency list
+   - Track both incoming and outgoing edges
+   - Consider using a matrix for dense graphs
 
-```python
-def topologicalSortDFS(vertices, edges):
-    def dfs(node, visited, temp, order):
-        if node in temp:  # Cycle detected
-            return False
-        if node in visited:
-            return True
-            
-        temp.add(node)
-        
-        for neighbor in graph[node]:
-            if not dfs(neighbor, visited, temp, order):
-                return False
-                
-        temp.remove(node)
-        visited.add(node)
-        order.append(node)
-        return True
-    
-    # Build graph
-    graph = defaultdict(list)
-    for src, dst in edges:
-        graph[src].append(dst)
-    
-    visited = set()
-    temp = set()
-    order = []
-    
-    # Process all vertices
-    for vertex in range(vertices):
-        if vertex not in visited:
-            if not dfs(vertex, visited, temp, order):
-                return []  # Cycle detected
-    
-    return order[::-1]
-```
+2. **Cycle Detection**
+   - Valid topological sort exists only for DAGs
+   - Track visited nodes during traversal
+   - Use DFS for explicit cycle detection
 
-2. **Course Schedule**
+3. **Optimization**
+   - Use BFS for shortest path considerations
+   - Consider priority queue for weighted edges
+   - Cache results for repeated queries
 
-```python
-def canFinish(numCourses, prerequisites):
-    # Build graph
-    graph = defaultdict(list)
-    in_degree = [0] * numCourses
-    
-    for course, prereq in prerequisites:
-        graph[prereq].append(course)
-        in_degree[course] += 1
-    
-    # Find courses with no prerequisites
-    queue = deque([i for i in range(numCourses) if in_degree[i] == 0])
-    taken = []
-    
-    while queue:
-        course = queue.popleft()
-        taken.append(course)
-        
-        for next_course in graph[course]:
-            in_degree[next_course] -= 1
-            if in_degree[next_course] == 0:
-                queue.append(next_course)
-    
-    return len(taken) == numCourses
-```
+## Common Pitfalls
 
-### Edge Cases to Consider
+1. **Cycle Handling**
+   - Always check for cycles
+   - Return empty result for cyclic graphs
+   - Consider partial ordering when possible
 
-1. Empty graph
-2. Single vertex
-3. Disconnected components
-4. Multiple valid orderings
-5. Cycle detection
-6. All vertices independent
-7. Linear chain of dependencies
+2. **Edge Cases**
+   - Empty graph
+   - Single node
+   - Disconnected components
 
-### Tips
+3. **Performance**
+   - Space complexity: O(V + E)
+   - Time complexity: O(V + E)
+   - Consider sparse vs dense graphs
 
-1. Always check for cycles
-2. Consider both BFS and DFS approaches
-3. Track visited states carefully
-4. Handle disconnected components
-5. Consider using adjacency list representation
+## Real Interview Questions
 
-### Time & Space Complexity
+1. Course Schedule (LeetCode 207)
+2. Alien Dictionary (LeetCode 269)
+3. Minimum Height Trees (LeetCode 310)
+4. Sequence Reconstruction (LeetCode 444)
 
-* Time Complexity: O(V + E)
-* Space Complexity: O(V)
-* Additional space for queue/stack
-* Graph representation space: O(E)
-* Visited set space: O(V) 
+## Practice Problems
+
+1. **Basic**
+   - Determine if course schedule is possible
+   - Find valid course ordering
+   - Detect cycle in directed graph
+
+2. **Intermediate**
+   - Parallel course scheduling
+   - Build order with dependencies
+   - Find all possible orderings
+
+3. **Advanced**
+   - Minimum time to complete all tasks
+   - Lexicographically smallest valid ordering
+   - Maximum tasks that can be completed
+
+Remember: Topological Sort is essential for system design interviews where dependency management is crucial (build systems, task schedulers, workflow engines). 
