@@ -2,6 +2,8 @@ import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import tailwind from '@astrojs/tailwind';
 
+import react from '@astrojs/react';
+
 // Only import sitemap if it's available
 let sitemap;
 try {
@@ -27,5 +29,6 @@ export default defineConfig({
         },
       },
     })] : []),
+    react()
   ],
 });
