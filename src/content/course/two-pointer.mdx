@@ -1,15 +1,867 @@
 ---
-title: "Two Pointer"
-description: "Learn how to build basic ai apps"
+title: "Two Pointer Pattern"
+description: "Master the art of solving array and string problems using two pointers"
 pubDate: 2024-01-01
-category: "two pointer"
+category: "patterns"
 author: "Aryan Singh"
-tags: ["two pointer"]
-priority: 3
-moduleNumber: 1  # First module after intro-to-saas
+tags: ["two-pointer", "arrays", "strings", "optimization"]
+priority: 1
 ---
 
-## Two Pointer
+## Two Pointer Pattern
 
-Two Pointer is a technique used to solve problems that involve arrays or linked lists. It involves using two pointers to traverse the array or linked list and find a solution.
+The two-pointer technique is a powerful algorithmic pattern that uses two pointers to traverse an array or string, often moving in tandem or in opposite directions. This pattern can transform O(n²) solutions into O(n) by eliminating nested loops.
 
+### Core Concepts
+
+1. **Types of Two-Pointer Movements**
+   - **Opposite Direction**
+     * Start from both ends
+     * Move towards center
+     * Used for palindromes, container problems
+     * Efficient for sorted arrays
+   
+   - **Same Direction**
+     * Start from beginning
+     * Move at different speeds
+     * Used for cycle detection
+     * Efficient for linked lists
+   
+   - **Window-Like Movement**
+     * Maintain a gap between pointers
+     * Used for subarray problems
+     * Dynamic size windows
+     * Fixed distance tracking
+
+2. **Common Applications**
+   - **Array Operations**
+     * Finding pairs with target sum
+     * Three sum variations
+     * Container with most water
+     * Removing duplicates
+   
+   - **String Manipulations**
+     * Palindrome verification
+     * Reversing strings
+     * Character matching
+     * Substring problems
+   
+   - **Linked List Operations**
+     * Finding middle element
+     * Cycle detection
+     * Intersection point
+     * Merging sorted lists
+
+### Implementation Patterns
+
+1. **Opposite Direction Pattern**
+The opposite direction pattern is fundamental in two-pointer algorithms. This approach is particularly effective when:
+- Working with sorted arrays
+- Finding pairs that satisfy conditions
+- Searching for elements with complementary properties
+- Optimizing space complexity
+
+Key advantages:
+- Reduces time complexity from O(n²) to O(n)
+- Avoids nested loops
+- Minimizes space usage
+- Handles duplicates efficiently
+
+Common use cases:
+- Two Sum variations
+- Container with most water
+- Palindrome verification
+- Array partitioning
+
+```python
+def twoSum(numbers: list[int], target: int) -> list[int]:
+    """
+    Find two numbers that add up to target in a sorted array.
+    Time: O(n), Space: O(1)
+    """
+    left, right = 0, len(numbers) - 1
+    
+    while left < right:
+        current_sum = numbers[left] + numbers[right]
+        
+        if current_sum == target:
+            return [left + 1, right + 1]  # 1-based indexing
+        elif current_sum < target:
+            left += 1  # Need larger numbers
+        else:
+            right -= 1  # Need smaller numbers
+    
+    return []  # No solution found
+
+# Example usage:
+# numbers = [2,7,11,15], target = 9
+# Output: [1,2] (numbers[0] + numbers[1] = 2 + 7 = 9)
+```
+
+2. **Fast-Slow Pointer Pattern**
+The fast-slow pointer (also known as Floyd's Tortoise and Hare) pattern is crucial for:
+- Cycle detection in linked lists or arrays
+- Finding middle elements
+- Detecting duplicates
+- Verifying sequence properties
+
+Why it works:
+- Fast pointer moves twice as fast as slow pointer
+- If cycle exists, they will eventually meet
+- Meeting point helps find cycle start
+- Optimal for memory-constrained environments
+
+Implementation considerations:
+- Handle null/empty inputs
+- Consider cycle length
+- Watch for infinite loops
+- Manage pointer movement carefully
+
+```python
+def findDuplicate(nums: list[int]) -> int:
+    """
+    Find duplicate number using Floyd's Cycle Detection.
+    Time: O(n), Space: O(1)
+    """
+    # Phase 1: Find intersection point
+    slow = fast = nums[0]
+    while True:
+        slow = nums[slow]
+        fast = nums[nums[fast]]
+        if slow == fast:
+            break
+    
+    # Phase 2: Find cycle entrance
+    slow = nums[0]
+    while slow != fast:
+        slow = nums[slow]
+        fast = nums[fast]
+    
+    return slow
+
+# Example usage:
+# nums = [1,3,4,2,2]
+# Output: 2 (duplicate number)
+```
+
+3. **Sliding Window Pattern**
+The sliding window variation combines two-pointer technique with window management. Ideal for:
+- Subarray/substring problems
+- Continuous sequence analysis
+- Fixed-size window operations
+- Dynamic window requirements
+
+Key concepts:
+- Window boundaries management
+- State tracking within window
+- Efficient updates
+- Optimization opportunities
+
+Common applications:
+- Maximum sum subarray
+- String pattern matching
+- Minimum window substring
+- Duplicate removal
+
+```python
+def removeDuplicates(nums: list[int]) -> int:
+    """
+    Remove duplicates in-place from sorted array.
+    Time: O(n), Space: O(1)
+    """
+    if not nums:
+        return 0
+        
+    # Position for next unique element
+    write_pointer = 1
+    
+    # Scan through array
+    for read_pointer in range(1, len(nums)):
+        # Found new unique element
+        if nums[read_pointer] != nums[read_pointer - 1]:
+            nums[write_pointer] = nums[read_pointer]
+            write_pointer += 1
+    
+    return write_pointer
+
+# Example usage:
+# nums = [1,1,2,2,3,4,4]
+# Output: 5, nums = [1,2,3,4,_,_,_]
+```
+
+### Advanced Techniques
+
+1. **Three Pointer Variations**
+Three pointer technique extends the basic two-pointer approach for more complex problems. Essential for:
+- Three-way partitioning
+- Triple sum problems
+- Array rearrangement
+- Multi-condition satisfaction
+
+Key challenges:
+- Maintaining pointer relationships
+- Handling duplicates
+- Optimizing movement strategy
+- Managing state complexity
+
+Implementation tips:
+- Sort array when possible
+- Skip duplicate values
+- Use helper functions
+- Consider edge cases
+
+```python
+def threeSum(nums: list[int]) -> list[list[int]]:
+    """
+    Find all unique triplets that sum to zero.
+    Time: O(n²), Space: O(1) excluding output
+    """
+    nums.sort()  # Sort for two-pointer technique
+    result = []
+    
+    for i in range(len(nums) - 2):
+        # Skip duplicates for first number
+        if i > 0 and nums[i] == nums[i - 1]:
+            continue
+            
+        # Use two pointers for remaining sum
+        left, right = i + 1, len(nums) - 1
+        target = -nums[i]
+        
+        while left < right:
+            current_sum = nums[left] + nums[right]
+            
+            if current_sum == target:
+                result.append([nums[i], nums[left], nums[right]])
+                
+                # Skip duplicates for second number
+                while left < right and nums[left] == nums[left + 1]:
+                    left += 1
+                # Skip duplicates for third number
+                while left < right and nums[right] == nums[right - 1]:
+                    right -= 1
+                    
+                left += 1
+                right -= 1
+            elif current_sum < target:
+                left += 1
+            else:
+                right -= 1
+    
+    return result
+```
+
+### Advanced Applications
+
+1. **Container With Most Water**
+This problem demonstrates an elegant application of the two-pointer technique for optimization problems. The key insights are:
+- Area is determined by minimum height and width
+- Moving the shorter line inward might improve area
+- Moving the taller line inward can't improve area
+- Optimal solution requires considering all potential maximum areas
+
+Key optimization principles:
+- Skip unnecessary calculations
+- Move pointers based on height comparison
+- Track maximum area efficiently
+- Handle edge cases gracefully
+
+```python
+def maxArea(height: list[int]) -> int:
+    """
+    Find two lines that together with x-axis forms a container holding maximum water.
+    Uses efficient two-pointer approach to avoid checking all combinations.
+    
+    Time: O(n), Space: O(1)
+    """
+    max_area = 0
+    left, right = 0, len(height) - 1
+    
+    while left < right:
+        # Calculate current area
+        width = right - left
+        container_height = min(height[left], height[right])
+        area = width * container_height
+        max_area = max(max_area, area)
+        
+        # Move pointer of smaller height
+        # Optimization: Moving the larger height can't improve result
+        if height[left] < height[right]:
+            left += 1
+        else:
+            right -= 1
+    
+    return max_area
+
+# Example usage:
+# height = [1,8,6,2,5,4,8,3,7]
+# Output: 49 (between heights 8 and 7)
+```
+
+2. **Minimum Window Substring with Two Pointers**
+This advanced problem combines two-pointer technique with hash map tracking. Important concepts:
+- Window expansion and contraction
+- Character frequency management
+- Minimum window tracking
+- Optimization through early termination
+
+Implementation challenges:
+- Efficient state tracking
+- Minimizing window size
+- Handling duplicate characters
+- Optimizing window updates
+
+```python
+def minWindow(s: str, t: str) -> str:
+    """
+    Find minimum window in s containing all characters of t.
+    Combines two-pointer with character frequency tracking.
+    
+    Time: O(n), Space: O(k) where k is unique chars in t
+    """
+    if not s or not t:
+        return ""
+        
+    # Character frequency in target string
+    target_freq = {}
+    for char in t:
+        target_freq[char] = target_freq.get(char, 0) + 1
+    
+    required = len(target_freq)
+    formed = 0
+    window_freq = {}
+    
+    # Answer variables
+    min_len = float('inf')
+    start = end = 0
+    
+    # Two pointers for window
+    left = 0
+    for right in range(len(s)):
+        # Expand window
+        char = s[right]
+        window_freq[char] = window_freq.get(char, 0) + 1
+        
+        # Check if current char helps form required frequency
+        if char in target_freq and window_freq[char] == target_freq[char]:
+            formed += 1
+        
+        # Try to minimize window
+        while formed == required:
+            # Update answer if current window is smaller
+            if right - left + 1 < min_len:
+                min_len = right - left + 1
+                start, end = left, right + 1
+            
+            # Contract window
+            char = s[left]
+            window_freq[char] -= 1
+            if char in target_freq and window_freq[char] < target_freq[char]:
+                formed -= 1
+            left += 1
+    
+    return s[start:end] if min_len != float('inf') else ""
+```
+
+3. **K-way Merge with Multiple Pointers**
+A sophisticated application combining two-pointer with heap data structure. Key aspects:
+- Multiple pointer management
+- Priority queue optimization
+- Memory efficient merging
+- Scalable for large datasets
+
+Design considerations:
+- Heap operations complexity
+- Memory usage optimization
+- Pointer synchronization
+- Error handling strategy
+
+```python
+from heapq import heappush, heappop
+
+def mergeKSortedArrays(arrays: list[list[int]]) -> list[int]:
+    """
+    Merge k sorted arrays using multiple pointers and heap.
+    Demonstrates advanced multi-pointer technique with heap optimization.
+    
+    Time: O(N log k) where N is total elements, k is number of arrays
+    Space: O(k) for the heap
+    """
+    # Initialize heap with first element from each array
+    heap = []
+    for i, arr in enumerate(arrays):
+        if arr:  # Handle empty arrays
+            heappush(heap, (arr[0], i, 0))  # (value, array_index, element_index)
+    
+    result = []
+    while heap:
+        val, arr_idx, elem_idx = heappop(heap)
+        result.append(val)
+        
+        # If there are more elements in this array, add next element to heap
+        if elem_idx + 1 < len(arrays[arr_idx]):
+            next_elem = arrays[arr_idx][elem_idx + 1]
+            heappush(heap, (next_elem, arr_idx, elem_idx + 1))
+    
+    return result
+
+# Example usage:
+# arrays = [[1,4,5],[1,3,4],[2,6]]
+# Output: [1,1,2,3,4,4,5,6]
+```
+
+### Complex Problem Variations
+
+1. **Circular Array Problems**
+Circular array problems require special handling of pointer movement and cycle detection. Critical aspects:
+- Circular movement calculation
+- Direction consistency checking
+- Cycle validation
+- State tracking
+
+Common challenges:
+- Handling negative jumps
+- Detecting invalid cycles
+- Managing visited states
+- Preventing infinite loops
+
+Implementation requirements:
+- Modular arithmetic for circular movement
+- Direction tracking
+- State restoration
+- Efficient cycle detection
+
+```python
+def circularArrayLoop(nums: list[int]) -> bool:
+    """
+    Detect cycles in a circular array where values indicate jump distance and direction.
+    Uses fast-slow pointer technique with additional constraints.
+    
+    Time: O(n), Space: O(1)
+    Key insight: Use value % n for circular movement and mark visited elements
+    """
+    n = len(nums)
+    
+    def get_next(current: int) -> int:
+        # Handle circular movement
+        next_pos = (current + nums[current]) % n
+        # Handle negative movement
+        return (next_pos + n) % n if next_pos < 0 else next_pos
+    
+    def is_valid_cycle(start: int) -> bool:
+        if nums[start] == 0:
+            return False
+            
+        slow = start
+        fast = start
+        direction = nums[start] > 0  # Track movement direction
+        
+        while True:
+            # Move slow pointer
+            slow = get_next(slow)
+            if nums[slow] == 0:  # Marked as visited
+                return False
+                
+            # Move fast pointer twice
+            fast = get_next(fast)
+            if nums[fast] == 0:
+                return False
+            fast = get_next(fast)
+            if nums[fast] == 0:
+                return False
+                
+            # Check cycle conditions
+            if slow == fast:
+                return True
+            
+            # Check direction consistency
+            if (nums[slow] > 0) != direction or (nums[fast] > 0) != direction:
+                return False
+                
+            # Mark as visited by setting to 0
+            nums[slow] = 0
+            
+    # Try each position as starting point
+    original_nums = nums.copy()  # Save original array
+    for i in range(n):
+        nums = original_nums.copy()  # Reset for each start position
+        if nums[i] != 0 and is_valid_cycle(i):
+            return True
+            
+    return False
+
+# Example usage:
+# nums = [2,-1,1,2,2]
+# Output: True (2 → 3 → 4 → 2 forms a cycle)
+```
+
+2. **String Interleaving**
+This complex variation combines two-pointer with dynamic programming. Key concepts:
+- State space exploration
+- Memoization optimization
+- Backtracking implementation
+- Character matching strategy
+
+Optimization techniques:
+- Cache previous results
+- Prune invalid paths
+- Optimize space usage
+- Handle edge cases efficiently
+
+Performance considerations:
+- Memoization trade-offs
+- Space complexity management
+- Time complexity optimization
+- Cache efficiency
+
+```python
+def isInterleave(s1: str, s2: str, s3: str) -> bool:
+    """
+    Check if s3 is formed by interleaving characters from s1 and s2.
+    Uses two pointers with backtracking optimization.
+    
+    Time: O(m*n) with memoization, Space: O(m*n)
+    Key insight: Use dynamic programming to avoid redundant checks
+    """
+    if len(s1) + len(s2) != len(s3):
+        return False
+        
+    # Memoization cache
+    memo = {}
+    
+    def can_interleave(i: int, j: int, k: int) -> bool:
+        if k == len(s3):
+            return i == len(s1) and j == len(s2)
+            
+        if (i, j) in memo:
+            return memo[(i, j)]
+            
+        result = False
+        # Try matching with s1
+        if i < len(s1) and s1[i] == s3[k]:
+            result = can_interleave(i + 1, j, k + 1)
+            
+        # Try matching with s2
+        if not result and j < len(s2) and s2[j] == s3[k]:
+            result = can_interleave(i, j + 1, k + 1)
+            
+        memo[(i, j)] = result
+        return result
+        
+    return can_interleave(0, 0, 0)
+
+# Example usage:
+# s1 = "aabcc", s2 = "dbbca", s3 = "aadbbcbcac"
+# Output: True
+```
+
+3. **Minimum Window Subsequence**
+A challenging problem combining sliding window with dynamic two-pointer approach. Essential concepts:
+- Forward scanning for matches
+- Backward scanning for minimization
+- Efficient window management
+- Optimal subsequence finding
+
+Technical considerations:
+- Two-phase scanning approach
+- Window size optimization
+- Character matching efficiency
+- Result management
+
+Advanced optimization strategies:
+- Early termination conditions
+- Efficient string scanning
+- Memory usage optimization
+- Performance tuning
+
+```python
+def minWindowSubsequence(S: str, T: str) -> str:
+    """
+    Find minimum window in S that contains T as a subsequence.
+    Uses dynamic two-pointer approach with optimization.
+    
+    Time: O(n*m), Space: O(1)
+    Key insight: Forward scan to find valid window, backward scan to minimize
+    """
+    def find_subsequence(start: int) -> tuple[int, int]:
+        # Forward scan to find end of valid window
+        t_idx = 0
+        for s_idx in range(start, len(S)):
+            if S[s_idx] == T[t_idx]:
+                t_idx += 1
+                if t_idx == len(T):
+                    # Found complete match, now minimize window
+                    end = s_idx
+                    # Backward scan to find start of minimal window
+                    t_idx -= 1
+                    while t_idx >= 0:
+                        while S[s_idx] != T[t_idx]:
+                            s_idx -= 1
+                        t_idx -= 1
+                        s_idx -= 1
+                    return (s_idx + 1, end)
+        return (-1, -1)
+    
+    min_len = float('inf')
+    result = ""
+    start = 0
+    
+    while start < len(S):
+        new_start, end = find_subsequence(start)
+        if new_start == -1:
+            break
+            
+        if end - new_start + 1 < min_len:
+            min_len = end - new_start + 1
+            result = S[new_start:end + 1]
+            
+        start = new_start + 1
+        
+    return result
+
+# Example usage:
+# S = "abcdebdde", T = "bde"
+# Output: "bcde"
+```
+
+### Real-World Applications
+
+1. **Network Packet Analysis**
+   - Detecting duplicate packets
+   - Finding packet sequence gaps
+   - Analyzing packet windows
+   - Processing stream data
+
+2. **Database Operations**
+   - Merge-join algorithms
+   - Range query processing
+   - Index scanning
+   - Duplicate elimination
+
+3. **Text Processing**
+   - Document diff tools
+   - Code similarity checking
+   - Pattern matching
+   - Text compression
+
+4. **Financial Analysis**
+   - Stock price analysis
+   - Trading pattern detection
+   - Time series analysis
+   - Portfolio optimization
+
+### Visualization Techniques
+
+Understanding how two pointers move and interact is crucial for mastering this pattern. The following visualization techniques help developers debug, understand, and optimize two-pointer algorithms.
+
+1. **Pointer Movement Visualization**
+This technique provides a clear visual representation of how pointers move through an array. It's particularly useful for:
+- Debugging pointer movement logic
+- Understanding convergence patterns
+- Identifying boundary conditions
+- Teaching the two-pointer concept
+
+The visualization uses special markers to show:
+- Left pointer position (L)
+- Right pointer position (R)
+- Overlapping positions ([])
+- Current element values
+- Movement direction
+
+```python
+def visualizePointerMovement(arr: list, left: int, right: int) -> str:
+    """
+    Creates a visual representation of two-pointer positions in an array.
+    Helpful for debugging and understanding pointer movements.
+    
+    Time: O(n), Space: O(n) for visualization string
+    """
+    result = []
+    for i in range(len(arr)):
+        if i == left and i == right:
+            result.append(f"[{arr[i]}]")  # Both pointers
+        elif i == left:
+            result.append(f"L{arr[i]}")   # Left pointer
+        elif i == right:
+            result.append(f"R{arr[i]}")   # Right pointer
+        else:
+            result.append(f" {arr[i]} ")   # No pointer
+    
+    return " ".join(result)
+
+def twoSumVisualized(numbers: list[int], target: int) -> None:
+    """
+    Visualize two-pointer approach for finding two sum.
+    Demonstrates pointer movement and decision making.
+    """
+    left, right = 0, len(numbers) - 1
+    steps = 1
+    
+    print("Initial array:")
+    print(visualizePointerMovement(numbers, left, right))
+    
+    while left < right:
+        current_sum = numbers[left] + numbers[right]
+        print(f"\nStep {steps}:")
+        print(f"Current sum: {numbers[left]} + {numbers[right]} = {current_sum}")
+        
+        if current_sum == target:
+            print("✅ Found target sum!")
+            return [left + 1, right + 1]
+        
+        if current_sum < target:
+            print("Sum too small, moving left pointer →")
+            left += 1
+        else:
+            print("Sum too large, moving right pointer ←")
+            right -= 1
+            
+        print(visualizePointerMovement(numbers, left, right))
+        steps += 1
+
+# Example usage:
+# numbers = [2,7,11,15], target = 9
+# Output:
+# Initial array:
+# L2  7  11 R15
+# Step 1:
+# Current sum: 2 + 15 = 17
+# Sum too large, moving right pointer ←
+# L2  7  R11  15
+# Step 2:
+# Current sum: 2 + 11 = 13
+# Sum too large, moving right pointer ←
+# L2  R7  11  15
+# Step 3:
+# Current sum: 2 + 7 = 9
+# ✅ Found target sum!
+```
+
+2. **State Space Visualization**
+State space visualization helps understand the search space exploration in two-pointer algorithms. This is critical for:
+- Optimizing search patterns
+- Identifying redundant states
+- Understanding algorithm efficiency
+- Finding optimization opportunities
+
+Key visualization features:
+- 2D grid representation
+- Explored state tracking
+- Optimal path highlighting
+- Search space coverage
+
+```python
+class PointerStateVisualizer:
+    """
+    Visualizes the state space exploration of two-pointer algorithms.
+    Useful for understanding search space and optimization opportunities.
+    
+    Time: O(1) for recording states, O(n²) for visualization
+    Space: O(n²) for storing states
+    """
+    def __init__(self, arr: list):
+        self.arr = arr
+        self.states = []
+        self.optimal_path = set()
+        self.current_value = float('-inf')
+        self.best_value = float('-inf')
+    
+    def record_state(self, left: int, right: int, current_value: float, is_optimal: bool = False):
+        """Record a state in the search space exploration"""
+        state = (left, right)
+        self.states.append((state, current_value))
+        self.current_value = current_value
+        
+        if is_optimal or current_value > self.best_value:
+            self.optimal_path.add(state)
+            self.best_value = current_value
+    
+    def visualize_search_space(self):
+        """Creates a 2D grid visualization of the search space"""
+        n = len(self.arr)
+        grid = [[' ' for _ in range(n)] for _ in range(n)]
+        values = [['' for _ in range(n)] for _ in range(n)]
+        
+        # Mark explored states and their values
+        for (left, right), value in self.states:
+            grid[left][right] = '•'
+            values[left][right] = f'{value:.1f}'
+        
+        # Mark optimal path
+        for left, right in self.optimal_path:
+            grid[left][right] = '★'
+        
+        # Print grid with array values on top
+        print("\nSearch Space Visualization:")
+        print("   " + "  ".join(f"{x:2}" for x in self.arr))
+        print("  " + "─" * (4 * n))
+        
+        for i in range(n):
+            row = f"{self.arr[i]:2}│"
+            for j in range(n):
+                if grid[i][j] != ' ':
+                    row += f"{grid[i][j]}{values[i][j]:3}"
+                else:
+                    row += "    "
+            print(row)
+    
+    def print_statistics(self):
+        """Print exploration statistics"""
+        print("\nExploration Statistics:")
+        print(f"Total states explored: {len(self.states)}")
+        print(f"Optimal states found: {len(self.optimal_path)}")
+        print(f"Best value found: {self.best_value}")
+        print(f"Search space coverage: {len(self.states)/(len(self.arr)**2)*100:.1f}%")
+
+# Example usage for container with most water
+def visualizeContainerWithWater(height: list[int]) -> int:
+    visualizer = PointerStateVisualizer(height)
+    max_area = 0
+    left, right = 0, len(height) - 1
+    
+    while left < right:
+        # Calculate current area
+        width = right - left
+        area = min(height[left], height[right]) * width
+        
+        # Record state
+        visualizer.record_state(left, right, area, area > max_area)
+        
+        # Update max area and move pointers
+        max_area = max(max_area, area)
+        if height[left] < height[right]:
+            left += 1
+        else:
+            right -= 1
+    
+    visualizer.visualize_search_space()
+    visualizer.print_statistics()
+    return max_area
+
+# Example usage:
+# height = [1,8,6,2,5,4,8,3,7]
+# Output shows 2D grid with explored states and optimal path
+```
+
+### System Design Applications
+
+Two-pointer techniques are not just for algorithmic problems; they're widely used in system design. Here are practical applications with real-world use cases.
+
+1. **Rate Limiter Implementation**
+Rate limiting is crucial for:
+- API throttling
+- DDoS protection
+- Resource allocation
+- Traffic shaping
+
+The sliding window rate limiter uses two pointers to:
+- Track request timestamps
+- Maintain window boundaries
+- Count requests efficiently
+- Ensure fair resource usage
+
+Implementation considerations:
+- Memory efficiency
+- Thread safety
+- Scalability
+- Error handling

@@ -1,46 +1,465 @@
 ---
 title: "Sliding Window"
-description: "Master the sliding window pattern for array and string problems"
-pubDate: 2024-01-01
-category: "sliding window"
+description: "Master the art of efficient array/string processing with sliding window technique"
+pubDate: 2024-01-02
+category: "patterns"
 author: "Aryan Singh"
-tags: ["sliding window"]
-priority: 3
-moduleNumber: 1
+tags: ["sliding-window", "arrays", "strings", "optimization"]
+priority: 2
 ---
 
 ## Sliding Window Pattern
 
-The Sliding Window pattern is used to perform operations on arrays or strings using a window that slides through the data structure. This technique is particularly useful for solving problems that involve contiguous sequences.
+The sliding window pattern is a powerful algorithmic technique that transforms nested iteration (O(n²)) into linear time complexity (O(n)) by maintaining a "window" of elements that slides through the data. This pattern is particularly effective when dealing with contiguous sequences in arrays or strings.
 
-### When to use Sliding Window?
-- Finding subarrays/substrings that satisfy certain conditions
-- Calculating running averages
-- Finding max/min sum subarrays of fixed size
-- Finding longest/shortest substring with certain properties
+### Core Concepts
 
-### Types of Sliding Window
+1. **Window Definition**
+   - A window is a contiguous sequence of elements
+   - Can be fixed or variable in size
+   - Maintains relevant data or state information
+   - Slides through the input sequentially
+
+2. **Window Operations**
+   - Expansion: Adding elements to the window
+   - Contraction: Removing elements from the window
+   - Sliding: Moving the window forward
+   - State Maintenance: Tracking window properties
+
+3. **Optimization Principles**
+   - Reuse calculations from previous window
+   - Maintain window state efficiently
+   - Avoid redundant computations
+   - Leverage window properties
+
+### When to Use Sliding Window?
+
+1. **Fixed-Length Windows**
+   - Scenarios:
+     * Finding maximum/minimum sum subarray of size k
+     * Calculating moving averages in time series
+     * Finding fixed-size patterns in strings
+     * Computing sliding medians or averages
+   - Characteristics:
+     * Window size remains constant
+     * State updates are predictable
+     * Usually simpler to implement
+   - Examples:
+     * Stock price averages over k days
+     * Temperature readings over fixed intervals
+     * Network traffic analysis in time windows
+
+2. **Dynamic-Length Windows**
+   - Scenarios:
+     * Longest substring with k distinct characters
+     * Smallest subarray with sum greater than x
+     * String permutations and anagrams
+     * Maximum fruits in baskets problem
+   - Characteristics:
+     * Window size varies based on conditions
+     * Requires dynamic state management
+     * More complex state updates
+   - Examples:
+     * Variable-length pattern matching
+     * Adaptive rate limiting
+     * Dynamic resource allocation
+
+3. **String Processing Applications**
+   - Common Problems:
+     * Minimum window substring
+     * Longest substring without repeating characters
+     * Finding all anagrams in a string
+     * Pattern matching with wildcards
+   - Key Considerations:
+     * Character frequency tracking
+     * Window state management
+     * Efficient string operations
+   - Optimization Techniques:
+     * Hash maps for frequency counting
+     * Early termination conditions
+     * State compression methods
+
+4. **Array Operations**
+   - Use Cases:
+     * Maximum sum subarray
+     * Continuous subarrays with constraints
+     * Stock price analysis
+     * Temperature range queries
+   - Implementation Strategies:
+     * State maintenance with variables
+     * Deque for min/max tracking
+     * Prefix sums for quick calculations
+   - Performance Considerations:
+     * Memory usage vs computation speed
+     * State update efficiency
+     * Data structure choice
+
+### Problem-Solving Framework
+
+1. **Identify Pattern Applicability**
+   - Is the problem about contiguous sequences?
+   - Can we optimize by reusing calculations?
+   - Are we dealing with subarrays or substrings?
+   - Is there a window size or constraint?
+
+2. **Choose Window Type**
+   - Fixed size: When k is given
+   - Dynamic size: When using constraints
+   - Multi-state: When tracking multiple conditions
+   - Directional: One-way vs bi-directional sliding
+
+3. **Design Window State**
+   - What information needs tracking?
+   - How to update state efficiently?
+   - What data structures to use?
+   - How to handle edge cases?
+
+4. **Implement Core Operations**
+   - Window initialization
+   - State updates
+   - Window sliding
+   - Result collection
+
+### Implementation Patterns
+
 1. **Fixed Window Size**
-    - Window size remains constant throughout
-    - Example: Find max sum subarray of size K
+This pattern is used when you need to process arrays/strings with a window of constant size. It's particularly efficient for calculating running averages, finding max/min subarrays, or analyzing fixed-size sequences.
 
-2. **Variable Window Size**
-    - Window size changes based on conditions
-    - Example: Longest substring without repeating characters
-
-### Basic Template
 ```python
-def slidingWindow(arr):
-    window_start = 0
-    for window_end in range(len(arr)):
-        # Add element to window
-        
-        # Process window if needed
-        
-        # Remove elements from window start if needed
-        while condition:
-            # Remove element from window
-            window_start += 1
+def fixedWindow(arr: list, k: int) -> list:
+    # Input validation
+    if not arr or k <= 0:
+        return []
     
+    # Initialize result array and first window sum    
+    result = []
+    window_sum = sum(arr[:k])  # Calculate sum of first k elements
+    result.append(window_sum)
+    
+    # Slide window through remaining elements
+    # Time Complexity: O(n), Space Complexity: O(1) excluding result array
+    for i in range(k, len(arr)):
+        # Sliding window technique:
+        # 1. Subtract element going out of window (arr[i-k])
+        # 2. Add new element entering window (arr[i])
+        # This maintains O(1) time for each window calculation
+        window_sum = window_sum - arr[i-k] + arr[i]
+        result.append(window_sum)
+        
+    return result
+
+# Example usage:
+# arr = [1, 2, 3, 4, 5], k = 3
+# Output: [6, 9, 12] (sum of each window [1,2,3], [2,3,4], [3,4,5])
+```
+
+2. **Dynamic Window with Constraints**
+This pattern is used when the window size can vary based on certain conditions. It's useful for finding longest/shortest subarrays that satisfy given constraints. The window expands and contracts based on the problem conditions.
+
+```python
+def dynamicWindow(s: str, k: int) -> int:
+    """
+    Find the longest substring with at most k distinct characters.
+    Time Complexity: O(n), where n is length of string
+    Space Complexity: O(k), where k is number of distinct characters
+    """
+    # Input validation
+    if not s or k <= 0:
+        return 0
+    
+    # Initialize window state
+    char_count = {}  # Track frequency of characters in current window
+    max_length = start = 0  # start: beginning of window
+    
+    # Process each character in string
+    for end in range(len(s)):
+        # 1. Expand window: add new character
+        char_count[s[end]] = char_count.get(s[end], 0) + 1
+        
+        # 2. Contract window if constraint is violated
+        # While we have more than k distinct characters
+        while len(char_count) > k:
+            # Remove characters from start of window
+            char_count[s[start]] -= 1
+            if char_count[s[start]] == 0:
+                del char_count[s[start]]  # Remove character if count becomes 0
+            start += 1  # Move window start forward
+            
+        # 3. Update result: current window length might be maximum
+        max_length = max(max_length, end - start + 1)
+    
+    return max_length
+
+# Example usage:
+# s = "eceba", k = 2
+# Output: 3 (longest substring "ece" has 2 distinct characters)
+```
+
+3. **Two-Pointer Sliding Window**
+This variation combines sliding window with two-pointer technique. It's particularly effective for finding subarrays that meet certain sum or product conditions. The two pointers represent the window boundaries.
+
+```python
+def minSubArrayLen(target: int, nums: list) -> int:
+    """
+    Find the minimal length subarray whose sum is greater than or equal to target.
+    Time Complexity: O(n), where n is length of array
+    Space Complexity: O(1)
+    """
+    # Initialize variables
+    min_length = float('inf')  # Track minimum window size
+    window_sum = start = 0     # Track current window sum and start position
+    
+    # Process each element as potential window end
+    for end in range(len(nums)):
+        # 1. Add current element to window sum
+        window_sum += nums[end]
+        
+        # 2. Try to minimize window size while maintaining sum condition
+        while window_sum >= target:
+            # Update minimum length if current window is smaller
+            current_length = end - start + 1
+            min_length = min(min_length, current_length)
+            
+            # Remove elements from start to find smaller valid window
+            window_sum -= nums[start]
+            start += 1
+            
+    # Return 0 if no valid window found
+    return min_length if min_length != float('inf') else 0
+
+# Example usage:
+# nums = [2,3,1,2,4,3], target = 7
+# Output: 2 (subarray [4,3] has sum ≥ 7 and length 2)
+```
+
+### Advanced Techniques
+
+1. **Multi-Window Processing**
+```python
+def maxSlidingWindow(nums: list, k: int) -> list:
+    from collections import deque
+    
+    result = []
+    window = deque()  # Store indices
+    
+    for i in range(len(nums)):
+        # Remove elements outside current window
+        while window and window[0] < i - k + 1:
+            window.popleft()
+            
+        # Remove smaller elements
+        while window and nums[window[-1]] < nums[i]:
+            window.pop()
+            
+        window.append(i)
+        
+        # Add to result if window is complete
+        if i >= k - 1:
+            result.append(nums[window[0]])
+            
     return result
 ```
+
+2. **Sliding Window with State**
+```python
+def characterReplacement(s: str, k: int) -> int:
+    char_count = {}
+    max_count = max_length = start = 0
+    
+    for end in range(len(s)):
+        # Update state
+        char_count[s[end]] = char_count.get(s[end], 0) + 1
+        max_count = max(max_count, char_count[s[end]])
+        
+        # Check if window is valid
+        while (end - start + 1) - max_count > k:
+            char_count[s[start]] -= 1
+            start += 1
+            
+        max_length = max(max_length, end - start + 1)
+    
+    return max_length
+```
+
+### Advanced Applications
+
+1. **Stock Price Analysis**
+Stock price analysis often requires processing continuous ranges of price data. This implementation demonstrates how to efficiently track both maximum and minimum values within a sliding window, which is crucial for analyzing price trends and identifying trading opportunities.
+
+Key applications:
+- Finding best buy/sell points
+- Calculating moving price ranges
+- Identifying price trends
+- Analyzing volatility patterns
+
+```python
+def maxProfit(prices: list, k: int) -> int:
+    def slidingMaxMin(arr: list, k: int) -> tuple:
+        from collections import deque
+        max_d = deque()
+        min_d = deque()
+        result_max = []
+        result_min = []
+        
+        for i in range(len(arr)):
+            # Update max deque
+            while max_d and arr[max_d[-1]] <= arr[i]:
+                max_d.pop()
+            max_d.append(i)
+            
+            # Update min deque
+            while min_d and arr[min_d[-1]] >= arr[i]:
+                min_d.pop()
+            min_d.append(i)
+            
+            # Remove elements outside window
+            if i >= k:
+                if max_d[0] <= i - k:
+                    max_d.popleft()
+                if min_d[0] <= i - k:
+                    min_d.popleft()
+                    
+            if i >= k - 1:
+                result_max.append(arr[max_d[0]])
+                result_min.append(arr[min_d[0]])
+                
+        return result_max, result_min
+```
+
+2. **Pattern Matching with Wildcards**
+Pattern matching with wildcards is a common text processing problem that can be optimized using sliding window technique combined with rolling hash. This approach is particularly useful for searching patterns in large texts, DNA sequences, or log files.
+
+Key features:
+- Rolling hash calculation for O(1) window updates
+- Efficient pattern comparison
+- Handles variable-length patterns
+- Early termination optimization
+
+Implementation considerations:
+- Choose appropriate hash function
+- Handle hash collisions
+- Consider pattern preprocessing
+- Optimize for specific character sets
+
+```python
+def findPattern(text: str, pattern: str) -> list[int]:
+    def createHash(window: str) -> int:
+        hash_value = 0
+        for char in window:
+            hash_value = hash_value * 26 + (ord(char) - ord('a'))
+        return hash_value
+    
+    pattern_length = len(pattern)
+    text_length = len(text)
+    if pattern_length > text_length:
+        return []
+        
+    pattern_hash = createHash(pattern)
+    current_hash = createHash(text[:pattern_length])
+    result = []
+    
+    # Check first window
+    if current_hash == pattern_hash:
+        result.append(0)
+        
+    # Slide window
+    for i in range(pattern_length, text_length):
+        # Remove first character of previous window
+        current_hash = (current_hash - 
+                       (ord(text[i-pattern_length]) - ord('a')) * 
+                       (26 ** (pattern_length - 1)))
+        # Add new character
+        current_hash = current_hash * 26 + (ord(text[i]) - ord('a'))
+        
+        if current_hash == pattern_hash:
+            result.append(i - pattern_length + 1)
+            
+    return result
+```
+
+### Advanced State Management
+
+1. **Multi-State Windows**
+Some problems require tracking multiple states within the same window. This approach is useful for complex pattern matching or when maintaining multiple constraints simultaneously.
+
+Example scenarios:
+- Tracking multiple frequencies
+- Managing multiple conditions
+- Handling nested patterns
+- Maintaining ordered states
+
+2. **State Compression Techniques**
+When dealing with large windows or memory constraints, state compression becomes crucial. These techniques help reduce memory usage while maintaining efficient operations.
+
+Common approaches:
+- Bit manipulation for state tracking
+- Run-length encoding for repetitive patterns
+- Sparse state representation
+- Delta encoding for changes
+
+3. **Dynamic State Updates**
+Efficient state updates are crucial for maintaining good performance, especially when window size or constraints can change dynamically.
+
+Key considerations:
+- Lazy state updates
+- Incremental state maintenance
+- State invalidation strategies
+- Efficient state merging
+
+### Performance Optimization Strategies
+
+1. **Memory Management**
+Proper memory management is crucial for sliding window implementations, especially when dealing with large datasets or memory constraints.
+
+Best practices:
+- Preallocate buffers when possible
+- Implement cleanup strategies
+- Use memory pools for frequent allocations
+- Consider memory alignment
+
+2. **Computation Optimization**
+Optimizing computations within the window operations can significantly improve performance.
+
+Techniques:
+- Use lookup tables for frequent calculations
+- Implement lazy evaluation
+- Utilize CPU cache effectively
+- Consider SIMD operations where applicable
+
+3. **Data Structure Selection**
+Choosing the right data structures can make a significant difference in both time and space complexity.
+
+Selection criteria:
+- Access pattern requirements
+- Update frequency
+- Memory constraints
+- Operation complexity needs
+
+### Edge Cases and Error Handling
+
+1. **Input Validation**
+Proper input validation is crucial for robust sliding window implementations.
+
+Common checks:
+- Empty input handling
+- Invalid window size
+- Boundary conditions
+- Type checking
+
+2. **Special Cases**
+Handle special cases that might break the standard sliding window approach.
+
+Examples:
+- Window size larger than input
+- Degenerate cases
+- Overflow conditions
+- Empty window handling
+
+3. **Error Recovery**
+Implement proper error recovery mechanisms for robust operation.
+
+Strategies:
+- State restoration on failure
+- Partial result handling
+- Graceful degradation
+- Error reporting
