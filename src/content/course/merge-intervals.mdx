@@ -1,147 +1,662 @@
 ---
 title: "Merge Intervals"
-description: "Learn to solve interval-based problems efficiently"
+description: "Master the technique of solving interval-based problems efficiently"
 pubDate: 2024-01-04
 category: "patterns"
 author: "Aryan Singh"
-tags: ["merge-intervals", "arrays", "sorting"]
+tags: ["merge-intervals", "arrays", "sorting", "scheduling"]
 priority: 4
 ---
 
 ## Merge Intervals Pattern
 
-The Merge Intervals pattern deals with problems involving overlapping intervals. This pattern is useful for scheduling, resource allocation, and time management problems.
+### Introduction
+The Merge Intervals pattern is a fundamental algorithmic technique used to solve problems involving ranges, time periods, or any pairs of numbers representing a start and end point. This pattern is particularly valuable because it mirrors many real-world scenarios where we need to manage overlapping time periods or ranges.
 
-### When to use Merge Intervals?
+### Why Learn This Pattern?
+1. **Real-World Applications**
+   - Calendar scheduling
+   - Resource booking systems
+   - Meeting room allocation
+   - Network bandwidth allocation
+   - Task scheduling in operating systems
+   - Hotel room booking systems
 
-* Merging overlapping intervals
-* Finding meeting time slots
-* Finding free time slots
-* Interval scheduling problems
-* Resource allocation problems
+2. **Problem-Solving Skills**
+   - Develops logical thinking about overlapping ranges
+   - Teaches efficient sorting and merging techniques
+   - Improves understanding of time complexity
+   - Enhances array manipulation skills
 
-### Key Concepts
+### Understanding Intervals
+
+1. **What is an Interval?**
+   An interval is simply a range with a start point and an end point. Think of it like a segment on a number line.
+   ```
+   Interval [2,5] represents: 2---3---4---5
+   ```
+
+2. **Common Interval Representations**
+   ```python
+   # Array representation
+   interval = [2, 5]  # [start, end]
+   
+   # Object representation
+   interval = {
+       'start': 2,
+       'end': 5
+   }
+   
+   # Class representation
+   class Interval:
+       def __init__(self, start, end):
+           self.start = start
+           self.end = end
+   ```
+
+3. **Basic Interval Properties**
+   - Start time must be defined
+   - End time must be defined
+   - Usually, end ≥ start (but not always required)
+   - Can be open or closed intervals
+   - May allow or disallow overlap
+
+### Understanding Interval Relationships
+
+1. **Non-overlapping Intervals**
+   ```
+   [1,2] and [4,5]
+   |--1--| |--4--|
+   
+   Key properties:
+   - No points in common
+   - Clear gap between intervals
+   - end1 < start2
+   ```
+
+2. **Overlapping Intervals**
+   ```
+   [1,4] and [2,5]
+   |---1---|
+      |---2---|
+   
+   Key properties:
+   - Share common points
+   - start2 ≤ end1
+   - Can partially or fully overlap
+   ```
+
+3. **Contained Intervals**
+   ```
+   [1,5] and [2,3]
+   |-----1-----|
+      |--2--|
+   
+   Key properties:
+   - One interval completely inside another
+   - start1 ≤ start2 and end2 ≤ end1
+   ```
+
+4. **Adjacent Intervals**
+   ```
+   [1,2] and [2,3]
+   |--1--|--2--|
+   
+   Key properties:
+   - End of one equals start of other
+   - No gap but no overlap
+   - Often merged in some problems
+   ```
+
+### Key Concepts for Solving Interval Problems
+
+1. **Sorting**
+   - Most interval problems require sorting
+   - Usually sort by start time
+   - Sometimes sort by end time
+   - Sorting makes overlaps consecutive
+
+2. **Comparing Intervals**
+   ```python
+   # Check if two intervals overlap
+   def hasOverlap(int1, int2):
+       return max(int1[0], int2[0]) <= min(int1[1], int2[1])
+   
+   # Check if int1 comes before int2 (no overlap)
+   def comesBefore(int1, int2):
+       return int1[1] < int2[0]
+   ```
+
+3. **Common Operations**
+   - Merging overlapping intervals
+   - Finding gaps between intervals
+   - Counting overlaps at any point
+   - Finding maximum overlaps
+
+4. **Visualization Techniques**
+   ```
+   Timeline representation:
+   [1,3]: |--------|
+   [2,4]:    |--------|
+   [5,7]:            |--------|
+   
+   Point representation:
+   1S---2S---3E---4E---5S---7E
+   (S = Start, E = End)
+   ```
+
+### Problem-Solving Framework
+
+1. **Analysis Phase**
+   - Identify if intervals are sorted
+   - Determine if intervals can overlap
+   - Check if intervals are valid
+   - Consider edge cases
+
+2. **Strategy Selection**
+   - Simple merge (for basic overlap)
+   - Line sweep (for complex overlap counting)
+   - Priority queue (for dynamic processing)
+   - Interval tree (for range queries)
+
+3. **Implementation Steps**
+   ```python
+   def solveIntervalProblem(intervals):
+       # 1. Validate input
+       if not intervals:
+           return []
+       
+       # 2. Sort if needed
+       intervals.sort(key=lambda x: x[0])
+       
+       # 3. Initialize result structure
+       result = []
+       
+       # 4. Process intervals
+       for interval in intervals:
+           # Process each interval
+           
+       # 5. Return result
+       return result
+   ```
+
+### Core Concepts
 
 1. **Interval Representation**
-    * Usually as pairs: `[start, end]`
-    * Sometimes as objects: `{start: x, end: y}`
+   - Array pairs: `[start, end]`
+   - Objects: `{ start: number, end: number }`
+   - Custom classes: `Interval(start, end)`
 
 2. **Interval Relationships**
-    * Overlapping: intervals share common time
-    * Non-overlapping: no common time
-    * Contained: one interval inside another
-    * Adjacent: intervals touch but don't overlap
+   ```
+   Non-overlapping: [1,2] [4,5]
+   |--1--| |--4--|
+   
+   Overlapping: [1,4] [2,5]
+   |---1---|
+      |---2---|
+   
+   Contained: [1,5] [2,3]
+   |-----1-----|
+      |--2--|
+   
+   Adjacent: [1,2] [2,3]
+   |--1--|--2--|
+   ```
 
-### Time Complexity
+### Common Problem Types
 
-* Most interval problems require sorting: O(n log n)
-* Linear scan after sorting: O(n)
-* Overall complexity: O(n log n)
-* Space complexity: Usually O(n) for output
+1. **Merging Overlapping Intervals**
+   The fundamental operation in interval problems is merging overlapping intervals. The key steps are:
+   - Sort intervals by start time to ensure we process them in order
+   - Keep track of the last interval in our result
+   - For each new interval, either merge it with the last interval or add it as a new interval
+   - Use max() to find the furthest end point when merging
 
-### Basic Template
+   Time Complexity: O(n log n) due to sorting
+   Space Complexity: O(n) for the result array
 
-```python
-def mergeIntervals(intervals):
-    if not intervals:
-        return []
-        
-    # Sort intervals by start time
-    intervals.sort(key=lambda x: x[0])
-    
-    merged = [intervals[0]]
-    
-    for current in intervals[1:]:
-        previous = merged[-1]
-        
-        # Check if current interval overlaps with previous
-        if current[0] <= previous[1]:
-            # Merge intervals by updating end time
-            previous[1] = max(previous[1], current[1])
-        else:
-            # Add non-overlapping interval
-            merged.append(current)
-            
-    return merged
+   ```python
+   def mergeIntervals(intervals):
+       if not intervals:
+           return []
+           
+       # Sort by start time
+       intervals.sort(key=lambda x: x[0])
+       
+       result = [intervals[0]]
+       
+       for current in intervals[1:]:
+           previous = result[-1]
+           
+           # If intervals overlap
+           if current[0] <= previous[1]:
+               # Merge by updating end time
+               previous[1] = max(previous[1], current[1])
+           else:
+               # Add as separate interval
+               result.append(current)
+               
+       return result
+   
+   # Example:
+   # Input: [[1,3], [2,6], [8,10], [15,18]]
+   # Output: [[1,6], [8,10], [15,18]]
+   ```
 
-# Example usage:
-intervals = [[1,3], [2,6], [8,10], [15,18]]
-# Returns: [[1,6], [8,10], [15,18]]
-```
+2. **Insert Interval**
+   This variation requires inserting a new interval into an already sorted list of non-overlapping intervals.
+   The approach breaks down into three phases:
+   - Add all intervals that come before the new interval
+   - Merge overlapping intervals with the new interval
+   - Add all remaining intervals
+   
+   Key challenge: Handling the merging phase correctly without missing any overlaps
 
-### Common Variations
+   Time Complexity: O(n) since input is already sorted
+   Space Complexity: O(n) for the result array
 
-1. **Insert Interval**
+   ```python
+   def insertInterval(intervals, newInterval):
+       result = []
+       i = 0
+       n = len(intervals)
+       
+       # Add all intervals before newInterval
+       while i < n and intervals[i][1] < newInterval[0]:
+           result.append(intervals[i])
+           i += 1
+           
+       # Merge overlapping intervals
+       while i < n and intervals[i][0] <= newInterval[1]:
+           newInterval[0] = min(newInterval[0], intervals[i][0])
+           newInterval[1] = max(newInterval[1], intervals[i][1])
+           i += 1
+           
+       result.append(newInterval)
+       
+       # Add remaining intervals
+       while i < n:
+           result.append(intervals[i])
+           i += 1
+           
+       return result
+   
+   # Example:
+   # Input: intervals = [[1,3],[6,9]], newInterval = [2,5]
+   # Output: [[1,5],[6,9]]
+   ```
 
-```python
-def insertInterval(intervals, newInterval):
-    result = []
-    i = 0
-    n = len(intervals)
-    
-    # Add all intervals before newInterval
-    while i < n and intervals[i][1] < newInterval[0]:
-        result.append(intervals[i])
-        i += 1
-    
-    # Merge overlapping intervals
-    while i < n and intervals[i][0] <= newInterval[1]:
-        newInterval[0] = min(newInterval[0], intervals[i][0])
-        newInterval[1] = max(newInterval[1], intervals[i][1])
-        i += 1
-    
-    result.append(newInterval)
-    
-    # Add remaining intervals
-    while i < n:
-        result.append(intervals[i])
-        i += 1
-        
-    return result
-```
+3. **Meeting Rooms**
+   This problem determines the minimum number of meeting rooms needed to accommodate all meetings.
+   The clever approach uses:
+   - Separate arrays for start and end times
+   - Track room count as we process events in time order
+   - Increment count for starts, decrement for ends
+   
+   Key insight: Sort start and end times separately to handle overlaps efficiently
 
-2. **Meeting Rooms**
+   Time Complexity: O(n log n) for sorting
+   Space Complexity: O(n) for sorted arrays
 
-```python
-def minMeetingRooms(intervals):
-    if not intervals:
-        return 0
-        
-    # Separate start and end times
-    start = sorted([i[0] for i in intervals])
-    end = sorted([i[1] for i in intervals])
-    
-    rooms = 0
-    max_rooms = 0
-    s = e = 0
-    
-    while s < len(intervals):
-        if start[s] < end[e]:
-            rooms += 1
-            s += 1
-        else:
-            rooms -= 1
-            e += 1
-        max_rooms = max(max_rooms, rooms)
-    
-    return max_rooms
-```
+   ```python
+   def minMeetingRooms(intervals):
+       if not intervals:
+           return 0
+           
+       # Separate start and end times
+       starts = sorted(i[0] for i in intervals)
+       ends = sorted(i[1] for i in intervals)
+       
+       rooms = 0
+       max_rooms = 0
+       s = e = 0
+       
+       while s < len(intervals):
+           if starts[s] < ends[e]:
+               rooms += 1
+               s += 1
+           else:
+               rooms -= 1
+               e += 1
+           max_rooms = max(max_rooms, rooms)
+       
+       return max_rooms
+   
+   # Example:
+   # Input: [[0,30],[5,10],[15,20]]
+   # Output: 2
+   ```
 
-### Edge Cases to Consider
+### Additional Examples and Variations
 
-1. Empty input
-2. Single interval
-3. No overlapping intervals
-4. All intervals overlapping
-5. Adjacent intervals
-6. Negative time values
-7. Equal start times
-8. Equal end times
+1. **Find Meeting Conflict**
+   This problem checks if a person can attend all meetings without any overlap.
+   Key approach:
+   - Sort by start time
+   - Check if any meeting starts before previous ends
+   - Early return on first conflict
 
-### Tips
+   ```python
+   def canAttendMeetings(intervals):
+       # Sort by start time
+       intervals.sort(key=lambda x: x[0])
+       
+       for i in range(1, len(intervals)):
+           if intervals[i][0] < intervals[i-1][1]:
+               return False
+       return True
 
-1. Always sort intervals first (usually by start time)
-2. Consider using separate arrays for start/end times
-3. Use min/max functions for merging
-4. Handle edge cases explicitly
-5. Consider using priority queues for complex scheduling
+   # Examples:
+   # Input: [[0,30],[5,10],[15,20]]
+   # Output: False
+   # Explanation: [0,30] overlaps with [5,10]
+   
+   # Input: [[7,10],[2,4]]
+   # Output: True
+   # Explanation: No overlap between meetings
+   ```
+
+2. **Maximum CPU Load**
+   Find the maximum CPU load when multiple processes run in parallel.
+   Key concepts:
+   - Track running processes with min heap
+   - Update load as processes start/end
+   - Keep track of maximum load seen
+
+   ```python
+   from heapq import heappush, heappop
+
+   def findMaxCPULoad(processes):
+       # processes: [[start_time, end_time, cpu_load], ...]
+       processes.sort(key=lambda x: x[0])  # Sort by start time
+       
+       max_load = 0
+       current_load = 0
+       running = []  # min heap of (end_time, cpu_load)
+       
+       for start, end, load in processes:
+           # Remove finished processes
+           while running and running[0][0] <= start:
+               _, finished_load = heappop(running)
+               current_load -= finished_load
+           
+           # Add current process
+           heappush(running, (end, load))
+           current_load += load
+           
+           max_load = max(max_load, current_load)
+       
+       return max_load
+
+   # Example:
+   # Input: [[1,4,3], [2,5,4], [7,9,6]]
+   # Output: 7
+   # Explanation: Maximum load is when processes [1,4,3] and [2,5,4] overlap
+   ```
+
+3. **Interval List Intersections**
+   Find intersections between two lists of intervals.
+   Strategy:
+   - Use two pointers approach
+   - Find overlapping parts
+   - Move pointer of interval that ends first
+
+   ```python
+   def intervalIntersection(A, B):
+       result = []
+       i = j = 0
+       
+       while i < len(A) and j < len(B):
+           # Find overlap
+           start = max(A[i][0], B[j][0])
+           end = min(A[i][1], B[j][1])
+           
+           # If valid interval, add to result
+           if start <= end:
+               result.append([start, end])
+           
+           # Move pointer of interval that ends first
+           if A[i][1] < B[j][1]:
+               i += 1
+           else:
+               j += 1
+               
+       return result
+
+   # Example:
+   # Input: 
+   # A = [[0,2],[5,10],[13,23],[24,25]]
+   # B = [[1,5],[8,12],[15,24],[25,26]]
+   # Output: [[1,2],[5,5],[8,10],[15,23],[24,24],[25,25]]
+   ```
+
+4. **Employee Free Time**
+   Find common free time slots among all employees.
+   Approach:
+   - Merge all schedules into events
+   - Track employee count
+   - Find periods when count is zero
+
+   ```python
+   def findEmployeeFreeTime(schedules):
+       # Convert to events
+       events = []
+       for schedule in schedules:
+           for start, end in schedule:
+               events.append((start, 1))   # 1 for start
+               events.append((end, -1))    # -1 for end
+       
+       events.sort()  # Sort by time
+       free_periods = []
+       employees_working = 0
+       last_time = None
+       
+       for time, count in events:
+           # Found a free period
+           if employees_working == 0 and last_time is not None:
+               free_periods.append([last_time, time])
+           
+           employees_working += count
+           last_time = time
+       
+       return free_periods
+
+   # Example:
+   # Input: [[[1,3],[6,7]], [[2,4]], [[2,5],[9,12]]]
+   # Output: [[5,6],[7,9]]
+   # Explanation: All employees are free between [5,6] and [7,9]
+   ```
+
+### Implementation Tips
+
+1. **Efficient Interval Comparison**
+   ```python
+   def isOverlapping(interval1, interval2):
+       return (interval1[0] <= interval2[1] and 
+               interval2[0] <= interval1[1])
+   ```
+
+2. **Finding Intersection**
+   ```python
+   def getIntersection(interval1, interval2):
+       start = max(interval1[0], interval2[0])
+       end = min(interval1[1], interval2[1])
+       return [start, end] if start <= end else None
+   ```
+
+3. **Merging Adjacent Intervals**
+   ```python
+   def canMerge(interval1, interval2):
+       return (interval1[1] >= interval2[0] - 1)
+   ```
+
+### Advanced Techniques
+
+1. **Interval Tree**
+   An Interval Tree is a specialized data structure for efficiently storing and querying intervals.
+   Key features:
+   - Each node stores an interval and the maximum end point in its subtree
+   - Supports efficient insertion and overlap queries
+   - Particularly useful for large datasets with frequent queries
+   
+   Time Complexity:
+   - Insert: O(log n)
+   - Query: O(log n)
+   Space Complexity: O(n)
+
+   ```python
+   class IntervalNode:
+       def __init__(self, interval):
+           self.interval = interval
+           self.max_end = interval[1]
+           self.left = None
+           self.right = None
+   
+   class IntervalTree:
+       def __init__(self):
+           self.root = None
+           
+       def insert(self, interval):
+           self.root = self._insert_recursive(self.root, interval)
+           
+       def _insert_recursive(self, node, interval):
+           if not node:
+               return IntervalNode(interval)
+               
+           node.max_end = max(node.max_end, interval[1])
+           
+           if interval[0] < node.interval[0]:
+               node.left = self._insert_recursive(node.left, interval)
+           else:
+               node.right = self._insert_recursive(node.right, interval)
+               
+           return node
+           
+       def find_overlapping(self, interval):
+           return self._find_overlapping_recursive(self.root, interval)
+           
+       def _find_overlapping_recursive(self, node, interval):
+           if not node:
+               return None
+               
+           if self._do_overlap(node.interval, interval):
+               return node.interval
+               
+           if node.left and node.left.max_end >= interval[0]:
+               return self._find_overlapping_recursive(node.left, interval)
+               
+           return self._find_overlapping_recursive(node.right, interval)
+           
+       def _do_overlap(self, i1, i2):
+           return i1[0] <= i2[1] and i2[0] <= i1[1]
+   ```
+
+### Optimization Techniques
+
+1. **Line Sweep Algorithm**
+   The line sweep technique processes intervals by treating them as events:
+   - Convert intervals into start/end events
+   - Sort events by time
+   - Process events in order to find free periods
+   
+   Perfect for finding gaps or overlaps in schedules
+
+   Time Complexity: O(n log n)
+   Space Complexity: O(n)
+
+   ```python
+   def employeeFreeTime(schedule):
+       # Convert to events with +1/-1 count
+       events = []
+       for emp_schedule in schedule:
+           for start, end in emp_schedule:
+               events.append((start, 1))
+               events.append((end, -1))
+               
+       events.sort()
+       result = []
+       count = 0
+       last_time = events[0][0]
+       
+       for time, delta in events:
+           if count == 0 and time > last_time:
+               result.append([last_time, time])
+           count += delta
+           last_time = time
+           
+       return result
+   ```
+
+2. **Priority Queue Approach**
+   Using a priority queue (heap) for interval problems:
+   - Efficient for tracking ongoing intervals
+   - Great for finding maximum overlaps
+   - Useful for dynamic interval processing
+   
+   Time Complexity: O(n log n)
+   Space Complexity: O(n)
+
+   ```python
+   from heapq import heappush, heappop
+
+   def findMaxConcurrentMeetings(intervals):
+       events = []
+       for start, end in intervals:
+           heappush(events, (start, 1))
+           heappush(events, (end, -1))
+           
+       max_concurrent = 0
+       current = 0
+       
+       while events:
+           _, delta = heappop(events)
+           current += delta
+           max_concurrent = max(max_concurrent, current)
+           
+       return max_concurrent
+   ```
+
+### Edge Cases and Common Pitfalls
+
+1. **Empty or Invalid Input**
+   - Empty interval array
+   - Single interval
+   - Invalid interval (end < start)
+   - Negative times
+
+2. **Boundary Conditions**
+   - Exactly overlapping intervals
+   - Adjacent intervals
+   - Completely contained intervals
+   - Maximum integer values
+
+3. **Performance Considerations**
+   - Sorting overhead
+   - Memory usage for large datasets
+   - Handling real-time updates
+   - Scaling with interval size
+
+### Practice Problems
+
+1. **Basic**
+   - Merge overlapping intervals
+   - Insert interval
+   - Meeting rooms I & II
+
+2. **Intermediate**
+   - Employee free time
+   - Interval list intersections
+   - Non-overlapping intervals
+
+3. **Advanced**
+   - Minimum number of arrows to burst balloons
+   - Data stream as disjoint intervals
+   - Range module implementation
+
+Remember: The key to solving interval problems efficiently is to:
+1. Sort intervals when needed
+2. Process intervals in order
+3. Handle overlaps systematically
+4. Consider using auxiliary data structures
+5. Watch for edge cases
