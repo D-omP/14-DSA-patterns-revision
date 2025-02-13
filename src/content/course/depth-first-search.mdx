@@ -10,111 +10,893 @@ priority: 8
 
 ## Depth First Search Pattern
 
-DFS is a traversal technique that explores as far as possible along each branch before backtracking. It's particularly useful for exploring paths and tree-like structures.
+### Introduction
+DFS is a traversal technique that explores as far as possible along each branch before backtracking. Think of it like exploring a maze by following each path to its end before going back and trying a different path.
 
-### When to use DFS?
+### Why Use DFS?
 
-* Path finding problems
-* Tree/Graph traversal
-* Cycle detection
-* Topological sorting
-* Maze solving
+1. **Memory Efficiency**
+   - Uses O(h) space vs O(w) for BFS
+   - Perfect for deep tree structures
+   - Efficient for path-finding problems
+   - Natural recursive implementation
 
-### How it Works
+2. **Real-World Applications**
+   - Maze Solving
+     * Finding path from start to end
+     * Detecting dead ends
+     * Mapping all possible routes
+     * Finding shortest/optimal paths
 
-1. **Basic Concept**
-    * Use recursion or stack
-    * Explore one path completely
-    * Backtrack when needed
+   - Game AI
+     * Chess move analysis
+     * Game tree exploration
+     * Min-max algorithm
+     * Alpha-beta pruning
 
-2. **Key Steps**
-    * Process current node
-    * Recursively process children
-    * Backtrack to parent
+   - File System Operations
+     * Directory traversal
+     * File searching
+     * Size calculation
+     * Duplicate detection
 
-### Basic Template
+   - Dependency Resolution
+     * Package managers
+     * Build systems
+     * Task scheduling
+     * Circular dependency detection
 
-```python
-def dfs(root):
-    if not root:
-        return
-    
-    # Process current node
-    print(root.val)
-    
-    # Recurse on children
-    dfs(root.left)
-    dfs(root.right)
-```
+### Core DFS Patterns
 
-### Common Variations
+1. **Preorder Traversal**
+   ```python
+   def preorder(root):
+       """
+       Process node before children
+       Visit order: Root -> Left -> Right
+       
+       Example Tree:
+           1
+          / \
+         2   3
+        / \
+       4   5
+       
+       Step-by-step execution:
+       1. Start at root (1)
+          - Add 1 to result: [1]
+          - Push to stack: [1]
+       
+       2. Go to left child (2)
+          - Add 2 to result: [1, 2]
+          - Push to stack: [1, 2]
+       
+       3. Go to left child (4)
+          - Add 4 to result: [1, 2, 4]
+          - No children, backtrack
+       
+       4. Back to 2, go to right child (5)
+          - Add 5 to result: [1, 2, 4, 5]
+          - No children, backtrack
+       
+       5. Back to 1, go to right child (3)
+          - Add 3 to result: [1, 2, 4, 5, 3]
+          
+       Final Output: [1, 2, 4, 5, 3]
+       
+       Real-world Applications:
+       1. Creating copy of tree
+          - Preserves parent-child relationships
+          - Maintains structural integrity
+       
+       2. Serializing tree structure
+          - Perfect for XML/JSON parsing
+          - Maintains hierarchical order
+       
+       3. Directory listing
+          - Shows parent directories first
+          - Natural for file system traversal
+       
+       4. Expression parsing
+          - Handles operator precedence
+          - Builds expression trees
+       """
+       def dfs(node, result):
+           if not node:
+               return
+               
+           # Process before children (preorder)
+           result.append(node.val)
+           
+           # Process children
+           dfs(node.left, result)
+           dfs(node.right, result)
+           
+       result = []
+       dfs(root, result)
+       return result
+   ```
 
-1. **Iterative DFS**
+2. **Inorder Traversal**
+   ```python
+   def inorder(root):
+       """
+       Process node between children
+       Visit order: Left -> Root -> Right
+       
+       Example Tree:
+           1
+          / \
+         2   3
+        / \
+       4   5
+       
+       Step-by-step execution:
+       1. Start at root (1)
+          - Push to stack: [1]
+          - Go left
+       
+       2. At node 2
+          - Push to stack: [1, 2]
+          - Go left
+       
+       3. At node 4
+          - No left child
+          - Add 4 to result: [4]
+          - No right child, pop 2
+       
+       4. Back at node 2
+          - Add 2 to result: [4, 2]
+          - Go to right child (5)
+       
+       5. At node 5
+          - Add 5 to result: [4, 2, 5]
+          - Pop 1
+       
+       6. Back at node 1
+          - Add 1 to result: [4, 2, 5, 1]
+          - Go to right child (3)
+       
+       7. At node 3
+          - Add 3 to result: [4, 2, 5, 1, 3]
+          
+       Final Output: [4, 2, 5, 1, 3]
+       
+       Key Use Cases:
+       1. Binary Search Tree Validation
+          - Values should be in ascending order
+          - Helps detect invalid BST structures
+          Example:
+          Valid BST:    Invalid BST:
+              2            2
+             / \          / \
+            1   3        1   0
+       
+       2. Sorted Sequence Generation
+          - Natural for ordered data
+          - Perfect for range queries
+          Example: Finding all values between 5 and 10
+       
+       3. Expression Evaluation
+          - Handles operator precedence naturally
+          - Perfect for mathematical expressions
+          Example: Converting "1 + 2 * 3" to postfix
+       """
+       def dfs(node, result):
+           if not node:
+               return
+               
+           # Process left subtree
+           dfs(node.left, result)
+           
+           # Process current node (inorder)
+           result.append(node.val)
+           
+           # Process right subtree
+           dfs(node.right, result)
+           
+       result = []
+       dfs(root, result)
+       return result
+   ```
 
-```python
-def dfsIterative(root):
-    if not root:
-        return []
-    
-    result = []
-    stack = [root]
-    
-    while stack:
-        node = stack.pop()
-        result.append(node.val)
-        
-        # Add right first so left is processed first
-        if node.right:
-            stack.append(node.right)
-        if node.left:
-            stack.append(node.left)
-    
-    return result
-```
+3. **Postorder Traversal**
+   ```python
+   def postorder(root):
+       """
+       Process node after children
+       Visit order: Left -> Right -> Root
+       
+       Example Tree:
+           1
+          / \
+         2   3
+        / \
+       4   5
+       
+       Detailed Execution Flow:
+       1. Start at root (1)
+          Stack: [1]
+          Visit left subtree
+       
+       2. At node 2
+          Stack: [1, 2]
+          Visit left subtree
+       
+       3. At node 4
+          - Process 4 (leaf node)
+          Result: [4]
+       
+       4. Back to 2, visit right
+          At node 5
+          - Process 5 (leaf node)
+          Result: [4, 5]
+       
+       5. Process 2 (both children done)
+          Result: [4, 5, 2]
+       
+       6. Back to 1, visit right
+          At node 3
+          - Process 3 (leaf node)
+          Result: [4, 5, 2, 3]
+       
+       7. Finally process root
+          Result: [4, 5, 2, 3, 1]
+       
+       Practical Applications:
+       1. Tree Deletion
+          Why postorder?
+          - Ensures children are deleted before parents
+          - Prevents memory leaks
+          - Maintains referential integrity
+          Example: Deleting a directory with files
+       
+       2. Directory Size Calculation
+          Process:
+          - Get sizes of all subdirectories
+          - Add file sizes
+          - Combine for total size
+          Example: du command in Unix
+       
+       3. Expression Evaluation
+          Example: Evaluating "3 4 +"
+          - Process operands first
+          - Then apply operator
+          Stack operations shown:
+          [3] -> [3, 4] -> [7]
+       """
+       def dfs(node, result):
+           if not node:
+               return
+               
+           dfs(node.left, result)
+           dfs(node.right, result)
+           result.append(node.val)  # Process after children
+           
+       result = []
+       dfs(root, result)
+       return result
+   ```
 
-2. **Path Finding**
+### Advanced DFS Patterns
 
-```python
-def hasPath(root, target_sum, current_sum=0, path=[]):
-    if not root:
-        return False
-    
-    current_sum += root.val
-    path.append(root.val)
-    
-    if not root.left and not root.right:
-        if current_sum == target_sum:
-            return True
-    
-    if (hasPath(root.left, target_sum, current_sum, path) or
-        hasPath(root.right, target_sum, current_sum, path)):
-        return True
-    
-    path.pop()  # Backtrack
-    return False
-```
+1. **Path Finding with Backtracking**
+   ```python
+   def findPath(root, target):
+       """
+       Find path from root to target node
+       Uses backtracking to build path
+       
+       Example:
+           1
+          / \
+         2   3
+        / \   \
+       4   5   6
+       
+       findPath(root, 5) -> [1, 2, 5]
+       """
+       def dfs(node, path):
+           if not node:
+               return False
+               
+           # Add current node to path
+           path.append(node.val)
+           
+           # Found target
+           if node.val == target:
+               return True
+               
+           # Try left and right subtrees
+           if dfs(node.left, path) or dfs(node.right, path):
+               return True
+               
+           # Backtrack if target not found in this path
+           path.pop()
+           return False
+           
+       path = []
+       dfs(root, path)
+       return path
+   ```
 
-### Edge Cases to Consider
+2. **Graph DFS with Cycle Detection**
+   ```python
+   def hasCycle(graph):
+       """
+       Detect cycles in directed graph
+       Uses three-color marking:
+       - White (0): Unvisited
+       - Gray (1): In current path
+       - Black (2): Completed
+       
+       Example:
+       graph = {
+           1: [2, 3],
+           2: [3],
+           3: [1]  # Creates cycle
+       }
+       """
+       def dfs(node):
+           if colors[node] == 1:  # Gray - cycle detected
+               return True
+           if colors[node] == 2:  # Black - already explored
+               return False
+               
+           colors[node] = 1  # Mark as being explored
+           
+           # Check all neighbors
+           for neighbor in graph[node]:
+               if dfs(neighbor):
+                   return True
+                   
+           colors[node] = 2  # Mark as completed
+           return False
+           
+       colors = {node: 0 for node in graph}  # Initialize all white
+       
+       for node in graph:
+           if colors[node] == 0:  # Unvisited
+               if dfs(node):
+                   return True
+       return False
+   ```
 
-1. Empty tree/graph
-2. Single node
-3. Unbalanced trees
-4. Cycles in graphs
-5. Disconnected components
-6. All nodes same value
-7. Maximum depth limit
+3. **DFS with State Tracking**
+   ```python
+   def maxPathSum(root):
+       """
+       Find maximum path sum in binary tree
+       Tracks state during traversal
+       
+       Example:
+           1
+          / \
+         2   3
+        / \
+       4   5
+       
+       Output: 11 (path: 4 -> 2 -> 5)
+       """
+       def dfs(node, current_sum):
+           if not node:
+               return current_sum
+               
+           # Try both paths
+           left_sum = dfs(node.left, current_sum + node.val)
+           right_sum = dfs(node.right, current_sum + node.val)
+           
+           # Return maximum path sum
+           return max(left_sum, right_sum)
+           
+       return dfs(root, 0)
+   ```
 
-### Tips
+### Edge Cases and Error Handling
 
-1. Consider iterative vs recursive approach
-2. Watch for stack overflow
-3. Track visited nodes in graphs
-4. Use backtracking when needed
-5. Handle base cases properly
+1. **Comprehensive Edge Case Handling**
+   ```python
+   def robustDFS(root):
+       """
+       DFS implementation with thorough edge case handling
+       """
+       # Handle empty tree
+       if not root:
+           return []
+           
+       # Handle single node
+       if not root.left and not root.right:
+           return [root.val]
+           
+       # Handle maximum depth
+       MAX_DEPTH = 1000
+       current_depth = 0
+       
+       def dfs(node, depth):
+           nonlocal current_depth
+           
+           # Check depth limit
+           if depth > MAX_DEPTH:
+               raise ValueError("Maximum depth exceeded")
+               
+           # Update maximum depth seen
+           current_depth = max(current_depth, depth)
+           
+           # Normal DFS logic...
+           
+       try:
+           result = []
+           dfs(root, 1)
+           return result
+       except Exception as e:
+           logging.error(f"DFS failed: {str(e)}")
+           raise
+   ```
 
-### Time & Space Complexity
+### Performance Optimization Tips
 
-* Time Complexity: O(V + E) for graphs, O(n) for trees
-* Space Complexity: O(h) where h is height
-* Recursive call stack can grow large
-* Better space complexity than BFS for deep structures 
+1. **Memory Optimization**
+   - Use iterative approach for large trees
+   - Implement tail recursion when possible
+   - Clear unnecessary state during backtracking
+   - Consider using generators for large datasets
+
+2. **Speed Optimization**
+   - Use early termination conditions
+   - Implement pruning techniques
+   - Cache repeated computations
+   - Choose appropriate data structures
+
+Remember: The key to mastering DFS is to:
+1. Understand recursion thoroughly
+2. Handle state management properly
+3. Implement proper backtracking
+4. Consider memory implications
+5. Handle edge cases carefully 
+
+### Practice Problems and Explanations
+
+1. **Path Sum Problems**
+   ```python
+   def hasPathSum(root, targetSum):
+       """
+       Problem: Determine if tree has root-to-leaf path summing to targetSum
+       Difficulty: Easy
+       
+       Key Insights:
+       1. Need to track running sum along path
+       2. Only check sum at leaf nodes
+       3. Use DFS to explore all paths
+       4. Backtracking happens automatically
+       
+       Example Tree:
+           10
+          /  \
+         5    15
+        / \     \
+       3   7     18
+       
+       Target = 18
+       Valid Paths:
+       - 10 -> 5 -> 3 (sum = 18) ✓
+       - 10 -> 5 -> 7 (sum = 22) ✗
+       - 10 -> 15 -> 18 (sum = 43) ✗
+       """
+       def dfs(node, remaining):
+           if not node:
+               return False
+               
+           # Check if we've reached a leaf node
+           if not node.left and not node.right:
+               return remaining == node.val
+               
+           # Try both paths, subtracting current value
+           return (dfs(node.left, remaining - node.val) or 
+                  dfs(node.right, remaining - node.val))
+                  
+       return dfs(root, targetSum)
+   ```
+
+2. **Boundary Traversal**
+   ```python
+   def boundaryTraversal(root):
+       """
+       Problem: Print boundary nodes of binary tree
+       Difficulty: Medium
+       
+       Key Concepts:
+       1. Left boundary (excluding leaves)
+       2. Leaves (in order)
+       3. Right boundary (excluding leaves, in reverse)
+       
+       Example Tree:
+           1
+          / \
+         2   3
+        / \   \
+       4   5   6
+        \     /
+         7   8
+       
+       Output: [1,2,4,7,5,8,6,3]
+       
+       Breakdown:
+       - Left boundary: [1,2,4]
+       - Leaves: [7,5,8]
+       - Right boundary (reverse): [6,3]
+       
+       Why DFS?
+       - Natural for boundary following
+       - Easy to track node position
+       - Efficient leaf collection
+       """
+       def isLeaf(node):
+           return node and not node.left and not node.right
+           
+       def addLeaves(node, leaves):
+           if not node:
+               return
+           if isLeaf(node):
+               leaves.append(node.val)
+               return
+               
+           addLeaves(node.left, leaves)
+           addLeaves(node.right, leaves)
+           
+       def addLeftBoundary(node, res):
+           if not node or isLeaf(node):
+               return
+           res.append(node.val)
+           if node.left:
+               addLeftBoundary(node.left, res)
+           else:
+               addLeftBoundary(node.right, res)
+               
+       def addRightBoundary(node, res):
+           if not node or isLeaf(node):
+               return
+           if node.right:
+               addRightBoundary(node.right, res)
+           else:
+               addRightBoundary(node.left, res)
+           res.append(node.val)
+           
+       if not root:
+           return []
+           
+       result = [root.val]
+       addLeftBoundary(root.left, result)
+       addLeaves(root, result)
+       addRightBoundary(root.right, result)
+       return result
+   ```
+
+3. **Serialize and Deserialize Binary Tree**
+   ```python
+   class Codec:
+       """
+       Problem: Convert binary tree to string and back
+       Difficulty: Hard
+       
+       Key Insights:
+       1. Need unique representation
+       2. Must handle null nodes
+       3. Preserve structure exactly
+       4. Use DFS for natural recursion
+       
+       Example:
+           1
+          / \
+         2   3
+            / \
+           4   5
+           
+       Serialized: "1,2,#,#,3,4,#,#,5,#,#"
+       
+       Why This Format?
+       - '#' marks null nodes
+       - Commas separate values
+       - Preorder traversal maintains structure
+       - Can reconstruct uniquely
+       
+       Common Pitfalls:
+       1. Forgetting null markers
+       2. Not handling special chars in values
+       3. Incorrect string parsing
+       4. Stack overflow for large trees
+       """
+       def serialize(self, root):
+           """
+           DFS preorder traversal with null markers
+           Time: O(n), Space: O(h)
+           """
+           if not root:
+               return "#"
+           return (f"{root.val}," + 
+                  self.serialize(root.left) + "," +
+                  self.serialize(root.right))
+           
+       def deserialize(self, data):
+           """
+           Recursive string parsing using queue
+           Time: O(n), Space: O(n)
+           """
+           def dfs():
+               val = next(values)
+               if val == "#":
+                   return None
+               node = TreeNode(int(val))
+               node.left = dfs()
+               node.right = dfs()
+               return node
+               
+           values = iter(data.split(","))
+           return dfs()
+   ```
+
+### Common Interview Questions and Solutions
+
+1. **Validate Binary Search Tree**
+   ```python
+   def isValidBST(root):
+       """
+       Question: Determine if binary tree is valid BST
+       
+       Key Requirements:
+       1. Left subtree values < node value
+       2. Right subtree values > node value
+       3. All subtrees must be BSTs
+       4. Handle duplicates (usually not allowed)
+       
+       Solution Strategy:
+       1. Use inorder traversal
+       2. Track valid range for each node
+       3. Update ranges while traversing
+       4. Early termination on violation
+       
+       Time: O(n), Space: O(h)
+       """
+       def validate(node, min_val, max_val):
+           if not node:
+               return True
+               
+           if not (min_val < node.val < max_val):
+               return False
+               
+           return (validate(node.left, min_val, node.val) and
+                  validate(node.right, node.val, max_val))
+                  
+       return validate(root, float('-inf'), float('inf'))
+   ```
+
+2. **Lowest Common Ancestor**
+   ```python
+   def lowestCommonAncestor(root, p, q):
+       """
+       Question: Find lowest common ancestor of two nodes
+       
+       Approach Explanation:
+       1. Use DFS to search for nodes
+       2. Return node when found
+       3. Combine results from subtrees
+       4. Handle not found case
+       
+       Example Cases:
+           3
+          / \
+         5   1
+        / \
+       6   2
+       
+       LCA(5,6) = 5  (Parent-Child)
+       LCA(6,2) = 5  (Siblings)
+       LCA(6,1) = 3  (Different Subtrees)
+       
+       Time: O(n), Space: O(h)
+       """
+       if not root or root == p or root == q:
+           return root
+           
+       left = lowestCommonAncestor(root.left, p, q)
+       right = lowestCommonAncestor(root.right, p, q)
+       
+       if left and right:
+           return root
+       return left if left else right 
+
+3. **Maximum Path Sum**
+   ```python
+   def maxPathSum(root):
+       """
+       Question: Find path with maximum sum between any two nodes
+       Difficulty: Hard
+       
+       Key Concepts:
+       1. Path can start/end at any node
+       2. Path doesn't need to pass through root
+       3. Negative values need special handling
+       4. Need to track both:
+          - Max path through current node
+          - Max path ending at current node
+       
+       Example Tree:
+           1
+          / \
+         2   3
+        /     \
+       4       5
+       
+       Possible Paths:
+       4 -> 2 -> 1 -> 3 -> 5
+       2 -> 1 -> 3
+       4 -> 2
+       
+       Time: O(n), Space: O(h)
+       """
+       def dfs(node):
+           nonlocal max_sum
+           if not node:
+               return 0
+               
+           # Get max path sums from children
+           left = max(dfs(node.left), 0)  # Ignore negative paths
+           right = max(dfs(node.right), 0)
+           
+           # Update max_sum if path through current node is larger
+           max_sum = max(max_sum, left + right + node.val)
+           
+           # Return max path ending at current node
+           return max(left, right) + node.val
+           
+       max_sum = float('-inf')
+       dfs(root)
+       return max_sum
+   ```
+
+4. **All Paths From Root to Leaf**
+   ```python
+   def findAllPaths(root):
+       """
+       Question: Find all paths from root to leaf nodes
+       Difficulty: Medium
+       
+       Key Points:
+       1. Need to track current path
+       2. Only collect complete paths
+       3. Handle backtracking properly
+       4. Consider path copying cost
+       
+       Example Tree:
+           1
+          / \
+         2   3
+        /   / \
+       4   5   6
+       
+       Output: [
+           [1, 2, 4],
+           [1, 3, 5],
+           [1, 3, 6]
+       ]
+       
+       Time: O(n), Space: O(nh) where h is height
+       """
+       def dfs(node, path, paths):
+           if not node:
+               return
+               
+           path.append(node.val)
+           
+           # Leaf node - add path copy
+           if not node.left and not node.right:
+               paths.append(path[:])
+           else:
+               dfs(node.left, path, paths)
+               dfs(node.right, path, paths)
+               
+           path.pop()  # Backtrack
+           
+       paths = []
+       dfs(root, [], paths)
+       return paths
+   ```
+
+5. **Flatten Binary Tree to Linked List**
+   ```python
+   def flatten(root):
+       """
+       Question: Flatten binary tree to linked list in-place
+       Difficulty: Medium
+       
+       Requirements:
+       1. Use preorder traversal order
+       2. Reuse existing nodes (in-place)
+       3. All right pointers, left = None
+       4. Maintain original node relationships
+       
+       Example:
+           1
+          / \           1
+         2   5    ->    \
+        / \   \          2
+       3   4   6         \
+                          3
+                           \
+                            4
+                             \
+                              5
+                               \
+                                6
+       
+       Time: O(n), Space: O(h)
+       """
+       def dfs(node):
+           nonlocal prev
+           if not node:
+               return
+               
+           # Save children
+           left, right = node.left, node.right
+           
+           # Link current node
+           if prev:
+               prev.right = node
+               prev.left = None
+           prev = node
+           
+           # Process children
+           dfs(left)
+           dfs(right)
+           
+       prev = None
+       dfs(root)
+   ```
+
+6. **Count Univalue Subtrees**
+   ```python
+   def countUnivalSubtrees(root):
+       """
+       Question: Count subtrees where all nodes have same value
+       Difficulty: Medium
+       
+       Definition:
+       - Univalue subtree: All nodes have same value
+       - Single node is a univalue subtree
+       - Empty tree is not counted
+       
+       Example:
+           5
+          / \
+         1   5
+        / \   \
+       5   5   5
+       
+       Output: 4 (three single 5s and one 1->5->5 subtree)
+       
+       Time: O(n), Space: O(h)
+       """
+       def dfs(node):
+           nonlocal count
+           if not node:
+               return True, None
+               
+           # Check left subtree
+           left_is_uni, left_val = dfs(node.left)
+           right_is_uni, right_val = dfs(node.right)
+           
+           # Current subtree is univalue if:
+           # 1. Both children are univalue subtrees
+           # 2. Children values match current node (if they exist)
+           is_uni = (left_is_uni and right_is_uni and
+                    (not node.left or node.val == left_val) and
+                    (not node.right or node.val == right_val))
+                    
+           if is_uni:
+               count += 1
+               
+           return is_uni, node.val
+           
+       count = 0
+       dfs(root)
+       return count
+   ``` 

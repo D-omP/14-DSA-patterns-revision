@@ -10,122 +10,1098 @@ priority: 7
 
 ## Breadth First Search Pattern
 
-BFS is a traversal technique that explores all nodes at the present depth before moving to nodes at the next depth level. It's particularly useful for finding shortest paths and level-wise traversals.
+### Introduction
+Breadth First Search (BFS) is a fundamental graph traversal algorithm that explores a tree or graph level by level. Think of it like ripples spreading out from a stone dropped in water - you explore all nodes at the current level before moving to the next level.
 
-### When to use BFS?
+### Why Learn BFS?
 
-* Level-wise tree traversal
-* Shortest path in unweighted graphs
-* Finding nearest/farthest nodes
-* Connected components
-* Graph validation problems
+1. **Fundamental Algorithm**
+   - Essential for many graph/tree problems
+   - Foundation for more complex algorithms
+   - Natural solution for level-based problems
+   - Optimal for finding shortest paths in unweighted graphs
 
-### How it Works
+2. **Real-World Applications**
+   - Social Network Analysis
+     - Finding friends within N connections
+     - Calculating degrees of separation
+     - Discovering mutual connections
+   
+   - Web Crawling
+     - Exploring linked web pages
+     - Building search engine indexes
+     - Finding all pages within N clicks
+   
+   - GPS Navigation
+     - Finding nearest locations
+     - Calculating shortest routes
+     - Discovering nearby services
+   
+   - Network Broadcasting
+     - Message propagation
+     - Network flooding algorithms
+     - Service discovery
 
-1. **Basic Concept**
-    * Use a queue for traversal
-    * Process nodes level by level
-    * Keep track of visited nodes
+### Core BFS Concepts
 
-2. **Key Steps**
-    * Start with root/source node
-    * Process current level completely
-    * Move to next level
+1. **Understanding BFS Traversal**
+   ```python
+   # Consider this tree:
+   #         1
+   #       /   \
+   #      2     3
+   #     / \   / \
+   #    4   5 6   7
+   
+   # BFS Traversal Process:
+   # Level 0: [1]
+   # Level 1: [2, 3]
+   # Level 2: [4, 5, 6, 7]
+   
+   # Final Output: [1, 2, 3, 4, 5, 6, 7]
+   ```
 
-### Basic Template
+2. **Queue Operations**
+   ```python
+   from collections import deque
+   
+   # Queue ensures FIFO (First In, First Out) order
+   queue = deque([root])       # Initialize with root
+   node = queue.popleft()      # Remove and return first element
+   queue.append(node.left)     # Add left child to end
+   queue.append(node.right)    # Add right child to end
+   
+   # Why use deque instead of list?
+   # - list.pop(0) is O(n)
+   # - deque.popleft() is O(1)
+   ```
 
-```python
-from collections import deque
+3. **Level Tracking Techniques**
+   ```python
+   # Method 1: Using null marker
+   def levelOrderWithNull(root):
+       if not root:
+           return []
+           
+       result = []
+       queue = deque([root, None])  # None marks end of level
+       current_level = []
+       
+       while queue:
+           node = queue.popleft()
+           
+           if node is None:
+               result.append(current_level)
+               current_level = []
+               if queue:  # Add level marker if more nodes exist
+                   queue.append(None)
+           else:
+               current_level.append(node.val)
+               if node.left:
+                   queue.append(node.left)
+               if node.right:
+                   queue.append(node.right)
+                   
+       return result
+   
+   # Method 2: Level size counting
+   def levelOrderWithCount(root):
+       if not root:
+           return []
+           
+       result = []
+       queue = deque([root])
+       
+       while queue:
+           level_size = len(queue)
+           current_level = []
+           
+           for _ in range(level_size):
+               node = queue.popleft()
+               current_level.append(node.val)
+               
+               if node.left:
+                   queue.append(node.left)
+               if node.right:
+                   queue.append(node.right)
+                   
+           result.append(current_level)
+           
+       return result
+   ```
 
-def bfs(root):
-    if not root:
-        return []
-    
-    result = []
-    queue = deque([root])
-    
-    while queue:
-        level_size = len(queue)
-        current_level = []
-        
-        for _ in range(level_size):
-            node = queue.popleft()
-            current_level.append(node.val)
-            
-            if node.left:
-                queue.append(node.left)
-            if node.right:
-                queue.append(node.right)
-                
-        result.append(current_level)
-    
-    return result
-```
+### Common BFS Patterns
 
-### Common Variations
+1. **Basic Level Order Traversal**
+   This is the fundamental BFS pattern that serves as a foundation for more complex variations.
 
-1. **Graph BFS**
+   Key Characteristics:
+   - Processes nodes level by level
+   - Maintains clear level separation
+   - Preserves hierarchical structure
+   - Guarantees order within levels
 
-```python
-def bfsGraph(graph, start):
-    visited = set([start])
-    queue = deque([start])
-    result = []
-    
-    while queue:
-        node = queue.popleft()
-        result.append(node)
-        
-        for neighbor in graph[node]:
-            if neighbor not in visited:
-                visited.add(neighbor)
-                queue.append(neighbor)
-    
-    return result
-```
+   When to Use:
+   - Tree structure visualization
+   - Level-based processing requirements
+   - Hierarchical data analysis
+   - Sequential level operations
 
-2. **Shortest Path**
+   Real-World Applications:
+   - Organization chart processing
+   - File system directory traversal
+   - Network layer analysis
+   - UI component tree traversal
 
-```python
-def shortestPath(graph, start, end):
-    visited = set([start])
-    queue = deque([(start, [start])])
-    
-    while queue:
-        node, path = queue.popleft()
-        
-        if node == end:
-            return path
-            
-        for neighbor in graph[node]:
-            if neighbor not in visited:
-                visited.add(neighbor)
-                queue.append((neighbor, path + [neighbor]))
-    
-    return []  # No path found
-```
+   Common Variations:
+   ```python
+   # Standard Level Order
+   def levelOrder(root):
+       """Basic level order traversal"""
+       if not root:
+           return []
+           
+       result = []
+       queue = deque([root])
+       
+       while queue:
+           level_size = len(queue)
+           current_level = []
+           
+           for _ in range(level_size):
+               node = queue.popleft()
+               current_level.append(node.val)
+               
+               if node.left:
+                   queue.append(node.left)
+               if node.right:
+                   queue.append(node.right)
+                   
+           result.append(current_level)
+           
+       return result
 
-### Edge Cases to Consider
+   # With Level Number
+   def levelOrderWithLevel(root):
+       """Includes level number in output"""
+       if not root:
+           return []
+           
+       result = []
+       queue = deque([(root, 0)])  # (node, level)
+       
+       while queue:
+           node, level = queue.popleft()
+           
+           if len(result) == level:
+               result.append([])
+           result[level].append(node.val)
+           
+           if node.left:
+               queue.append((node.left, level + 1))
+           if node.right:
+               queue.append((node.right, level + 1))
+               
+       return result
 
-1. Empty tree/graph
-2. Single node
-3. Disconnected components
-4. Cycles in graph
-5. Multiple valid paths
-6. No valid path
-7. Binary vs n-ary trees
+   # With Custom Processing
+   def levelOrderWithProcessing(root, process_fn):
+       """Allows custom node processing"""
+       if not root:
+           return []
+           
+       result = []
+       queue = deque([root])
+       
+       while queue:
+           level = []
+           for _ in range(len(queue)):
+               node = queue.popleft()
+               level.append(process_fn(node))  # Custom processing
+               
+               if node.left:
+                   queue.append(node.left)
+               if node.right:
+                   queue.append(node.right)
+                   
+           result.append(level)
+           
+       return result
 
-### Tips
+   # Example usage:
+   # 1. Get node values: levelOrderWithProcessing(root, lambda x: x.val)
+   # 2. Get node depths: levelOrderWithProcessing(root, lambda x: x.depth)
+   # 3. Custom transformation: levelOrderWithProcessing(root, lambda x: x.val * 2)
+   ```
 
-1. Always mark nodes as visited in graphs
-2. Use queue for level order processing
-3. Consider space complexity
-4. Handle cycles carefully
-5. Track additional state when needed
+2. **Zigzag Level Order**
+   This pattern alternates the direction of traversal at each level, providing a different perspective of the tree structure.
 
-### Time & Space Complexity
+   Key Applications:
+   - Printing tree in special formats
+   - Optimizing certain tree operations
+   - Handling specific visualization requirements
+   - Balancing node processing loads
 
-* Time Complexity: O(V + E) for graphs, O(n) for trees
-* Space Complexity: O(W) where W is maximum width
-* Queue can grow large for wide trees/graphs
-* Visited set needed for graphs 
+   Implementation Considerations:
+   - Direction tracking
+   - Level awareness
+   - Order preservation
+   - Efficient node insertion
+
+   Common Use Cases:
+   - Pretty printing of trees
+   - Special tree serialization
+   - Balanced node processing
+   - Custom tree visualization
+
+   Additional Implementation Approaches:
+   ```python
+   # Using Two Stacks
+   def zigzagLevelOrderTwoStacks(root):
+       """
+       Implements zigzag traversal using two stacks
+       Advantage: More intuitive for some developers
+       """
+       if not root:
+           return []
+           
+       result = []
+       current_stack = [root]
+       next_stack = []
+       left_to_right = True
+       
+       while current_stack:
+           level = []
+           
+           while current_stack:
+               node = current_stack.pop()
+               level.append(node.val)
+               
+               if left_to_right:
+                   if node.left:
+                       next_stack.append(node.left)
+                   if node.right:
+                       next_stack.append(node.right)
+               else:
+                   if node.right:
+                       next_stack.append(node.right)
+                   if node.left:
+                       next_stack.append(node.left)
+                       
+           result.append(level)
+           current_stack = next_stack
+           next_stack = []
+           left_to_right = not left_to_right
+           
+       return result
+
+   # Using Deque with Reverse
+   def zigzagLevelOrderDeque(root):
+       """
+       Implements zigzag traversal using deque and reverse
+       Advantage: Simpler code, potentially better memory usage
+       """
+       if not root:
+           return []
+           
+       result = []
+       queue = deque([root])
+       left_to_right = True
+       
+       while queue:
+           level_size = len(queue)
+           current_level = []
+           
+           for _ in range(level_size):
+               node = queue.popleft()
+               
+               if left_to_right:
+                   current_level.append(node.val)
+               else:
+                   current_level.insert(0, node.val)
+                   
+               if node.left:
+                   queue.append(node.left)
+               if node.right:
+                   queue.append(node.right)
+                   
+           result.append(current_level)
+           left_to_right = not left_to_right
+           
+       return result
+   ```
+
+3. **Right Side View**
+   This pattern focuses on nodes visible from the right side of the tree, useful for various tree analysis scenarios.
+
+   Key Benefits:
+   - Efficient tree boundary analysis
+   - Quick rightmost node access
+   - Simplified tree profiling
+   - Boundary node identification
+
+   Common Applications:
+   - Tree silhouette analysis
+   - Boundary node processing
+   - Profile view generation
+   - Edge node operations
+
+   Technical Considerations:
+   - Level tracking importance
+   - Last node identification
+   - Complete level processing
+   - Efficient queue management
+
+   Additional Variations:
+   ```python
+   # Complete Tree View
+   def getAllSideViews(root):
+       """
+       Gets left, right, top, and bottom views of tree
+       Returns: {
+           'left': [leftmost nodes],
+           'right': [rightmost nodes],
+           'top': [topmost nodes],
+           'bottom': [bottommost nodes]
+       }
+       """
+       if not root:
+           return {'left': [], 'right': [], 'top': [], 'bottom': []}
+           
+       views = {'left': [], 'right': [], 'top': [], 'bottom': []}
+       queue = deque([(root, 0, 0)])  # (node, row, col)
+       min_col = max_col = 0
+       
+       while queue:
+           level_size = len(queue)
+           level_nodes = []
+           
+           for _ in range(level_size):
+               node, row, col = queue.popleft()
+               level_nodes.append((node, col))
+               
+               if node.left:
+                   queue.append((node.left, row + 1, col - 1))
+                   min_col = min(min_col, col - 1)
+               if node.right:
+                   queue.append((node.right, row + 1, col + 1))
+                   max_col = max(max_col, col + 1)
+           
+           # Update views
+           if not views['left']:
+               views['left'].append(min(level_nodes, key=lambda x: x[1])[0].val)
+           if not views['right']:
+               views['right'].append(max(level_nodes, key=lambda x: x[1])[0].val)
+           views['top'].append(level_nodes[0][0].val)
+           views['bottom'] = [node[0].val for node in level_nodes]  # Update bottom view
+           
+       return views
+
+   # Diagonal View
+   def diagonalView(root):
+       """
+       Gets diagonal view of tree
+       Example:
+           1
+          / \
+         2   3
+        / \   \
+       4   5   6
+       
+       Output: [[1,3,6], [2,5], [4]]
+       """
+       if not root:
+           return []
+           
+       result = []
+       queue = deque([(root, 0)])  # (node, diagonal)
+       
+       while queue:
+           node, d = queue.popleft()
+           
+           # Extend result list if needed
+           while len(result) <= d:
+               result.append([])
+           result[d].append(node.val)
+           
+           # Left child creates new diagonal
+           if node.left:
+               queue.append((node.left, d + 1))
+           # Right child continues same diagonal
+           if node.right:
+               queue.append((node.right, d))
+               
+       return result
+   ```
+
+4. **Level-wise Processing**
+   This pattern focuses on handling nodes at each level with specific requirements or constraints.
+
+   Key Features:
+   - Level-specific operations
+   - Grouped node processing
+   - Hierarchical data management
+   - Level-based decision making
+
+   Implementation Strategies:
+   - Level size tracking
+   - Batch processing
+   - Level-specific validation
+   - Result aggregation
+
+   Common Scenarios:
+   - Average calculation per level
+   - Level-specific transformations
+   - Group-based operations
+   - Hierarchical data validation
+
+   ```python
+   def processLevels(root):
+       """
+       Process nodes level by level with specific operations
+       Time: O(n), Space: O(w)
+       """
+       if not root:
+           return []
+           
+       result = []
+       queue = deque([root])
+       level = 0
+       
+       while queue:
+           size = len(queue)
+           current_level = []
+           
+           # Process current level
+           for _ in range(size):
+               node = queue.popleft()
+               
+               # Level-specific processing
+               if level % 2 == 0:
+                   # Even level processing
+                   current_level.append(node.val * 2)
+               else:
+                   # Odd level processing
+                   current_level.append(node.val + 1)
+                   
+               if node.left:
+                   queue.append(node.left)
+               if node.right:
+                   queue.append(node.right)
+                   
+           result.append(current_level)
+           level += 1
+           
+       return result
+   ```
+
+5. **Distance-based Processing**
+   This pattern handles nodes based on their distance from a target node or starting point.
+
+   Key Applications:
+   - Finding nodes at specific distances
+   - Distance-based grouping
+   - Proximity analysis
+   - Range-based operations
+
+   Implementation Considerations:
+   - Distance tracking
+   - Path validation
+   - Range checking
+   - Efficient state management
+
+   ```python
+   def findNodesAtDistance(root, target, k):
+       """
+       Find all nodes at distance k from target node
+       Time: O(n), Space: O(n)
+       """
+       if not root:
+           return []
+           
+       # Build parent pointers using BFS
+       parent_map = {}
+       queue = deque([root])
+       while queue:
+           node = queue.popleft()
+           
+           if node.left:
+               parent_map[node.left] = node
+               queue.append(node.left)
+           if node.right:
+               parent_map[node.right] = node
+               queue.append(node.right)
+               
+       # Find nodes at distance k using BFS
+       result = []
+       visited = {target}
+       queue = deque([(target, 0)])
+       
+       while queue:
+           node, dist = queue.popleft()
+           
+           if dist == k:
+               result.append(node.val)
+           elif dist < k:
+               # Check children
+               for child in (node.left, node.right):
+                   if child and child not in visited:
+                       visited.add(child)
+                       queue.append((child, dist + 1))
+                       
+               # Check parent
+               parent = parent_map.get(node)
+               if parent and parent not in visited:
+                   visited.add(parent)
+                   queue.append((parent, dist + 1))
+                   
+       return result
+   ```
+
+### More Advanced BFS Applications
+
+1. **Binary Tree Level Order Traversal II (Bottom-Up)**
+   ```python
+   def levelOrderBottom(root):
+       """
+       Level order traversal from bottom to top
+       Time: O(n), Space: O(w) where w is max width
+       
+       Example:
+           3
+          / \
+         9  20
+           /  \
+          15   7
+       
+       Output: [[15,7], [9,20], [3]]
+       """
+       if not root:
+           return []
+           
+       result = []
+       queue = deque([root])
+       
+       while queue:
+           level_size = len(queue)
+           current_level = []
+           
+           for _ in range(level_size):
+               node = queue.popleft()
+               current_level.append(node.val)
+               
+               if node.left:
+                   queue.append(node.left)
+               if node.right:
+                   queue.append(node.right)
+                   
+           result.insert(0, current_level)  # Insert at beginning
+           
+       return result
+   ```
+
+2. **Average of Levels**
+   ```python
+   def averageOfLevels(root):
+       """
+       Calculate average value of nodes at each level
+       Time: O(n), Space: O(w)
+       
+       Example:
+           3
+          / \
+         9  20
+           /  \
+          15   7
+       
+       Output: [3.0, 14.5, 11.0]
+       Explanation:
+       - Level 0: 3 / 1 = 3.0
+       - Level 1: (9 + 20) / 2 = 14.5
+       - Level 2: (15 + 7) / 2 = 11.0
+       """
+       if not root:
+           return []
+           
+       result = []
+       queue = deque([root])
+       
+       while queue:
+           level_size = len(queue)
+           level_sum = 0
+           
+           for _ in range(level_size):
+               node = queue.popleft()
+               level_sum += node.val
+               
+               if node.left:
+                   queue.append(node.left)
+               if node.right:
+                   queue.append(node.right)
+                   
+           result.append(level_sum / level_size)
+           
+       return result
+   ```
+
+3. **Binary Tree Cousins**
+   ```python
+   def isCousins(root, x, y):
+       """
+       Determine if two nodes are cousins (same level, different parents)
+       Time: O(n), Space: O(w)
+       
+       Example:
+           1
+          / \
+         2   3
+        /     \
+       4       5
+       
+       isCousins(4, 5) -> True (same level, different parents)
+       isCousins(4, 3) -> False (different levels)
+       """
+       if not root:
+           return False
+           
+       queue = deque([(root, None, 0)])  # (node, parent, level)
+       x_info = y_info = None
+       
+       while queue:
+           node, parent, level = queue.popleft()
+           
+           if node.val == x:
+               x_info = (parent, level)
+           elif node.val == y:
+               y_info = (parent, level)
+               
+           if x_info and y_info:
+               # Same level, different parents
+               return (x_info[1] == y_info[1] and 
+                      x_info[0] != y_info[0])
+               
+           if node.left:
+               queue.append((node.left, node, level + 1))
+           if node.right:
+               queue.append((node.right, node, level + 1))
+               
+       return False
+   ```
+
+### Graph BFS Applications
+
+1. **Shortest Path in Binary Matrix**
+   ```python
+   def shortestPathBinaryMatrix(grid):
+       """
+       Find shortest path from top-left to bottom-right
+       in binary matrix where 0 represents walkable cells
+       Time: O(n*m), Space: O(n*m)
+       
+       Example:
+       grid = [
+           [0,1,1],
+           [1,0,0],
+           [1,1,0]
+       ]
+       Output: 4 (Path: [0,0] -> [1,1] -> [1,2] -> [2,2])
+       """
+       if not grid or grid[0][0] == 1:
+           return -1
+           
+       n = len(grid)
+       if n == 1:
+           return 1 if grid[0][0] == 0 else -1
+           
+       # All 8 directions
+       directions = [
+           (-1,-1), (-1,0), (-1,1),
+           (0,-1),          (0,1),
+           (1,-1),  (1,0),  (1,1)
+       ]
+       
+       queue = deque([(0, 0, 1)])  # (row, col, path_length)
+       grid[0][0] = 1  # Mark as visited
+       
+       while queue:
+           row, col, path_len = queue.popleft()
+           
+           if row == n-1 and col == n-1:
+               return path_len
+               
+           # Try all 8 directions
+           for dx, dy in directions:
+               new_row, new_col = row + dx, col + dy
+               
+               if (0 <= new_row < n and 
+                   0 <= new_col < n and 
+                   grid[new_row][new_col] == 0):
+                   grid[new_row][new_col] = 1  # Mark visited
+                   queue.append((new_row, new_col, path_len + 1))
+                   
+       return -1
+   ```
+
+2. **Rotting Oranges**
+   ```python
+   def orangesRotting(grid):
+       """
+       Find minimum time for all oranges to rot
+       Time: O(n*m), Space: O(n*m)
+       
+       Example:
+       grid = [
+           [2,1,1],
+           [1,1,0],
+           [0,1,1]
+       ]
+       Output: 4
+       
+       0: empty cell
+       1: fresh orange
+       2: rotten orange
+       """
+       if not grid:
+           return 0
+           
+       rows, cols = len(grid), len(grid[0])
+       queue = deque()
+       fresh_count = 0
+       
+       # Find all rotten oranges and count fresh ones
+       for r in range(rows):
+           for c in range(cols):
+               if grid[r][c] == 2:
+                   queue.append((r, c, 0))  # (row, col, time)
+               elif grid[r][c] == 1:
+                   fresh_count += 1
+                   
+       if fresh_count == 0:
+           return 0
+           
+       directions = [(1,0), (-1,0), (0,1), (0,-1)]
+       max_time = 0
+       
+       while queue:
+           row, col, time = queue.popleft()
+           max_time = max(max_time, time)
+           
+           for dx, dy in directions:
+               new_row, new_col = row + dx, col + dy
+               
+               if (0 <= new_row < rows and 
+                   0 <= new_col < cols and 
+                   grid[new_row][new_col] == 1):
+                   grid[new_row][new_col] = 2
+                   fresh_count -= 1
+                   queue.append((new_row, new_col, time + 1))
+                   
+       return max_time if fresh_count == 0 else -1
+   ```
+
+### Common Mistakes and How to Avoid Them
+
+1. **Forgetting to Mark Visited Nodes**
+   ```python
+   # Wrong way (can cause infinite loop)
+   def bfsWrong(graph, start):
+       queue = deque([start])
+       while queue:
+           node = queue.popleft()
+           for neighbor in graph[node]:
+               queue.append(neighbor)  # No visited check!
+   
+   # Why this is wrong:
+   # - Can get stuck in cycles
+   # - Processes same nodes multiple times
+   # - Memory usage grows unnecessarily
+   # - Can cause stack overflow
+   
+   # Correct way with explanation
+   def bfsCorrect(graph, start):
+       """
+       Properly implemented BFS with visited tracking
+       
+       Example graph:
+       graph = {
+           1: [2, 3],
+           2: [1, 4],
+           3: [1, 4],
+           4: [2, 3]
+       }
+       """
+       visited = set([start])  # Track visited nodes
+       queue = deque([start])
+       result = []  # Store traversal order
+       
+       while queue:
+           node = queue.popleft()
+           result.append(node)  # Process current node
+           
+           for neighbor in graph[node]:
+               if neighbor not in visited:  # Check before adding
+                   visited.add(neighbor)    # Mark as visited immediately
+                   queue.append(neighbor)   # Add to queue
+                   
+       return result
+
+   # Example execution:
+   # Input: graph = {1: [2, 3], 2: [1, 4], 3: [1, 4], 4: [2, 3]}, start = 1
+   # Step 1: visited = {1}, queue = [1], result = []
+   # Step 2: visited = {1, 2, 3}, queue = [2, 3], result = [1]
+   # Step 3: visited = {1, 2, 3, 4}, queue = [3, 4], result = [1, 2]
+   # Step 4: visited = {1, 2, 3, 4}, queue = [4], result = [1, 2, 3]
+   # Step 5: visited = {1, 2, 3, 4}, queue = [], result = [1, 2, 3, 4]
+   ```
+
+2. **Incorrect Level Tracking**
+   ```python
+   # Wrong way (mixes levels)
+   def levelOrderWrong(root):
+       """
+       This implementation loses level information
+       
+       Example tree:
+           1
+          / \
+         2   3
+        / \   \
+       4   5   6
+       
+       Expected: [[1], [2, 3], [4, 5, 6]]
+       Actual: [1, 2, 3, 4, 5, 6]  # Lost level structure!
+       """
+       queue = deque([root])
+       result = []
+       while queue:
+           node = queue.popleft()
+           result.append(node.val)  # No level separation!
+           if node.left:
+               queue.append(node.left)
+           if node.right:
+               queue.append(node.right)
+               
+   # Correct way with detailed explanation
+   def levelOrderCorrect(root):
+       """
+       Properly tracks levels using size-based approach
+       
+       Time: O(n) where n is number of nodes
+       Space: O(w) where w is maximum width of tree
+       
+       Example execution:
+           1
+          / \
+         2   3
+        / \   \
+       4   5   6
+       
+       Step-by-step:
+       1. First level: size = 1
+          - Process: 1
+          - Queue: [2, 3]
+          - Result: [[1]]
+          
+       2. Second level: size = 2
+          - Process: 2, 3
+          - Queue: [4, 5, 6]
+          - Result: [[1], [2, 3]]
+          
+       3. Third level: size = 3
+          - Process: 4, 5, 6
+          - Queue: []
+          - Result: [[1], [2, 3], [4, 5, 6]]
+       """
+       if not root:
+           return []
+           
+       queue = deque([root])
+       result = []
+       
+       while queue:
+           level_size = len(queue)  # Track current level size
+           current_level = []
+           
+           # Process all nodes at current level
+           for _ in range(level_size):
+               node = queue.popleft()
+               current_level.append(node.val)
+               
+               # Add children for next level
+               if node.left:
+                   queue.append(node.left)
+               if node.right:
+                   queue.append(node.right)
+                   
+           result.append(current_level)
+           
+       return result
+   ```
+
+3. **Inefficient Queue Usage**
+   ```python
+   # Wrong way (using list as queue)
+   def bfsInefficient(root):
+       """
+       Using list as queue is inefficient
+       Time: O(n²) due to list.pop(0)
+       """
+       if not root:
+           return []
+           
+       queue = [root]  # Using list instead of deque
+       result = []
+       
+       while queue:
+           node = queue.pop(0)  # O(n) operation!
+           result.append(node.val)
+           
+           if node.left:
+               queue.append(node.left)
+           if node.right:
+               queue.append(node.right)
+               
+       return result
+   
+   # Correct way with efficient queue
+   def bfsEfficient(root):
+       """
+       Using deque for O(1) operations
+       Time: O(n) - optimal
+       
+       Why deque is better:
+       - popleft(): O(1) vs list.pop(0): O(n)
+       - append(): O(1) same as list
+       - Memory efficient
+       - Thread-safe operations
+       """
+       if not root:
+           return []
+           
+       queue = deque([root])  # Using deque
+       result = []
+       
+       while queue:
+           node = queue.popleft()  # O(1) operation
+           result.append(node.val)
+           
+           if node.left:
+               queue.append(node.left)
+           if node.right:
+               queue.append(node.right)
+               
+       return result
+   ```
+
+4. **Not Handling Edge Cases**
+   ```python
+   # Common edge cases to handle:
+   def bfsWithEdgeCases(root):
+       """
+       Comprehensive edge case handling
+       
+       Edge Cases:
+       1. Empty tree
+       2. Single node
+       3. Unbalanced tree
+       4. Complete binary tree
+       5. All nodes same value
+       6. Maximum tree depth
+       """
+       # Case 1: Empty tree
+       if not root:
+           return []
+           
+       # Case 2: Single node
+       if not root.left and not root.right:
+           return [[root.val]]
+           
+       queue = deque([root])
+       result = []
+       
+       try:
+           while queue:
+               level_size = len(queue)
+               current_level = []
+               
+               for _ in range(level_size):
+                   node = queue.popleft()
+                   
+                   # Case 5: Handle duplicate values if needed
+                   current_level.append(node.val)
+                   
+                   # Case 3 & 4: Handle children consistently
+                   for child in (node.left, node.right):
+                       if child:
+                           queue.append(child)
+                           
+               result.append(current_level)
+               
+               # Case 6: Check maximum depth if needed
+               if len(result) > MAX_DEPTH:
+                   raise ValueError("Tree exceeds maximum depth")
+                   
+       except Exception as e:
+           # Handle any runtime errors
+           logging.error(f"BFS failed: {str(e)}")
+           raise
+           
+       return result
+   ```
+
+### Performance Optimization
+
+1. **Memory Management**
+   ```python
+   def memoryEfficientBFS(root):
+       """
+       Memory efficient BFS that processes nodes immediately
+       instead of storing all levels
+       """
+       if not root:
+           return
+           
+       queue = deque([root])
+       
+       while queue:
+           node = queue.popleft()
+           process(node)  # Process immediately
+           
+           if node.left:
+               queue.append(node.left)
+           if node.right:
+               queue.append(node.right)
+   ```
+
+2. **Early Termination**
+   ```python
+   def findTarget(root, target):
+       """
+       BFS with early termination when target is found
+       """
+       if not root:
+           return False
+           
+       queue = deque([root])
+       
+       while queue:
+           node = queue.popleft()
+           
+           if node.val == target:
+               return True  # Early exit
+               
+           if node.left:
+               queue.append(node.left)
+           if node.right:
+               queue.append(node.right)
+               
+       return False
+   ```
+
+Remember: The key to mastering BFS is to:
+1. Understand queue operations thoroughly
+2. Choose appropriate level tracking method
+3. Handle edge cases properly
+4. Consider memory optimization
+5. Use appropriate data structures 
