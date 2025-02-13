@@ -51,7 +51,8 @@ const visualizerPath = `../visualizers/${slug}/index.tsx`;
   <!-- Tab Navigation -->
   <div class="border-b border-gray-200">
     <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-      {['content', 'practice', 'resources', 'visualizer'].map((tabId) => (
+      <!-- add resources tab -->
+      {['content', 'practice', 'visualizer'].map((tabId) => (
         <button
           id={`${tabId}-tab`}
           class={`
@@ -110,30 +111,6 @@ const visualizerPath = `../visualizers/${slug}/index.tsx`;
     </div>
 
     <div id="resources-panel" class="hidden">
-      <!-- Videos -->
-      <!-- <div>
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Video Tutorials</h3>
-        <div class="grid gap-6 md:grid-cols-2">
-          {
-            resources.videos.map((video) => (
-              <a
-                href={video.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="block bg-white p-6 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
-              >
-                <h4 class="font-medium text-gray-900">{video.title}</h4>
-                <div class="mt-2 flex items-center text-sm text-gray-500">
-                  <span>{video.platform}</span>
-                  <span class="mx-2">•</span>
-                  <span>{video.duration}</span>
-                </div>
-              </a>
-            ))
-          }
-        </div>
-      </div> -->
-
       <!-- Articles -->
       <div>
         <h3 class="text-lg font-semibold text-gray-900 mb-4">Articles & Tutorials</h3>

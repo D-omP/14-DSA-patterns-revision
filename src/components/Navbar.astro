@@ -4,7 +4,7 @@ const currentPath = Astro.url.pathname;
 const navigation = [
   { name: 'Patterns', href: '/course/two-pointer' },
   { name: 'Blog', href: '/blog' },
-  { name: 'About', href: '/about' },
+  // { name: 'About', href: '/about' },
 ];
 ---
 
@@ -39,11 +39,12 @@ const navigation = [
 
       <!-- Right side buttons -->
       <div class="hidden sm:flex sm:items-center sm:space-x-4">
-        <a
-          href="/course/two-pointer"
-          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+        <a target="_blank"
+          href="https://www.skillsetmaster.com/dsa-revision"
+          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
         >
-          Start Learning
+          <span class="mr-2">🎯</span>
+          DSA RevisionCourse
         </a>
       </div>
 
@@ -91,11 +92,13 @@ const navigation = [
           {item.name}
         </a>
       ))}
-      <a
-        href="/course/two-pointer"
-        class="block w-full text-center px-4 py-2 mx-2 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
+      <a 
+        href="https://www.skillsetmaster.com/dsa-revision"
+        target="_blank"
+        class="block w-full text-center px-4 py-2 mx-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700"
       >
-        Start Learning
+        <span class="mr-2">🎯</span>
+        DSA Revision Course
       </a>
     </div>
   </div>
