@@ -1,16 +1,115 @@
 ---
 import BaseLayout from './Layout.astro';
 import { ViewTransitions } from 'astro:transitions';
+import { getCollection } from 'astro:content';
 
 const { frontmatter } = Astro.props;
+
+// Get all course content and sort by priority
+const allCourseContent = await getCollection('course');
+const sortedPatterns = allCourseContent.sort((a, b) => a.data.priority - b.data.priority);
 ---
 
 <BaseLayout title={frontmatter.title} description={frontmatter.description}>
   <ViewTransitions />
   
-  <main class="max-w-4xl mx-auto px-4 py-8">
+  <!-- Mobile FAB for Sidebar - Updated styles -->
+  <button
+    id="mobile-sidebar-fab"
+    class="fixed bottom-6 right-6 z-[100] p-4 bg-primary-600 text-white rounded-full shadow-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 md:hidden flex items-center justify-center"
+    aria-label="Open patterns menu"
+    style="position: fixed; /* Ensure fixed positioning works */"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
+  </button>
+
+  <!-- Mobile Sidebar Overlay - Updated z-index -->
+  <div
+    id="mobile-sidebar"
+    class="fixed inset-0 bg-gray-800 bg-opacity-75 z-[90] hidden md:hidden"
+    aria-hidden="true"
+  >
+    <div class="fixed inset-y-0 right-0 max-w-xs w-full bg-white shadow-xl z-[95] transform transition-transform duration-300 translate-x-full">
+      <!-- Close button -->
+      <button
+        id="close-sidebar"
+        class="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+        aria-label="Close menu"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <!-- Patterns List -->
+      <div class="py-6 px-4 overflow-y-auto h-full">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">DSA Patterns</h3>
+        <ul class="space-y-2">
+          {sortedPatterns.map((pattern) => (
+            <li>
+              <a
+                href={`/course/${pattern.slug}`}
+                class={`block px-4 py-2 rounded-lg text-sm ${
+                  Astro.url.pathname === `/course/${pattern.slug}`
+                    ? 'bg-primary-50 text-primary-700 font-medium'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                {pattern.data.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <main class="max-w-4xl mx-auto px-4 py-8 relative">
     <article>
       <slot />
     </article>
   </main>
-</BaseLayout> 
+</BaseLayout>
+
+<script>
+  function setupMobileSidebar() {
+    const fab = document.getElementById('mobile-sidebar-fab');
+    const sidebar = document.getElementById('mobile-sidebar');
+    const sidebarContent = sidebar?.querySelector('div');
+    const closeButton = document.getElementById('close-sidebar');
+
+    function openSidebar() {
+      sidebar?.classList.remove('hidden');
+      setTimeout(() => {
+        if (sidebarContent) {
+          sidebarContent.classList.remove('translate-x-full');
+        }
+      }, 10);
+    }
+
+    function closeSidebar() {
+      if (sidebarContent) {
+        sidebarContent.classList.add('translate-x-full');
+      }
+      setTimeout(() => {
+        sidebar?.classList.add('hidden');
+      }, 300);
+    }
+
+    fab?.addEventListener('click', openSidebar);
+    closeButton?.addEventListener('click', closeSidebar);
+    sidebar?.addEventListener('click', (e) => {
+      if (e.target === sidebar) {
+        closeSidebar();
+      }
+    });
+  }
+
+  // Setup on initial load
+  setupMobileSidebar();
+
+  // Setup after view transitions
+  document.addEventListener('astro:page-load', setupMobileSidebar);
+</script> 
