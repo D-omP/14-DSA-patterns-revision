@@ -15,6 +15,10 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await entry.render();
 
+// Get all course content and sort by priority
+const allCourseContent = await getCollection('course');
+const sortedPatterns = allCourseContent.sort((a, b) => a.data.priority - b.data.priority);
+
 // Get practice problems and resources for this pattern
 const patternData = courseContent[entry.slug] || {
   practice: { problems: [] },
@@ -23,93 +27,64 @@ const patternData = courseContent[entry.slug] || {
 ---
 
 <CourseLayout frontmatter={entry.data}>
-  <div class="prose max-w-none">
-    <h1>{entry.data.title}</h1>
-    <p class="text-gray-600">{entry.data.description}</p>
-  </div>
+  <div class="flex relative">
+    <!-- Sidebar -->
+    <div class="hidden md:block w-64 h-[calc(100vh-4rem)] overflow-y-auto fixed left-0 top-16 p-4 bg-white border-r">
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">DSA Patterns</h3>
+      <ul class="space-y-2">
+        {sortedPatterns.map((pattern) => (
+          <li>
+            <a
+              href={`/course/${pattern.slug}`}
+              class={`block px-4 py-2 rounded-lg text-sm ${
+                Astro.url.pathname === `/course/${pattern.slug}`
+                  ? 'bg-primary-50 text-primary-700 font-medium'
+                  : 'text-gray-600 hover:bg-gray-50'
+              }`}
+            >
+              {pattern.data.title}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
 
-  <CourseTabs slug={entry.slug}>
-    <Content />
-  </CourseTabs>
+    <!-- Main Content -->
+    <div class="w-full">
+      <main class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+        <div class="prose prose-sm sm:prose max-w-none">
+          <h1 class="text-2xl sm:text-4xl font-bold">{entry.data.title}</h1>
+          <p class="text-gray-600 text-sm sm:text-base">{entry.data.description}</p>
+        </div>
+
+        <CourseTabs slug={entry.slug}>
+          <Content />
+        </CourseTabs>
+      </main>
+    </div>
+  </div>
 </CourseLayout>
 
 <style>
-  /* Hide scrollbar for Chrome, Safari and Opera */
-  aside::-webkit-scrollbar {
-    display: none;
+  /* Ensure proper content width on mobile */
+  :global(.prose) {
+    max-width: 100%;
   }
-
-  /* Hide scrollbar for IE, Edge and Firefox */
-  aside {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+  
+  /* Adjust font sizes for mobile */
+  :global(.prose p) {
+    font-size: 16px;
+    line-height: 1.6;
   }
-
-  /* Add smooth scrolling to the whole page */
-  html {
-    scroll-behavior: smooth;
+  
+  :global(.prose pre) {
+    font-size: 14px;
+    border-radius: 0.5rem;
   }
-
-  @media (max-width: 768px) {
-    .prose {
-      font-size: 1rem;
-      line-height: 1.6;
-    }
-    
-    main {
-      margin-left: 0;
-      margin-right: 0;
-      padding-bottom: 6rem; /* Space for FAB */
-    }
-
-    /* Improve mobile typography */
-    .prose h1 {
-      font-size: 2rem;
-      line-height: 1.2;
-    }
-
-    .prose h2 {
-      font-size: 1.5rem;
-      margin-top: 2rem;
-    }
-
-    .prose p {
-      margin-bottom: 1.25rem;
-    }
-  }
-
-  /* Add new styles */
-  .prose {
-    max-width: none;
-  }
-
-  .prose h1 {
-    margin-bottom: 0.5rem;
-  }
-
-  .prose h2 {
-    margin-top: 2.5rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .prose h3 {
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-  }
-
-  .prose p {
-    margin-bottom: 1.5rem;
-    line-height: 1.75;
-  }
-
-  .prose ul {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-  }
-
-  .prose li {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
+  
+  /* Better spacing on mobile */
+  :global(.prose > * + *) {
+    margin-top: 1em;
   }
 </style>
 
