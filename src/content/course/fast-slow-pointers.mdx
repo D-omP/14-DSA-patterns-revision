@@ -10,674 +10,409 @@ priority: 3
 
 ## Fast & Slow Pointers Pattern
 
-The fast & slow pointers technique, also known as Floyd's Tortoise and Hare algorithm, is a pointer algorithm that uses two pointers moving at different speeds. This pattern is particularly useful for cycle detection and linked list problems.
+The Fast & Slow pointers technique, also known as Floyd's Tortoise and Hare algorithm or the two-pointer technique, is a pointer algorithm that uses two pointers moving through a sequence at different speeds. This pattern is particularly useful for:
+- Cycle detection
+- Finding middle elements
+- Finding list lengths
+- Determining sequence periodicity
+
+### Understanding Fast & Slow Pointers
+
+The Fast & Slow pointer technique is like having two runners on a track - one running twice as fast as the other. This simple idea leads to powerful solutions for many problems.
+
+#### Why Use Two Different Speeds?
+1. **Cycle Detection**: If there's a cycle, the fast runner will eventually catch up to the slow runner. Think of it like running on a circular track - a faster runner will eventually lap the slower runner.
+
+2. **Finding Middle**: By the time the fast runner reaches the end, the slow runner will be halfway through. This is because the fast runner covers twice the distance in the same time.
+
+3. **Distance Relationships**: The relative speeds create useful mathematical relationships that help solve complex problems.
+
+### Real-World Analogies
+
+1. **Race Track Analogy**
+   ```
+   Think of a circular race track:
+   - Slow runner: jogging pace
+   - Fast runner: sprinting pace (2x speed)
+   
+   Two scenarios:
+   1. Circular track (has cycle):
+      - Runners will meet eventually
+      - Like linked list cycle detection
+   
+   2. Straight track (no cycle):
+      - Fast runner reaches end
+      - Slow runner at middle
+      - Like finding middle element
+   ```
+
+2. **Clock Hands Analogy**
+   ```
+   Similar to hour and minute hands:
+   - Hour hand (slow pointer)
+   - Minute hand (fast pointer)
+   - They meet at regular intervals
+   - Predictable meeting points
+   ```
 
 ### Core Concepts
 
-1. **Basic Principle**
-   - Two pointers moving at different speeds
-   - Fast pointer moves twice as fast as slow pointer
-   - If cycle exists, pointers will eventually meet
-   - Used for cycle detection and middle finding
+1. **Movement Patterns**
+   ```
+   Fast pointer moves twice as fast as slow pointer:
+   
+   Initial:  1 → 2 → 3 → 4 → 5 → 6
+            s,f
+   
+   Step 1:   1 → 2 → 3 → 4 → 5 → 6
+                s   f
+   
+   Step 2:   1 → 2 → 3 → 4 → 5 → 6
+                    s       f
+   ```
 
-2. **Key Applications**
-   - Cycle detection in linked lists
-   - Finding middle elements
-   - Palindrome verification
-   - Cycle length calculation
-   - Finding cycle start point
+2. **Cycle Detection**
+   ```python
+   def hasCycle(head: ListNode) -> bool:
+       """
+       Floyd's Cycle Detection Algorithm
+       
+       How it works:
+       1. If there's a cycle, fast pointer will eventually catch up
+       2. If no cycle, fast pointer reaches end
+       
+       Example:
+       1 → 2 → 3 → 4 → 5
+               ↑       ↓
+               7 ← 6 ←┘
+       
+       Steps:
+       1. slow=1, fast=1
+       2. slow=2, fast=3
+       3. slow=3, fast=5
+       4. slow=4, fast=7
+       5. slow=5, fast=2
+       6. slow=6, fast=4
+       7. slow=7, fast=6
+       8. slow=3, fast=3 (meet!)
+       """
+       if not head or not head.next:
+           return False
+           
+       slow = fast = head
+       while fast and fast.next:
+           slow = slow.next
+           fast = fast.next.next
+           if slow == fast:
+               return True
+               
+       return False
+   ```
 
-### Implementation Patterns
+3. **Finding Cycle Start**
+   ```python
+   def detectCycle(head: ListNode) -> ListNode:
+       """
+       Floyd's Cycle Finding Algorithm
+       
+       Mathematical proof:
+       Let's say:
+       - Distance from head to cycle start = x
+       - Distance from cycle start to meeting point = y
+       - Remaining cycle length = z
+       
+       When they meet:
+       Slow pointer traveled: x + y
+       Fast pointer traveled: x + y + n(y + z) where n is number of cycles
+       
+       Since fast moves 2x speed:
+       2(x + y) = x + y + n(y + z)
+       x + y = n(y + z)
+       x = n(y + z) - y
+       x = (n-1)(y + z) + z
+       
+       This means: Moving x steps from head and meeting point reaches cycle start!
+       """
+       if not head or not head.next:
+           return None
+           
+       # Find meeting point
+       slow = fast = head
+       while fast and fast.next:
+           slow = slow.next
+           fast = fast.next.next
+           if slow == fast:
+               break
+       else:
+           return None
+           
+       # Find cycle start
+       slow = head
+       while slow != fast:
+           slow = slow.next
+           fast = fast.next
+           
+       return slow
+   ```
 
-1. **Basic Cycle Detection**
-This is the fundamental application of fast-slow pointers. The algorithm works because:
-- In a cyclic path, fast pointer will eventually catch up to slow pointer
-- Meeting point occurs after fast pointer has moved twice the distance of slow pointer
-- If no cycle exists, fast pointer reaches end
+### Common Applications
 
-```python
-def hasCycle(head: ListNode) -> bool:
-    """
-    Detect cycle in a linked list using Floyd's algorithm.
-    Time: O(n), Space: O(1)
-    """
-    if not head or not head.next:
-        return False
-    
-    slow = fast = head
-    
-    while fast and fast.next:
-        slow = slow.next        # Move one step
-        fast = fast.next.next   # Move two steps
-        
-        if slow == fast:        # Cycle detected
-            return True
-    
-    return False  # No cycle found
+1. **Finding Middle Element**
+   ```python
+   def findMiddle(head: ListNode) -> ListNode:
+       """
+       Fast pointer moves twice, so when it reaches end,
+       slow pointer is at middle.
+       
+       Example: 1 → 2 → 3 → 4 → 5
+       
+       Steps:
+       1. s=1, f=1
+       2. s=2, f=3
+       3. s=3, f=5
+       4. f reaches end, s at middle (3)
+       """
+       if not head or not head.next:
+           return head
+           
+       slow = fast = head
+       while fast.next and fast.next.next:
+           slow = slow.next
+           fast = fast.next.next
+           
+       return slow
+   ```
 
-# Example usage:
-# 1 -> 2 -> 3 -> 4 -> 2 (cycles back)
-# Output: True
-```
-
-2. **Finding Cycle Start**
-Once a cycle is detected, finding its start requires understanding:
-- Distance properties of meeting point
-- Relationship between cycle length and meeting point
-- Reset and synchronization technique
-
-```python
-def detectCycle(head: ListNode) -> ListNode:
-    """
-    Find the node where cycle begins.
-    Time: O(n), Space: O(1)
-    """
-    if not head or not head.next:
-        return None
-    
-    # Phase 1: Detect cycle using Floyd's algorithm
-    slow = fast = head
-    has_cycle = False
-    
-    while fast and fast.next:
-        slow = slow.next
-        fast = fast.next.next
-        if slow == fast:
-            has_cycle = True
-            break
-    
-    if not has_cycle:
-        return None
-    
-    # Phase 2: Find cycle start
-    # Reset slow to head, keep fast at meeting point
-    slow = head
-    while slow != fast:
-        slow = slow.next
-        fast = fast.next
-    
-    return slow
-
-# Example usage:
-# 3 -> 2 -> 0 -> -4 ↵
-#      ↑____________|
-# Output: Node with value 2
-```
-
-3. **Middle Element Finding**
-Finding middle element is useful for:
-- List partitioning
-- Binary search on linked list
-- Palindrome checking
-- List manipulation
-
-```python
-def findMiddle(head: ListNode) -> ListNode:
-    """
-    Find middle node of linked list.
-    For even length, returns second middle node.
-    Time: O(n), Space: O(1)
-    """
-    if not head or not head.next:
-        return head
-    
-    slow = fast = head
-    
-    # Fast moves twice as fast, so when it reaches end,
-    # slow will be at middle
-    while fast and fast.next:
-        slow = slow.next
-        fast = fast.next.next
-    
-    return slow
-
-# Example usage:
-# 1 -> 2 -> 3 -> 4 -> 5
-# Output: Node with value 3
-```
+2. **Finding List Length**
+   ```python
+   def findLength(head: ListNode) -> int:
+       """
+       Using cycle detection to find length.
+       
+       For cyclic lists:
+       1. Find meeting point
+       2. Count steps to complete one cycle
+       
+       For linear lists:
+       Fast pointer reaches end, count slow pointer steps
+       """
+       if not head:
+           return 0
+           
+       slow = fast = head
+       length = 0
+       
+       while fast and fast.next:
+           slow = slow.next
+           fast = fast.next.next
+           length += 1
+           
+           if slow == fast:  # Cycle detected
+               cycle_length = 1
+               slow = slow.next
+               while slow != fast:
+                   cycle_length += 1
+                   slow = slow.next
+               return cycle_length
+               
+       return length * 2 if fast else length * 2 - 1
+   ```
 
 ### Advanced Applications
 
 1. **Happy Number Detection**
-This problem demonstrates how fast-slow pointer can be applied to numeric sequences:
-- Each number generates a sequence
-- Cycle indicates not a happy number
-- Reaching 1 indicates happy number
-
-```python
-def isHappy(n: int) -> bool:
-    """
-    Determine if a number is happy using cycle detection.
-    Time: O(log n), Space: O(1)
-    """
-    def get_next(num: int) -> int:
-        total = 0
-        while num > 0:
-            digit = num % 10
-            total += digit * digit
-            num = num // 10
-        return total
-    
-    slow = fast = n
-    while True:
-        slow = get_next(slow)           # One step
-        fast = get_next(get_next(fast)) # Two steps
-        
-        if fast == 1:
-            return True
-        if slow == fast:
-            return False
-
-# Example usage:
-# n = 19
-# Output: True (1^2 + 9^2 = 82, 8^2 + 2^2 = 68, 6^2 + 8^2 = 100, 1^2 + 0^2 + 0^2 = 1)
-```
+   ```python
+   def isHappy(n: int) -> bool:
+       """
+       A number is happy if the sum of squares of its digits
+       eventually equals 1.
+       
+       Example: 19
+       1² + 9² = 82
+       8² + 2² = 68
+       6² + 8² = 100
+       1² + 0² + 0² = 1 (Happy!)
+       
+       Uses cycle detection:
+       - If sequence reaches 1, number is happy
+       - If sequence cycles, number is not happy
+       """
+       def get_next(num):
+           total = 0
+           while num > 0:
+               num, digit = divmod(num, 10)
+               total += digit ** 2
+           return total
+           
+       slow = fast = n
+       while True:
+           slow = get_next(slow)
+           fast = get_next(get_next(fast))
+           if fast == 1:
+               return True
+           if slow == fast:
+               return False
+   ```
 
 2. **Palindrome Linked List**
-This problem combines middle finding with list manipulation:
-- Find middle using fast-slow
-- Reverse second half
-- Compare with first half
+   ```python
+   def isPalindrome(head: ListNode) -> bool:
+       """
+       Uses fast/slow to find middle, then reverses second half
+       
+       Example: 1 → 2 → 2 → 1
+       
+       Steps:
+       1. Find middle using fast/slow
+       2. Reverse second half
+       3. Compare first and second half
+       """
+       if not head or not head.next:
+           return True
+           
+       # Find middle
+       slow = fast = head
+       while fast.next and fast.next.next:
+           slow = slow.next
+           fast = fast.next.next
+           
+       # Reverse second half
+       second = slow.next
+       prev = None
+       while second:
+           next_node = second.next
+           second.next = prev
+           prev = second
+           second = next_node
+           
+       # Compare halves
+       first = head
+       second = prev
+       while second:
+           if first.val != second.val:
+               return False
+           first = first.next
+           second = second.next
+           
+       return True
+   ```
 
-```python
-def isPalindrome(head: ListNode) -> bool:
-    """
-    Check if linked list is palindrome.
-    Time: O(n), Space: O(1)
-    """
-    if not head or not head.next:
-        return True
-    
-    # Find middle (slow will be at middle)
-    slow = fast = head
-    while fast.next and fast.next.next:
-        slow = slow.next
-        fast = fast.next.next
-    
-    # Reverse second half
-    second = slow.next
-    prev = None
-    while second:
-        next_temp = second.next
-        second.next = prev
-        prev = second
-        second = next_temp
-    
-    # Compare first half with reversed second half
-    first = head
-    second = prev
-    while second:
-        if first.val != second.val:
-            return False
-        first = first.next
-        second = second.next
-    
-    return True
+### Edge Cases and Optimization
 
-# Example usage:
-# 1 -> 2 -> 2 -> 1
-# Output: True
-```
+1. **Empty or Single Node**
+   ```python
+   # Always check for empty or single node
+   if not head or not head.next:
+       return head  # or appropriate value
+   ```
 
-### Common Pitfalls
+2. **Even vs Odd Length**
+   ```python
+   # For finding middle:
+   # Even length: first of middle two
+   # Odd length: middle element
+   while fast.next and fast.next.next:
+       slow = slow.next
+       fast = fast.next.next
+   ```
 
-1. **Boundary Conditions**
-   - Empty lists
-   - Single node lists
-   - Even vs odd length
-   - Cycle at head
+3. **Memory Optimization**
+   ```python
+   # In-place reversal for palindrome check
+   # Space: O(1) vs O(n) for storing values
+   def reverse(head):
+       prev = None
+       while head:
+           next_node = head.next
+           head.next = prev
+           prev = head
+           head = next_node
+       return prev
+   ```
 
-2. **Performance Issues**
-   - Unnecessary iterations
-   - Memory leaks
-   - Stack overflow
-   - Infinite loops
+### Practice Problems
 
-3. **Implementation Mistakes**
-   - Wrong pointer movement
-   - Incorrect cycle detection
-   - Memory management
-   - State restoration
+1. **Basic**
+   - Linked List Cycle
+   - Middle of Linked List
+   - Happy Number
+   - Palindrome Linked List
 
-### Best Practices
+2. **Intermediate**
+   - Cycle Length
+   - Start of Cycle
+   - Reorder List
+   - Intersection Point
 
-1. **Input Validation**
-   - Check for null/empty inputs
-   - Validate pointer integrity
-   - Handle edge cases
-   - Consider list length
+3. **Advanced**
+   - Circular Array Loop
+   - Find Duplicate Number
+   - Split Circular Linked List
+   - Clone Linked List with Random Pointer
 
-2. **Memory Management**
-   - Avoid extra space usage
-   - Clean up modified structures
-   - Handle circular references
-   - Prevent memory leaks
+### Understanding Time Complexity
 
-3. **Code Organization**
-   - Separate pointer logic
-   - Clear state management
-   - Proper error handling
-   - Clean code structure 
+1. **Why O(n)?**
+   Even though we have two pointers:
+   - Fast pointer moves at 2x speed
+   - Total distance covered is still proportional to n
+   - No nested loops in basic implementation
 
-### Advanced Techniques
+2. **Space Complexity Benefits**
+   Most Fast & Slow pointer solutions are O(1) space because:
+   - Only need two pointers
+   - No extra data structures
+   - In-place modifications
 
-1. **Cycle Length Calculation**
-This technique extends basic cycle detection to find the length of a cycle. Key steps:
-- First detect cycle using Floyd's algorithm
-- Count steps needed to complete one cycle
-- Use length for optimization in other algorithms
+### Common Mistakes to Avoid
 
-```python
-def findCycleLength(head: ListNode) -> int:
-    """
-    Find the length of cycle in a linked list.
-    Time: O(n), Space: O(1)
-    """
-    if not head or not head.next:
-        return 0
-        
-    # Find meeting point
-    slow = fast = head
-    while fast and fast.next:
-        slow = slow.next
-        fast = fast.next.next
-        if slow == fast:
-            # Found cycle, calculate length
-            current = slow
-            length = 0
-            while True:
-                current = current.next
-                length += 1
-                if current == slow:
-                    return length
-    
-    return 0  # No cycle
+1. **Null Pointer Errors**
+   ```python
+   # Wrong:
+   while fast.next.next:  # Might throw error
+       
+   # Correct:
+   while fast and fast.next:  # Safe null checking
+   ```
 
-# Example usage:
-# 1 -> 2 -> 3 -> 4 -> 5 -> 2 (cycles back)
-# Output: 4 (length of cycle 2->3->4->5->2)
-```
+2. **Off-by-One Errors**
+   ```python
+   # Finding middle in even-length lists:
+   # Be clear which middle element you want
+   
+   1 → 2 → 3 → 4
+       ↑   ↑
+   first second
+   middle middle
+   ```
 
-2. **Distance from Start to Cycle**
-Understanding the distance relationship helps in many cycle-related problems:
-- Distance from start to cycle entry
-- Distance from cycle entry to meeting point
-- Total path length analysis
+3. **Infinite Loops**
+   ```python
+   # Wrong:
+   while slow != fast:  # Might never meet
+       slow = slow.next
+       fast = fast.next.next
+       
+   # Correct:
+   while fast and fast.next:  # Has exit condition
+   ```
 
-```python
-def findDistancesToCycle(head: ListNode) -> tuple[int, int]:
-    """
-    Find distances to cycle entry and meeting point.
-    Returns (distance_to_cycle, cycle_length)
-    Time: O(n), Space: O(1)
-    """
-    if not head or not head.next:
-        return (0, 0)
-    
-    # Find meeting point
-    slow = fast = head
-    meeting_point = None
-    steps = 0
-    
-    while fast and fast.next:
-        slow = slow.next
-        fast = fast.next.next
-        steps += 1
-        if slow == fast:
-            meeting_point = slow
-            break
-    
-    if not meeting_point:
-        return (0, 0)
-    
-    # Find cycle entry
-    slow = head
-    distance_to_cycle = 0
-    while slow != fast:
-        slow = slow.next
-        fast = fast.next
-        distance_to_cycle += 1
-    
-    # Calculate cycle length
-    cycle_length = 1
-    current = slow.next
-    while current != slow:
-        cycle_length += 1
-        current = current.next
-    
-    return (distance_to_cycle, cycle_length)
+### Interview Tips
 
-# Example usage:
-# 1 -> 2 -> 3 -> 4 -> 5 -> 3 (cycles back)
-# Output: (2, 3) - 2 nodes to cycle, cycle length 3
-```
+1. **Problem Analysis**
+   - Explain why Fast & Slow pointers are suitable
+   - Discuss alternatives and trade-offs
+   - Mention space/time complexity benefits
 
-3. **Multiple Cycles Detection**
-Some advanced problems involve detecting multiple cycles or cycle-like patterns:
-- Interconnected cycles
-- Nested cycles
-- Cycle dependencies
+2. **Solution Communication**
+   - Draw the pointer movements
+   - Explain the mathematical reasoning
+   - Discuss edge cases proactively
+   - Mention potential optimizations
 
-```python
-def findAllCycles(head: ListNode) -> list[tuple[ListNode, int]]:
-    """
-    Find all cycles in a complex linked structure.
-    Returns list of (cycle_start_node, cycle_length)
-    Time: O(n), Space: O(n)
-    """
-    if not head:
-        return []
-    
-    visited = set()
-    cycles = []
-    
-    def detectCycleFrom(node: ListNode) -> tuple[ListNode, int]:
-        slow = fast = node
-        while fast and fast.next:
-            if fast in visited:
-                return None  # Already processed
-            visited.add(fast)
-            
-            slow = slow.next
-            fast = fast.next.next
-            if slow == fast:
-                # Found cycle, find its start and length
-                cycle_start = node
-                while cycle_start != slow:
-                    cycle_start = cycle_start.next
-                    slow = slow.next
-                
-                # Calculate length
-                length = 1
-                current = cycle_start.next
-                while current != cycle_start:
-                    length += 1
-                    current = current.next
-                
-                return (cycle_start, length)
-        return None
-    
-    # Process each unvisited node
-    current = head
-    while current:
-        if current not in visited:
-            cycle_info = detectCycleFrom(current)
-            if cycle_info:
-                cycles.append(cycle_info)
-        current = current.next
-    
-    return cycles
-
-# Example usage:
-# Complex structure with multiple cycles:
-# 1 -> 2 -> 3 -> 4 -> 2 (cycle 1)
-#           ↓    ↑
-#           6 <- 5 (cycle 2)
-# Output: [(2, 3), (5, 2)] - Two cycles found
-```
-
-4. **Cycle Pattern Recognition**
-Some problems require recognizing specific patterns within cycles:
-- Repeated sequences
-- Pattern length calculation
-- Pattern start identification
-
-```python
-def findRepeatingPattern(arr: list[int]) -> tuple[list[int], int]:
-    """
-    Find repeating pattern in array using fast-slow approach.
-    Returns (pattern, start_index)
-    Time: O(n), Space: O(1)
-    """
-    if not arr:
-        return ([], 0)
-    
-    # Use array indices as linked list
-    slow = fast = 0
-    
-    # Find meeting point
-    while True:
-        slow = (slow + 1) % len(arr)
-        fast = (fast + 2) % len(arr)
-        if slow == fast:
-            break
-    
-    # Find pattern start
-    slow = 0
-    start_index = 0
-    while slow != fast:
-        slow = (slow + 1) % len(arr)
-        fast = (fast + 1) % len(arr)
-        start_index += 1
-    
-    # Extract pattern
-    pattern = []
-    current = slow
-    while True:
-        pattern.append(arr[current])
-        current = (current + 1) % len(arr)
-        if current == slow:
-            break
-    
-    return (pattern, start_index)
-
-# Example usage:
-# arr = [1, 2, 3, 4, 2, 3, 4, 2, 3, 4]
-# Output: ([2, 3, 4], 1) - Pattern starts at index 1
-```
-
-### Real-World Applications
-
-1. **Memory Leak Detection**
-Fast-slow pointers can be used to detect memory leaks in reference counting systems:
-- References form a graph structure
-- Cycles indicate potential memory leaks
-- Detection helps in garbage collection
-
-```python
-class MemoryNode:
-    def __init__(self, id: str):
-        self.id = id
-        self.references = []
-        self.ref_count = 0
-
-def detectMemoryLeak(root: MemoryNode) -> list[str]:
-    """
-    Detect potential memory leaks in reference counting system.
-    Returns IDs of nodes in reference cycles.
-    Time: O(n), Space: O(1)
-    """
-    def get_next(node: MemoryNode) -> MemoryNode:
-        return node.references[0] if node.references else None
-    
-    def find_cycle(start: MemoryNode) -> list[MemoryNode]:
-        if not start or not start.references:
-            return []
-            
-        slow = fast = start
-        # Find meeting point
-        while fast and fast.references:
-            slow = get_next(slow)
-            fast = get_next(get_next(fast))
-            if slow == fast:
-                # Found cycle, collect nodes
-                cycle_nodes = []
-                current = slow
-                while True:
-                    cycle_nodes.append(current)
-                    current = get_next(current)
-                    if current == slow:
-                        break
-                return cycle_nodes
-        return []
-    
-    return [node.id for node in find_cycle(root)]
-
-# Example usage:
-# A -> B -> C -> D
-#      ↑         |
-#      └─────────┘
-# Output: ['B', 'C', 'D']
-```
-
-2. **Network Cycle Detection**
-Detecting cycles in network topologies:
-- Find routing loops
-- Identify circular dependencies
-- Detect deadlocks
-
-```python
-class NetworkNode:
-    def __init__(self, id: str):
-        self.id = id
-        self.connections = []
-        self.is_active = True
-
-def detectNetworkCycles(start: NetworkNode) -> list[list[str]]:
-    """
-    Find all cycles in network topology.
-    Returns lists of node IDs forming cycles.
-    Time: O(V + E), Space: O(V)
-    """
-    cycles = []
-    visited = set()
-    
-    def find_cycles_from(node: NetworkNode, path: list[str]):
-        if not node.is_active:
-            return
-            
-        if node.id in path:
-            # Found cycle
-            cycle_start = path.index(node.id)
-            cycles.append(path[cycle_start:])
-            return
-            
-        if node.id in visited:
-            return
-            
-        visited.add(node.id)
-        path.append(node.id)
-        
-        for next_node in node.connections:
-            find_cycles_from(next_node, path.copy())
-            
-        path.pop()
-    
-    find_cycles_from(start, [])
-    return cycles
-
-# Example usage:
-# A -> B -> C -> D
-#      ↑    |    ↓
-#      └────E <- F
-# Output: [['B', 'C', 'E'], ['C', 'D', 'F', 'E']]
-```
-
-3. **Process Deadlock Detection**
-Using fast-slow pointers to detect process deadlocks:
-- Resource allocation graphs
-- Wait-for cycles
-- Deadlock prevention
-
-```python
-class Process:
-    def __init__(self, pid: int):
-        self.pid = pid
-        self.waiting_for = None
-        self.resources = set()
-
-def detectDeadlock(processes: list[Process]) -> list[int]:
-    """
-    Detect deadlocked processes using fast-slow pointer.
-    Returns PIDs of processes in deadlock.
-    Time: O(n), Space: O(1)
-    """
-    def get_next(p: Process) -> Process:
-        return p.waiting_for
-    
-    deadlocked = []
-    for process in processes:
-        if process in deadlocked:
-            continue
-            
-        slow = fast = process
-        while fast and fast.waiting_for:
-            slow = get_next(slow)
-            fast = get_next(get_next(fast))
-            
-            if slow == fast:
-                # Found deadlock cycle
-                current = slow
-                cycle = []
-                while True:
-                    cycle.append(current.pid)
-                    current = get_next(current)
-                    if current == slow:
-                        break
-                deadlocked.extend(cycle)
-                break
-    
-    return deadlocked
-
-# Example usage:
-# P1 waiting for P2
-# P2 waiting for P3
-# P3 waiting for P1
-# Output: [1, 2, 3]
-```
-
-4. **Circular Buffer Implementation**
-Using fast-slow pointers for efficient circular buffer operations:
-- Detect buffer wrap-around
-- Manage read/write pointers
-- Handle overflow conditions
-
-```python
-class CircularBuffer:
-    """
-    Efficient circular buffer implementation using fast-slow pointers.
-    Handles wrap-around and overflow detection.
-    """
-    def __init__(self, size: int):
-        self.buffer = [0] * size
-        self.size = size
-        self.write_ptr = 0  # Fast pointer
-        self.read_ptr = 0   # Slow pointer
-        self.count = 0
-    
-    def write(self, value: int) -> bool:
-        """Write value to buffer, returns False if buffer is full"""
-        if self.count == self.size:
-            return False
-            
-        self.buffer[self.write_ptr] = value
-        self.write_ptr = (self.write_ptr + 1) % self.size
-        self.count += 1
-        return True
-    
-    def read(self) -> int:
-        """Read value from buffer, returns -1 if buffer is empty"""
-        if self.count == 0:
-            return -1
-            
-        value = self.buffer[self.read_ptr]
-        self.read_ptr = (self.read_ptr + 1) % self.size
-        self.count -= 1
-        return value
-    
-    def is_full(self) -> bool:
-        """Check if buffer is full using pointer positions"""
-        return self.count == self.size
-    
-    def is_empty(self) -> bool:
-        """Check if buffer is empty using pointer positions"""
-        return self.count == 0
-
-# Example usage:
-# buffer = CircularBuffer(3)
-# buffer.write(1)  # True
-# buffer.write(2)  # True
-# buffer.write(3)  # True
-# buffer.write(4)  # False (buffer full)
-# buffer.read()    # 1
-```
+Remember: The key to mastering Fast & Slow pointers is to:
+1. Understand pointer movement patterns
+2. Handle edge cases carefully
+3. Consider memory optimization
+4. Practice with varied problems
+5. Understand the mathematical principles

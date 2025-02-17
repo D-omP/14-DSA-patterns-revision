@@ -4,13 +4,454 @@ description: "Master the technique of sorting vertices in a directed acyclic gra
 pubDate: 2024-01-10
 category: "patterns"
 author: "Aryan Singh"
-tags: ["topological-sort", "graphs", "dfs"]
+tags: ["topological-sort", "graphs", "dfs", "dependencies"]
 priority: 10
 ---
 
-# Topological Sort Pattern
+## Topological Sort Pattern
 
-Topological Sort is a crucial pattern for solving problems involving dependencies and ordering in directed acyclic graphs (DAGs).
+Topological sorting is a linear ordering of vertices in a directed acyclic graph (DAG) such that for every directed edge u→v, vertex u comes before v in the ordering. Think of it as scheduling tasks while respecting their dependencies.
+
+### Understanding Through Real-World Examples
+
+1. **Course Prerequisites**
+   ```
+   Real-world scenario:
+   CS curriculum planning where courses have prerequisites
+   
+   Example courses:
+   - CS101: Intro to Programming
+   - CS201: Data Structures (needs CS101)
+   - CS301: Algorithms (needs CS201)
+   - MATH101: Calculus
+   - CS302: Databases (needs CS101)
+   
+   Visual representation:
+   MATH101    CS101
+              ↙    ↘
+           CS201  CS302
+             ↓
+           CS301
+   
+   Valid orderings:
+   - [MATH101, CS101, CS201, CS302, CS301]
+   - [CS101, MATH101, CS201, CS302, CS301]
+   ```
+
+2. **Build System Dependencies**
+   ```
+   Example: Building a software project
+   
+   Components:
+   - Core Library
+   - Database Layer (needs Core)
+   - UI Components (needs Core)
+   - API Layer (needs Database)
+   - Tests (needs everything)
+   
+   Dependency Graph:
+   Core Library
+        ↙     ↘
+   Database   UI
+        ↘    ↙
+        API
+         ↓
+       Tests
+   ```
+
+### Understanding Through More Examples
+
+1. **Software Deployment Pipeline**
+   ```
+   Real-world scenario: Deploying a microservices application
+   
+   Services:
+   - Database
+   - Authentication Service
+   - User Service
+   - API Gateway
+   - Frontend
+   
+   Dependencies:
+   Database ← Authentication ← API Gateway ← Frontend
+           ← User Service ←┘
+   
+   Deployment Considerations:
+   1. Database must be up first
+   2. Auth & User services can deploy in parallel
+   3. API Gateway needs both services
+   4. Frontend deploys last
+   
+   Valid Deployment Order:
+   1. Database
+   2. [Auth Service, User Service] (parallel)
+   3. API Gateway
+   4. Frontend
+   ```
+
+2. **Recipe Preparation**
+   ```
+   Making a sandwich:
+   
+   Steps:
+   1. Toast bread
+   2. Cook bacon
+   3. Slice tomatoes
+   4. Wash lettuce
+   5. Assemble sandwich
+   
+   Dependencies:
+   - Assemble needs all ingredients ready
+   - Bacon must cool slightly after cooking
+   - Bread must cool after toasting
+   
+   Visual Timeline:
+   0min    2min    4min    6min    8min
+   |--------|--------|--------|--------|
+   [Toast Bread]--[Cool]
+   [Cook Bacon]----[Cool]
+   [Slice Tomatoes]
+   [Wash Lettuce   ]
+                        [Assemble    ]
+   ```
+
+### Implementation Approaches
+
+1. **Kahn's Algorithm (BFS Approach)**
+   ```python
+   def topologicalSort(graph: Dict[int, List[int]]) -> List[int]:
+       """
+       Using BFS with in-degree tracking
+       
+       How it works:
+       1. Calculate in-degree for each node
+       2. Start with nodes having 0 in-degree
+       3. Remove edges and update in-degrees
+       4. Add nodes with new 0 in-degree to queue
+       
+       Visual process for above course example:
+       Initial in-degrees:
+       MATH101: 0  CS101: 0
+       CS201: 1    CS302: 1
+       CS301: 1
+       
+       Steps:
+       1. Queue: [MATH101, CS101]
+       2. After CS101: Queue: [MATH101, CS201, CS302]
+       3. After MATH101: Queue: [CS201, CS302]
+       4. After CS201: Queue: [CS302, CS301]
+       ...and so on
+       """
+       # Calculate in-degree for each node
+       in_degree = {node: 0 for node in graph}
+       for node in graph:
+           for neighbor in graph[node]:
+               in_degree[neighbor] += 1
+               
+       # Start with nodes having 0 in-degree
+       queue = deque([node for node, degree in in_degree.items() if degree == 0])
+       result = []
+       
+       while queue:
+           node = queue.popleft()
+           result.append(node)
+           
+           # Reduce in-degree of neighbors
+           for neighbor in graph[node]:
+               in_degree[neighbor] -= 1
+               if in_degree[neighbor] == 0:
+                   queue.append(neighbor)
+                   
+       return result if len(result) == len(graph) else []  # Check for cycles
+   ```
+
+2. **DFS Approach**
+   ```python
+   def topologicalSortDFS(graph: Dict[int, List[int]]) -> List[int]:
+       """
+       Using DFS with cycle detection
+       
+       How it works:
+       1. Use DFS to explore paths
+       2. Add nodes to result when backtracking
+       3. Maintain visited set for cycle detection
+       
+       States of nodes:
+       - UNVISITED: Not processed
+       - VISITING: In current DFS path (cycle detection)
+       - VISITED: Fully processed
+       
+       Example trace:
+       CS101 → mark VISITING
+         → CS201 → mark VISITING
+           → CS301 → mark VISITING, backtrack
+         → backtrack
+       → backtrack
+       """
+       WHITE, GRAY, BLACK = 0, 1, 2  # States for cycle detection
+       colors = {node: WHITE for node in graph}
+       result = []
+       
+       def dfs(node: int) -> bool:
+           if colors[node] == GRAY:  # Cycle detected
+               return False
+           if colors[node] == BLACK:  # Already processed
+               return True
+               
+           colors[node] = GRAY  # Mark as being visited
+           
+           # Visit all neighbors
+           for neighbor in graph[node]:
+               if not dfs(neighbor):
+                   return False
+                   
+           colors[node] = BLACK  # Mark as fully visited
+           result.append(node)
+           return True
+           
+       # Try DFS from each unvisited node
+       for node in graph:
+           if colors[node] == WHITE:
+               if not dfs(node):
+                   return []  # Cycle detected
+                   
+       return result[::-1]  # Reverse for correct order
+   ```
+
+### Common Applications
+
+1. **Build Systems**
+   ```python
+   """
+   Example: Make file dependencies
+   
+   Makefile:
+   app: lib.o main.o
+       gcc -o app lib.o main.o
+   
+   lib.o: lib.c lib.h
+       gcc -c lib.c
+   
+   main.o: main.c lib.h
+       gcc -c main.c
+   
+   Dependency Graph:
+   lib.h → lib.o → app
+     ↘         ↗
+   main.c → main.o
+   
+   Topological Sort helps determine build order
+   """
+   ```
+
+2. **Task Scheduling**
+   ```python
+   def scheduleJobs(jobs: List[str], deps: List[Tuple[str, str]]) -> List[str]:
+       """
+       Real-world job scheduling with dependencies
+       
+       Example:
+       jobs = ['deploy', 'test', 'build', 'develop']
+       deps = [
+           ('develop', 'build'),
+           ('build', 'test'),
+           ('test', 'deploy')
+       ]
+       
+       Result: ['develop', 'build', 'test', 'deploy']
+       """
+       # Implementation similar to topological sort
+   ```
+
+### Advanced Concepts and Techniques
+
+1. **Priority-Based Topological Sort**
+   ```python
+   def priorityTopSort(graph, priorities):
+       """
+       Topological sort that respects both dependencies
+       and priority preferences
+       
+       Example: Deployment with Priority
+       
+       Services:
+       - Critical (High): Database, Auth
+       - Important (Medium): API, Cache
+       - Normal (Low): UI, Analytics
+       
+       Strategy:
+       1. Group nodes by priority
+       2. Within each priority, follow dependencies
+       3. Try to schedule high priority nodes first
+       
+       Implementation:
+       Use priority queue instead of regular queue
+       """
+       def get_priority_score(node):
+           base_score = priorities[node] * 1000
+           return base_score - in_degree[node]
+       
+       # Similar to regular toposort but with priority queue
+       pq = [(get_priority_score(n), n) for n in nodes]
+       heapify(pq)
+       # ... rest of implementation
+   ```
+
+2. **Parallel Task Scheduling**
+   ```python
+   def parallelSchedule(tasks, dependencies, workers):
+       """
+       Schedule tasks across multiple workers while
+       respecting dependencies
+       
+       Example:
+       tasks = ['A', 'B', 'C', 'D', 'E']
+       deps = [('A','C'), ('B','C'), ('C','E'), ('D','E')]
+       workers = 2
+       
+       Timeline:
+       Worker1: A -> C -> E
+       Worker2: B -> D
+       
+       Total Time: 3 time units
+       
+       Visual:
+       Worker1: [A] -> [C] -> [E]
+       Worker2: [B] -> [D] -> [ ]
+       
+       Key Concepts:
+       1. Level-based scheduling
+       2. Worker assignment
+       3. Critical path analysis
+       """
+       levels = defaultdict(list)
+       current_level = 0
+       
+       # Group tasks by levels
+       while tasks:
+           available = [t for t in tasks if not dependencies[t]]
+           if not available:
+               return None  # Cycle detected
+           
+           levels[current_level] = available
+           # ... rest of implementation
+   ```
+
+### Real-World System Design Applications
+
+1. **Database Schema Migration**
+   ```
+   Problem: Applying database migrations in correct order
+   
+   Example Migrations:
+   M1: Create Users Table
+   M2: Create Products Table
+   M3: Add Email to Users
+   M4: Create Orders Table (needs Users, Products)
+   M5: Add Index on Email
+   
+   Dependencies:
+   M1 <- M3 <- M5
+   M1, M2 <- M4
+   
+   Challenges:
+   1. Some migrations can run in parallel
+   2. Must handle failed migrations
+   3. Need rollback capability
+   4. Version tracking
+   ```
+
+2. **CI/CD Pipeline Optimization**
+   ```
+   Scenario: Optimizing build and test pipeline
+   
+   Steps:
+   1. Code Checkout
+   2. Dependencies Installation
+   3. Unit Tests (needs deps)
+   4. Integration Tests (needs unit tests)
+   5. Build (needs tests)
+   6. Deploy (needs build)
+   
+   Optimization Opportunities:
+   1. Parallel test execution
+   2. Cache dependency installation
+   3. Incremental builds
+   4. Selective testing
+   
+   Implementation:
+   Use topological sort to:
+   1. Identify parallel execution paths
+   2. Calculate critical path
+   3. Optimize resource allocation
+   ```
+
+### Edge Cases and Error Handling
+
+1. **Cycle Detection**
+   ```python
+   """
+   Problem: Circular dependencies
+   
+   Example:
+   A → B → C → A
+   
+   Issues:
+   - No valid ordering possible
+   - Must detect and handle appropriately
+   - Report specific cycle for debugging
+   
+   Solution:
+   - Use colors (WHITE, GRAY, BLACK)
+   - Or track current path
+   - Return cycle information
+   """
+   ```
+
+2. **Multiple Valid Orderings**
+   ```python
+   """
+   Example:
+   A → C
+   B → C
+   
+   Valid orderings:
+   - [A, B, C]
+   - [B, A, C]
+   
+   Handling:
+   - Both are correct
+   - May want deterministic ordering
+   - Consider using sorted neighbors
+   """
+   ```
+
+### Practice Problems
+
+1. **Basic**
+   - Course Schedule
+   - Prerequisites Tasks
+   - Build Order
+   - Recipe Dependencies
+
+2. **Intermediate**
+   - Alien Dictionary
+   - Parallel Courses
+   - Minimum Height Trees
+   - Course Schedule II
+
+3. **Advanced**
+   - Sequence Reconstruction
+   - Sort Items by Groups
+   - Longest Chain of Prerequisites
+   - Maximum Team Performance
+
+Remember: The key to mastering Topological Sort is to:
+1. Identify dependency relationships
+2. Handle cycles properly
+3. Consider multiple valid orderings
+4. Optimize for specific requirements
+5. Test with complex dependency graphs
 
 ## When to Use Topological Sort
 
@@ -49,40 +490,6 @@ Use this pattern when you need to:
    - Schedule tasks with dependencies
    - Find minimum completion time
    - Parallel task execution
-
-## Implementation Template
-
-```python
-from collections import defaultdict, deque
-
-def topological_sort(vertices, edges):
-    # Create adjacency list
-    graph = defaultdict(list)
-    in_degree = {i: 0 for i in range(vertices)}
-    
-    # Build the graph
-    for prereq, course in edges:
-        graph[prereq].append(course)
-        in_degree[course] += 1
-    
-    # Add all vertices with 0 in-degree to queue
-    queue = deque([v for v in range(vertices) if in_degree[v] == 0])
-    result = []
-    
-    # Process until queue is empty
-    while queue:
-        vertex = queue.popleft()
-        result.append(vertex)
-        
-        # Reduce in-degree of neighbors
-        for neighbor in graph[vertex]:
-            in_degree[neighbor] -= 1
-            if in_degree[neighbor] == 0:
-                queue.append(neighbor)
-    
-    # Check if valid topological sort exists
-    return result if len(result) == vertices else []
-```
 
 ## Problem-Solving Tips
 

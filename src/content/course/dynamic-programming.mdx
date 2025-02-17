@@ -4,113 +4,683 @@ description: "Master the art of solving complex problems by breaking them into s
 pubDate: 2024-01-13
 category: "patterns"
 author: "Aryan Singh"
-tags: ["dp", "optimization", "recursion"]
+tags: ["dp", "optimization", "recursion", "memoization"]
 priority: 13
 ---
 
 ## Dynamic Programming Pattern
 
-Dynamic Programming (DP) is a method for solving complex problems by breaking them down into simpler subproblems. It solves each subproblem only once and stores the results for future use.
+Dynamic Programming (DP) is a powerful algorithmic technique that solves complex problems by breaking them down into simpler subproblems. It's particularly effective when subproblems overlap and have optimal substructure.
 
-### When to use Dynamic Programming?
+### Understanding Through Examples
 
-* Optimization problems
-* Counting problems
-* Path finding problems
-* String matching
-* Resource allocation
-* Games and puzzles
+1. **Climbing Stairs Problem**
+   Given n stairs, you can climb 1 or 2 stairs at a time. How many distinct ways can you climb to the top?
 
-### How it Works
+   ```
+   Visual representation for n = 4:
+   
+   [4]
+    ↗ ↖
+   [3]  [2]
+   ↗ ↖  ↗ ↖
+   [2] [1][1][0]
+   ↗ ↖
+   [1][0]
+   ↗
+   [0]
+   ```
 
-1. **Basic Concept**
-    * Break into subproblems
-    * Store subproblem solutions
-    * Build up to larger problems
-    * Avoid recalculation
+   ```python
+   def climbStairs(n: int) -> int:
+       """
+       Time: O(n), Space: O(1)
+       
+       How it works:
+       n = 4
+       dp[0] = 1 (base case)
+       dp[1] = 1 (one way to climb 1 stair)
+       dp[2] = 2 (1+1 or 2 stairs)
+       dp[3] = 3 (1+1+1, 1+2, 2+1)
+       dp[4] = 5 (1+1+1+1, 1+1+2, 1+2+1, 2+1+1, 2+2)
+       """
+       if n <= 1:
+           return 1
+           
+       prev2, prev1 = 1, 1
+       for i in range(2, n + 1):
+           current = prev1 + prev2
+           prev2 = prev1
+           prev1 = current
+           
+       return prev1
+   ```
 
-2. **Key Steps**
-    * Identify subproblems
-    * Define state clearly
-    * Write recurrence relation
-    * Determine base cases
+2. **Coin Change Problem**
+   Given coins of different denominations and a total amount, find the minimum number of coins needed.
 
-### Basic Template
+   ```
+   Example: coins = [1,2,5], amount = 11
+   
+   Visual DP table construction:
+   
+   Amount: 0  1  2  3  4  5  6  7  8  9  10 11
+   DP:     0  1  1  2  2  1  2  2  3  3  2  3
+   
+   For amount 11:
+   Using 1: dp[11-1] + 1 = dp[10] + 1 = 3
+   Using 2: dp[11-2] + 1 = dp[9] + 1 = 4
+   Using 5: dp[11-5] + 1 = dp[6] + 1 = 3
+   Take minimum: 3 coins
+   ```
 
-```python
-def fibonacci_dp(n):
-    # Initialize dp array
-    dp = [0] * (n + 1)
-    dp[1] = 1  # Base case
-    
-    # Build up solution
-    for i in range(2, n + 1):
-        dp[i] = dp[i-1] + dp[i-2]
-    
-    return dp[n]
-```
+   ```python
+   def coinChange(coins: List[int], amount: int) -> int:
+       """
+       Time: O(amount * len(coins))
+       Space: O(amount)
+       
+       Step-by-step for amount = 11:
+       dp[0] = 0
+       dp[1] = 1 (use 1)
+       dp[2] = 1 (use 2)
+       dp[3] = 2 (use 1+2)
+       dp[4] = 2 (use 2+2)
+       dp[5] = 1 (use 5)
+       ...and so on
+       """
+       dp = [float('inf')] * (amount + 1)
+       dp[0] = 0
+       
+       for coin in coins:
+           for x in range(coin, amount + 1):
+               dp[x] = min(dp[x], dp[x - coin] + 1)
+               
+       return dp[amount] if dp[amount] != float('inf') else -1
+   ```
 
-### Common Variations
+3. **Longest Increasing Subsequence (LIS)**
+   Find the length of the longest subsequence where all elements are in ascending order.
 
-1. **0/1 Knapsack**
+   ```
+   Example: nums = [10,9,2,5,3,7,101,18]
+   
+   Visual process:
+   
+   Index:  0   1   2   3   4   5   6    7
+   Array: 10   9   2   5   3   7  101  18
+   LIS:    1   1   1   2   2   3   4    4
+   
+   At each step:
+   10: [10] = 1
+   9:  [9] = 1
+   2:  [2] = 1
+   5:  [2,5] = 2
+   3:  [2,3] = 2
+   7:  [2,3,7] = 3
+   101:[2,3,7,101] = 4
+   18: [2,3,7,18] = 4
+   ```
 
-```python
-def knapsack(values, weights, capacity):
-    n = len(values)
-    dp = [[0] * (capacity + 1) for _ in range(n + 1)]
-    
-    for i in range(1, n + 1):
-        for w in range(capacity + 1):
-            if weights[i-1] <= w:
-                dp[i][w] = max(
-                    values[i-1] + dp[i-1][w-weights[i-1]],
-                    dp[i-1][w]
-                )
-            else:
-                dp[i][w] = dp[i-1][w]
-    
-    return dp[n][capacity]
-```
+   ```python
+   def lengthOfLIS(nums: List[int]) -> int:
+       """
+       Time: O(n²)
+       Space: O(n)
+       
+       Detailed steps for [10,9,2,5,3,7,101,18]:
+       
+       1. Initialize dp[i] = 1 for all i
+       2. For each position i:
+          - Look at all previous positions j
+          - If nums[i] > nums[j]:
+            - Can extend that subsequence
+          - Update dp[i] with max length found
+       """
+       if not nums:
+           return 0
+           
+       dp = [1] * len(nums)
+       for i in range(len(nums)):
+           for j in range(i):
+               if nums[i] > nums[j]:
+                   dp[i] = max(dp[i], dp[j] + 1)
+                   
+       return max(dp)
+   ```
 
-2. **Longest Common Subsequence**
+4. **0/1 Knapsack**
+   Given weights and values of n items, put these items in a knapsack of capacity W to get the maximum total value.
 
-```python
-def lcs(text1, text2):
-    m, n = len(text1), len(text2)
-    dp = [[0] * (n + 1) for _ in range(m + 1)]
-    
-    for i in range(1, m + 1):
-        for j in range(1, n + 1):
-            if text1[i-1] == text2[j-1]:
-                dp[i][j] = dp[i-1][j-1] + 1
-            else:
-                dp[i][j] = max(dp[i-1][j], dp[i][j-1])
-    
-    return dp[m][n]
-```
+   ```
+   Example:
+   values = [60, 100, 120]
+   weights = [10, 20, 30]
+   capacity = 50
+   
+   DP Table:
+   W   0  10  20  30  40  50
+   i
+   0   0  60  60  60  60  60
+   1   0  60  100 160 160 160
+   2   0  60  100 160 180 220
+   
+   Visual decision tree:
+   Item 3 (30kg, 120$)
+   ├── Take it (30kg used)
+   │   └── Item 2 (20kg, 100$)
+   │       └── Can't take Item 1
+   └── Leave it
+       └── Item 2
+           ├── Take it (20kg used)
+           │   └── Item 1
+           └── Leave it
+               └── Item 1
+   ```
 
-### Edge Cases to Consider
+   ```python
+   def knapsack(values: List[int], weights: List[int], capacity: int) -> int:
+       """
+       Time: O(n * capacity)
+       Space: O(n * capacity)
+       
+       How the DP table is filled:
+       1. dp[i][w] represents max value using first i items with capacity w
+       2. For each item i and weight w:
+          - If we can't take item i: dp[i-1][w]
+          - If we can take item i: max(dp[i-1][w], 
+                                     dp[i-1][w-weights[i]] + values[i])
+       """
+       n = len(values)
+       dp = [[0] * (capacity + 1) for _ in range(n + 1)]
+       
+       for i in range(1, n + 1):
+           for w in range(capacity + 1):
+               if weights[i-1] <= w:
+                   dp[i][w] = max(
+                       values[i-1] + dp[i-1][w-weights[i-1]],
+                       dp[i-1][w]
+                   )
+               else:
+                   dp[i][w] = dp[i-1][w]
+                   
+       # Reconstruct solution
+       selected = []
+       i, w = n, capacity
+       while i > 0 and w > 0:
+           if dp[i][w] != dp[i-1][w]:
+               selected.append(i-1)
+               w -= weights[i-1]
+           i -= 1
+           
+       return dp[n][capacity], selected[::-1]
+   ```
 
-1. Empty input
-2. Single element
-3. No solution exists
-4. Multiple solutions
-5. Overlapping subproblems
-6. Maximum recursion depth
-7. Memory constraints
+### Key Characteristics
 
-### Tips
+1. **Overlapping Subproblems**
+   - Same subproblems encountered multiple times
+   - Results can be cached/stored
+   - Example: Fibonacci numbers calculation
 
-1. Draw recursion tree
-2. Identify overlapping subproblems
-3. Choose appropriate state representation
-4. Consider space optimization
-5. Handle base cases carefully
+2. **Optimal Substructure**
+   - Optimal solution contains optimal solutions to subproblems
+   - Can build solution from smaller parts
+   - Example: Shortest path problems
 
-### Time & Space Complexity
+### Approaches to DP
 
-* Time: Usually O(n²) or O(n*m)
-* Space: Can often be optimized
-* Consider state space size
-* Trade-off between time and space
-* Bottom-up vs Top-down approach 
+1. **Top-Down (Memoization)**
+   ```python
+   def fib(n, memo={}):
+       if n in memo:
+           return memo[n]
+       if n <= 1:
+           return n
+           
+       memo[n] = fib(n-1, memo) + fib(n-2, memo)
+       return memo[n]
+   ```
+   - Start with main problem
+   - Break into subproblems
+   - Cache results
+   - Natural recursive structure
+   - Good for sparse problems
+
+2. **Bottom-Up (Tabulation)**
+   ```python
+   def fib(n):
+       if n <= 1:
+           return n
+           
+       dp = [0] * (n + 1)
+       dp[1] = 1
+       
+       for i in range(2, n + 1):
+           dp[i] = dp[i-1] + dp[i-2]
+           
+       return dp[n]
+   ```
+   - Start with smallest subproblems
+   - Build up to larger problems
+   - Usually more efficient
+   - Better space complexity
+   - Easier to optimize
+
+### Common DP Patterns
+
+1. **Linear Sequences**
+   - Fibonacci numbers
+   - Climbing stairs
+   - House robber
+   
+   Example (House Robber):
+   ```python
+   def rob(nums):
+       if not nums:
+           return 0
+       if len(nums) <= 2:
+           return max(nums)
+           
+       dp = [0] * len(nums)
+       dp[0] = nums[0]
+       dp[1] = max(nums[0], nums[1])
+       
+       for i in range(2, len(nums)):
+           dp[i] = max(dp[i-1], dp[i-2] + nums[i])
+           
+       return dp[-1]
+   ```
+
+2. **Grid Problems**
+   - Minimum path sum
+   - Unique paths
+   - Robot movement
+   
+   Example (Minimum Path Sum):
+   ```python
+   def minPathSum(grid):
+       if not grid:
+           return 0
+           
+       m, n = len(grid), len(grid[0])
+       dp = [[0] * n for _ in range(m)]
+       dp[0][0] = grid[0][0]
+       
+       # Fill first row
+       for j in range(1, n):
+           dp[0][j] = dp[0][j-1] + grid[0][j]
+           
+       # Fill first column
+       for i in range(1, m):
+           dp[i][0] = dp[i-1][0] + grid[i][0]
+           
+       # Fill rest of the grid
+       for i in range(1, m):
+           for j in range(1, n):
+               dp[i][j] = min(dp[i-1][j], dp[i][j-1]) + grid[i][j]
+               
+       return dp[m-1][n-1]
+   ```
+
+3. **String Problems**
+   - Longest Common Subsequence (LCS)
+   - Edit Distance
+   - Palindromic Substrings
+   
+   Example (Edit Distance):
+   ```python
+   def minDistance(word1: str, word2: str) -> int:
+       m, n = len(word1), len(word2)
+       dp = [[0] * (n + 1) for _ in range(m + 1)]
+       
+       # Base cases
+       for i in range(m + 1):
+           dp[i][0] = i
+       for j in range(n + 1):
+           dp[0][j] = j
+           
+       # Fill dp table
+       for i in range(1, m + 1):
+           for j in range(1, n + 1):
+               if word1[i-1] == word2[j-1]:
+                   dp[i][j] = dp[i-1][j-1]
+               else:
+                   dp[i][j] = min(
+                       dp[i-1][j],    # deletion
+                       dp[i][j-1],    # insertion
+                       dp[i-1][j-1]   # replacement
+                   ) + 1
+                   
+       return dp[m][n]
+   ```
+
+### Advanced DP Concepts
+
+1. **State Compression**
+   - Using bits to represent states
+   - Reducing memory usage
+   - Handling large state spaces
+   
+   Example (Traveling Salesman):
+   ```python
+   def tsp(graph):
+       n = len(graph)
+       all_visited = (1 << n) - 1
+       
+       dp = {}
+       def solve(mask, pos):
+           if mask == all_visited:
+               return graph[pos][0]
+               
+           state = (mask, pos)
+           if state in dp:
+               return dp[state]
+               
+           ans = float('inf')
+           for city in range(n):
+               if not mask & (1 << city):
+                   new_mask = mask | (1 << city)
+                   ans = min(ans, graph[pos][city] + 
+                           solve(new_mask, city))
+                   
+           dp[state] = ans
+           return ans
+           
+       return solve(1, 0)  # Start from city 0
+   ```
+
+2. **Digit DP**
+   - Counting numbers with properties
+   - Range queries
+   - Digit-based constraints
+   
+   Example (Count Numbers with Sum of Digits = K):
+   ```python
+   def countNumbers(n: int, k: int) -> int:
+       def solve(pos, tight, sum_so_far, dp):
+           if sum_so_far > k:
+               return 0
+           if pos == len(str(n)):
+               return sum_so_far == k
+               
+           state = (pos, tight, sum_so_far)
+           if state in dp:
+               return dp[state]
+               
+           limit = int(str(n)[pos]) if tight else 9
+           count = 0
+           
+           for digit in range(limit + 1):
+               new_tight = tight and digit == limit
+               count += solve(pos + 1, new_tight,
+                            sum_so_far + digit, dp)
+               
+           dp[state] = count
+           return count
+           
+       return solve(0, True, 0, {})
+   ```
+
+### Optimization Techniques
+
+1. **Space Optimization**
+   - Using rolling arrays
+   - Constant space solutions
+   - State compression
+   
+   Example (Fibonacci with O(1) space):
+   ```python
+   def fib(n):
+       if n <= 1:
+           return n
+           
+       prev2, prev1 = 0, 1
+       for _ in range(2, n + 1):
+           curr = prev1 + prev2
+           prev2 = prev1
+           prev1 = curr
+           
+       return prev1
+   ```
+
+2. **Time Optimization**
+   - Precalculation
+   - State reduction
+   - Mathematical properties
+   
+   Example (Counting Palindromes):
+   ```python
+   def countPalindromes(s: str) -> int:
+       n = len(s)
+       # Precalculate palindrome info
+       is_pal = [[False] * n for _ in range(n)]
+       
+       # Single characters
+       for i in range(n):
+           is_pal[i][i] = True
+           
+       # Two characters
+       for i in range(n-1):
+           is_pal[i][i+1] = s[i] == s[i+1]
+           
+       # Larger palindromes
+       for length in range(3, n + 1):
+           for start in range(n - length + 1):
+               end = start + length - 1
+               is_pal[start][end] = (
+                   s[start] == s[end] and 
+                   is_pal[start+1][end-1]
+               )
+               
+       # Count palindromes
+       return sum(sum(row) for row in is_pal)
+   ```
+
+### Practice Problems
+
+1. **Basic**
+   - Climbing Stairs
+   - Maximum Subarray
+   - House Robber
+   - Coin Change
+
+2. **Intermediate**
+   - Longest Increasing Subsequence
+   - Unique Paths
+   - Edit Distance
+   - Palindromic Substrings
+
+3. **Advanced**
+   - Regular Expression Matching
+   - Burst Balloons
+   - Cherry Pickup
+   - Optimal BST
+
+### Semi-Patterns in Dynamic Programming
+
+1. **Interval DP**
+   Problems involving intervals or subarrays where we combine smaller intervals to solve larger ones.
+
+   Example: Matrix Chain Multiplication
+   ```python
+   def matrixChainMultiplication(dimensions):
+       """
+       Given: Array of matrix dimensions where matrix i has dimensions[i-1] x dimensions[i]
+       Find: Minimum number of operations to multiply all matrices
+       
+       Example: dimensions = [10, 30, 5, 60]
+       Matrices: (10×30), (30×5), (5×60)
+       
+       Possible ways to multiply:
+       ((A×B)×C): (10×30×5) + (10×5×60) = 1500 + 3000 = 4500 ops
+       (A×(B×C)): (30×5×60) + (10×30×60) = 9000 + 18000 = 27000 ops
+       
+       Answer: 4500 operations
+       """
+       n = len(dimensions) - 1
+       dp = [[0] * n for _ in range(n)]
+       
+       # Length of chain
+       for length in range(2, n + 1):
+           # Start of chain
+           for i in range(n - length + 1):
+               j = i + length - 1
+               dp[i][j] = float('inf')
+               # Split point
+               for k in range(i, j):
+                   cost = (dp[i][k] + dp[k+1][j] + 
+                          dimensions[i] * dimensions[k+1] * dimensions[j+1])
+                   dp[i][j] = min(dp[i][j], cost)
+       
+       return dp[0][n-1]
+   ```
+
+2. **Partition DP**
+   Problems where we need to partition the input in different ways to find the optimal solution.
+
+   Example: Palindrome Partitioning
+   ```python
+   def minCuts(s: str) -> int:
+       """
+       Problem: Partition string into palindromes with minimum cuts
+       
+       Example: "aab"
+       Possible partitions:
+       - "a|a|b" (2 cuts)
+       - "aa|b" (1 cut)
+       
+       Answer: 1 cut
+       
+       How it works:
+       1. First calculate all palindromes
+       2. Then find minimum cuts needed
+       """
+       n = len(s)
+       # isPal[i][j] = true if s[i:j+1] is palindrome
+       isPal = [[False] * n for _ in range(n)]
+       
+       # Single characters
+       for i in range(n):
+           isPal[i][i] = True
+           
+       # Two or more characters
+       for length in range(2, n + 1):
+           for start in range(n - length + 1):
+               end = start + length - 1
+               if length == 2:
+                   isPal[start][end] = s[start] == s[end]
+               else:
+                   isPal[start][end] = (s[start] == s[end] and 
+                                      isPal[start+1][end-1])
+       
+       # dp[i] = minimum cuts needed for s[0:i+1]
+       dp = list(range(-1, n))  # Initialize with worst case
+       
+       for i in range(n):
+           for j in range(i + 1):
+               if isPal[j][i]:
+                   dp[i+1] = min(dp[i+1], dp[j] + 1)
+                   
+       return dp[n]
+   ```
+
+3. **Bitmask DP**
+   Using bits to represent states, especially useful for small set problems.
+
+   Example: Minimum Cost to Visit Every Node
+   ```python
+   def shortestPathLength(graph: List[List[int]]) -> int:
+       """
+       Problem: Find shortest path visiting all nodes (can revisit nodes)
+       
+       Example: graph = [[1,2,3],[0],[0],[0]]
+       Represents:
+           1
+          /
+       0 -- 2
+          \
+           3
+       
+       State representation:
+       - Current node: 0,1,2,3
+       - Visited nodes: bitmask (0000 to 1111)
+       """
+       n = len(graph)
+       all_visited = (1 << n) - 1
+       
+       # dp[node][mask] = shortest path to node with visited mask
+       dp = {}
+       
+       def solve(node: int, mask: int) -> int:
+           if mask == all_visited:
+               return 0
+               
+           state = (node, mask)
+           if state in dp:
+               return dp[state]
+           
+           dp[state] = float('inf)
+           for next_node in graph[node]:
+               if mask & (1 << next_node):
+                   # Already visited
+                   dp[state] = min(dp[state],
+                                 1 + solve(next_node, mask))
+               else:
+                   # Visit new node
+                   dp[state] = min(dp[state],
+                                 1 + solve(next_node, mask | (1 << next_node)))
+           
+           return dp[state]
+       
+       return min(solve(i, 1 << i) for i in range(n))
+   ```
+
+### Understanding State Design
+
+The key to solving DP problems lies in proper state design. Here's a systematic approach:
+
+1. **State Components**
+   - Position/Index: Where are we in the input?
+   - Choices Made: What decisions led here?
+   - Resources Left: What constraints remain?
+   - Additional Info: Any other needed information?
+
+2. **State Transition Rules**
+   - What choices can we make at each state?
+   - How do choices affect our state?
+   - What constraints must we maintain?
+   - How do we combine subproblem results?
+
+3. **State Space Analysis**
+   ```python
+   """
+   Example: Climbing Stairs with Cost
+   
+   State Components:
+   1. Current stair (position)
+   2. Cost accumulated (resource)
+   
+   State Transitions:
+   1. Take 1 step: (i, cost) -> (i+1, cost + cost[i])
+   2. Take 2 steps: (i, cost) -> (i+2, cost + cost[i])
+   
+   State Space Size: O(n * maxCost)
+   """
+   def minCostClimbingStairs(cost: List[int]) -> int:
+       n = len(cost)
+       dp = [0] * (n + 1)
+       
+       for i in range(2, n + 1):
+           dp[i] = min(dp[i-1] + cost[i-1],
+                      dp[i-2] + cost[i-2])
+           
+       return dp[n]
+   ```
+
+Remember: The key to mastering DP is to:
+1. Identify overlapping subproblems
+2. Define clear state transitions
+3. Choose appropriate DP approach
+4. Consider optimization techniques
+5. Practice with varied problems 

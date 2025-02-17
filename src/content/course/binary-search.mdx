@@ -1,127 +1,553 @@
 ---
 title: "Binary Search"
-description: "Master the binary search technique for efficient searching"
+description: "Master the art of efficient searching in sorted arrays and optimization problems"
 pubDate: 2024-01-09
 category: "patterns"
 author: "Aryan Singh"
-tags: ["binary-search", "searching", "arrays"]
+tags: ["binary-search", "searching", "arrays", "optimization"]
 priority: 9
 ---
 
 ## Binary Search Pattern
 
-Binary Search is a divide-and-conquer algorithm that efficiently finds a target value in a sorted array. It's also useful for optimization problems with monotonic search spaces.
+Binary Search is not just a simple search algorithm - it's a powerful problem-solving technique that can be applied to any problem with a monotonic search space. Understanding its variations and applications is crucial for solving complex problems efficiently.
 
-### When to use Binary Search?
+### Core Concept Visualization
 
-* Searching in sorted arrays
-* Finding insertion points
-* Optimization problems
-* Finding peak elements
-* Range queries
-* Finding boundaries
+```
+Basic Binary Search visualization:
 
-### How it Works
+Array: [2, 5, 8, 12, 16, 23, 38, 56, 72, 91]
+Target: 23
 
-1. **Basic Concept**
-    * Divide search space in half
-    * Compare target with middle
-    * Eliminate half of search space
-    * Repeat until found or space exhausted
-
-2. **Key Steps**
-    * Calculate middle point
-    * Compare with target
-    * Adjust search boundaries
-    * Handle duplicates carefully
-
-### Basic Template
-
-```python
-def binarySearch(nums, target):
-    left, right = 0, len(nums) - 1
-    
-    while left <= right:
-        mid = left + (right - left) // 2
+Step 1: [2, 5, 8, 12, 16, 23, 38, 56, 72, 91]
+         ↑              ↑               ↑
+        left          mid            right
         
-        if nums[mid] == target:
-            return mid
-        elif nums[mid] < target:
-            left = mid + 1
-        else:
-            right = mid - 1
-    
-    return -1  # Not found
+Step 2: [2, 5, 8, 12, 16, 23, 38, 56, 72, 91]
+                        ↑    ↑        ↑
+                      left  mid     right
+                      
+Step 3: [2, 5, 8, 12, 16, 23, 38, 56, 72, 91]
+                        ↑  ↑  ↑
+                      left mid right
+                      
+Found: mid = target = 23
 ```
 
-### Common Variations
+### Understanding Binary Search Intuition
 
-1. **Finding Leftmost Position**
+Think of Binary Search like finding a word in a dictionary:
+1. Open the dictionary in the middle
+2. Is your word before or after this page?
+3. Eliminate half you don't need
+4. Repeat with remaining half
 
-```python
-def findLeftmost(nums, target):
-    left, right = 0, len(nums)
-    
-    while left < right:
-        mid = left + (right - left) // 2
-        
-        if nums[mid] < target:
-            left = mid + 1
-        else:
-            right = mid
-    
-    return left if left < len(nums) and nums[left] == target else -1
+This same intuition applies to many problems:
+```
+Examples of Binary Search Thinking:
+
+1. Finding a number (classic):
+   [1, 3, 5, 7, 9, 11, 13, 15]
+   Target = 7
+   
+   Step 1: Mid = 9
+   7 < 9, look left
+   [1, 3, 5, 7]
+   
+   Step 2: Mid = 3
+   7 > 3, look right
+   [5, 7]
+   
+   Step 3: Mid = 7
+   Found!
+
+2. Finding square root (optimization):
+   Find square root of 16
+   
+   Search space: [0...16]
+   Step 1: Try 8
+   8*8 = 64 > 16, too big
+   New range: [0...7]
+   
+   Step 2: Try 4
+   4*4 = 16 = target
+   Found!
 ```
 
-2. **Search in Rotated Array**
+### Implementation Patterns
 
-```python
-def searchRotated(nums, target):
-    left, right = 0, len(nums) - 1
-    
-    while left <= right:
-        mid = left + (right - left) // 2
-        
-        if nums[mid] == target:
-            return mid
-            
-        # Left half is sorted
-        if nums[left] <= nums[mid]:
-            if nums[left] <= target < nums[mid]:
-                right = mid - 1
-            else:
-                left = mid + 1
-        # Right half is sorted
-        else:
-            if nums[mid] < target <= nums[right]:
-                left = mid + 1
-            else:
-                right = mid - 1
-    
-    return -1
-```
+1. **Classic Binary Search**
+   ```python
+   def binarySearch(nums: List[int], target: int) -> int:
+       """
+       Standard binary search implementation
+       
+       Key Points:
+       1. Initialize left and right pointers
+       2. Calculate mid point safely
+       3. Compare and adjust search space
+       4. Handle edge cases
+       
+       Time: O(log n)
+       Space: O(1)
+       """
+       left, right = 0, len(nums) - 1
+       
+       while left <= right:
+           # Avoid integer overflow
+           mid = left + (right - left) // 2
+           
+           if nums[mid] == target:
+               return mid
+           elif nums[mid] < target:
+               left = mid + 1
+           else:
+               right = mid - 1
+               
+       return -1
+   ```
 
-### Edge Cases to Consider
+2. **Finding Leftmost Position**
+   ```python
+   def searchLeftmost(nums: List[int], target: int) -> int:
+       """
+       Find leftmost occurrence of target
+       
+       Example:
+       nums = [1, 2, 2, 2, 3, 4]
+       target = 2
+       
+       Steps:
+       1. [1, 2, 2, 2, 3, 4]  mid = 2 (value = 2)
+          Don't stop! Keep searching left
+          
+       2. [1, 2, 2]  mid = 1 (value = 2)
+          Still don't stop!
+          
+       3. [1, 2]  mid = 0 (value = 1)
+          Search right half
+          
+       4. Found leftmost 2 at index 1
+       """
+       left, right = 0, len(nums)
+       
+       while left < right:
+           mid = left + (right - left) // 2
+           if nums[mid] >= target:
+               right = mid
+           else:
+               left = mid + 1
+               
+       return left if left < len(nums) and nums[left] == target else -1
+   ```
 
-1. Empty array
-2. Single element
-3. Target not present
-4. Duplicate elements
-5. Target at boundaries
-6. Rotated array
-7. All elements same
+### Advanced Binary Search Patterns
 
-### Tips
+1. **Binary Search on Answer**
+   ```python
+   def minEatingSpeed(piles: List[int], h: int) -> int:
+       """
+       Koko Eating Bananas problem
+       
+       Problem:
+       - Koko has piles of bananas
+       - Must eat all bananas within h hours
+       - Can eat k bananas per hour
+       - Find minimum k
+       
+       Example:
+       piles = [3, 6, 7, 11], h = 8
+       
+       Search space: [1...max(piles)]
+       
+       For k = 4:
+       pile1 = 3: 1 hour
+       pile2 = 6: 2 hours
+       pile3 = 7: 2 hours
+       pile4 = 11: 3 hours
+       Total = 8 hours (possible!)
+       
+       Binary search to find minimum k
+       """
+       def canEatAll(speed: int) -> bool:
+           return sum((p + speed - 1) // speed for p in piles) <= h
+           
+       left, right = 1, max(piles)
+       while left < right:
+           mid = left + (right - left) // 2
+           if canEatAll(mid):
+               right = mid
+           else:
+               left = mid + 1
+               
+       return left
+   ```
 
-1. Use `left + (right - left) // 2` to avoid overflow
-2. Consider inclusive vs exclusive bounds
-3. Handle duplicates carefully
-4. Check boundary conditions
-5. Consider binary search on answer space
+2. **Binary Search with Duplicates**
+   ```python
+   def searchRange(nums: List[int], target: int) -> List[int]:
+       """
+       Find first and last position of target
+       
+       Example:
+       nums = [5,7,7,8,8,8,10], target = 8
+       
+       Two binary searches:
+       1. Find leftmost position
+       2. Find rightmost position
+       
+       Visual process:
+       First search (leftmost):
+       [5,7,7,8,8,8,10]
+           ↑ ↑   ↑
+           L M   R
+       [5,7,7,8,8,8,10]
+               ↑↑ ↑
+               LM R
+               
+       Second search (rightmost):
+       [5,7,7,8,8,8,10]
+               ↑ ↑  ↑
+               L M  R
+       [5,7,7,8,8,8,10]
+                 ↑↑ ↑
+                 LM R
+       """
+       def findLeft(target):
+           left, right = 0, len(nums)
+           while left < right:
+               mid = left + (right - left) // 2
+               if nums[mid] >= target:
+                   right = mid
+               else:
+                   left = mid + 1
+           return left
+           
+       def findRight(target):
+           left, right = 0, len(nums)
+           while left < right:
+               mid = left + (right - left) // 2
+               if nums[mid] > target:
+                   right = mid
+               else:
+                   left = mid + 1
+           return left - 1
+           
+       left = findLeft(target)
+       if left == len(nums) or nums[left] != target:
+           return [-1, -1]
+           
+       return [left, findRight(target)]
+   ```
 
-### Time & Space Complexity
+### Real-World Applications
 
-* Time Complexity: O(log n)
-* Space Complexity: O(1)
-* Reduces search space by half each time
-* Very efficient for large sorted datasets 
+1. **Database Indexing**
+   ```
+   In B-tree indexes:
+   - Each node contains sorted keys
+   - Binary search used at each level
+   - Reduces search space logarithmically
+   
+   Example:
+   Finding record with id = 45
+   
+   Root Node: [10, 20, 30, 40, 50]
+                         ↓
+   Internal: [31, 33, 35, 37, 39]
+                  ↓
+   Leaf: [34, 35, 36, 45, 47]
+                    ↑
+   Found target record
+   ```
+
+2. **Version Control Bisect**
+   ```python
+   def gitBisect(commits: List[str], isBad: Callable) -> str:
+       """
+       Git bisect implementation
+       
+       Problem:
+       - Find first bad commit
+       - Each commit depends on previous
+       - Minimize number of tests
+       
+       Example:
+       commits = [good, good, good, bad, bad, bad]
+       
+       Binary search process:
+       1. Test middle commit
+       2. If bad, search earlier half
+       3. If good, search later half
+       """
+       left, right = 0, len(commits) - 1
+       
+       while left < right:
+           mid = left + (right - left) // 2
+           if isBad(commits[mid]):
+               right = mid
+           else:
+               left = mid + 1
+               
+       return commits[left]
+   ```
+
+### Common Pitfalls and Solutions
+
+1. **Integer Overflow**
+   ```python
+   # Wrong:
+   mid = (left + right) // 2  # Can overflow
+   
+   # Correct:
+   mid = left + (right - left) // 2
+   ```
+
+2. **Infinite Loops**
+   ```python
+   # Wrong:
+   while left < right:
+       mid = (left + right) // 2
+       if condition:
+           left = mid  # Might not change
+           
+   # Correct:
+   while left < right:
+       mid = (left + right + 1) // 2  # Round up
+       if condition:
+           left = mid
+   ```
+
+3. **Off-by-One Errors**
+   ```python
+   # Consider:
+   # - Should right be inclusive or exclusive?
+   # - When to use left <= right vs left < right?
+   # - How to handle empty arrays?
+   
+   # Template for exclusive right:
+   left, right = 0, len(nums)  # right is exclusive
+   while left < right:  # Stop when left == right
+   ```
+
+### Common Binary Search Patterns
+
+1. **Exact Match Search**
+   ```python
+   def exactSearch(nums: List[int], target: int) -> int:
+       """
+       When to use:
+       - Sorted array
+       - Looking for exact value
+       - Need position of element
+       
+       Example walkthrough:
+       nums = [2,4,6,8,10,12,14]
+       target = 8
+       
+       Step 1: left=0, right=6, mid=3
+               [2,4,6,8,10,12,14]
+                     ↑
+                    mid=8 (found!)
+       """
+       left, right = 0, len(nums) - 1
+       
+       while left <= right:
+           mid = left + (right - left) // 2
+           if nums[mid] == target:
+               return mid
+           elif nums[mid] < target:
+               left = mid + 1
+           else:
+               right = mid - 1
+               
+       return -1
+   ```
+
+2. **Boundary Search**
+   ```python
+   def findBoundary(nums: List[int]) -> int:
+       """
+       When to use:
+       - Finding first/last occurrence
+       - Finding transition point
+       - Finding insertion position
+       
+       Example: Find first True
+       [F,F,F,T,T,T]
+       
+       Step 1: mid=2 (F)
+       [F,F,F|T,T,T]
+           look right
+           
+       Step 2: mid=4 (T)
+       [F,F,F,T|T,T]
+           look left
+           
+       Step 3: mid=3 (T)
+       [F,F,F|T,T,T]
+           found boundary!
+       """
+       left, right = 0, len(nums) - 1
+       boundary = -1
+       
+       while left <= right:
+           mid = left + (right - left) // 2
+           if nums[mid]:  # Found candidate
+               boundary = mid
+               right = mid - 1  # Look for earlier occurrence
+           else:
+               left = mid + 1
+               
+       return boundary
+   ```
+
+### Advanced Search Spaces
+
+1. **Floating Point Search**
+   ```python
+   def squareRoot(n: float, precision: float = 1e-7) -> float:
+       """
+       Binary search on decimal numbers
+       
+       Example: sqrt(10)
+       
+       Step 1: [0...10] mid = 5
+       5*5 = 25 > 10, too big
+       
+       Step 2: [0...5] mid = 2.5
+       2.5*2.5 = 6.25 < 10, too small
+       
+       Step 3: [2.5...5] mid = 3.75
+       3.75*3.75 = 14.06 > 10, too big
+       
+       Continue until difference < precision
+       """
+       if n < 0:
+           return -1
+           
+       left, right = 0, max(1, n)
+       
+       while right - left > precision:
+           mid = left + (right - left) / 2
+           square = mid * mid
+           
+           if abs(square - n) < precision:
+               return mid
+           elif square < n:
+               left = mid
+           else:
+               right = mid
+               
+       return left
+   ```
+
+2. **Matrix Search**
+   ```python
+   def searchMatrix(matrix: List[List[int]], target: int) -> bool:
+       """
+       Binary search in 2D sorted matrix
+       
+       Example matrix:
+       [1,  4,  7,  11]
+       [2,  5,  8,  12]
+       [3,  6,  9,  16]
+       [10, 13, 14, 17]
+       
+       Two approaches:
+       1. Treat as 1D array (n*m elements)
+       2. Binary search on rows, then columns
+       
+       Key insight:
+       - Matrix[i][j] maps to position p = i*n + j
+       - Position p maps to (p/n, p%n)
+       """
+       if not matrix or not matrix[0]:
+           return False
+           
+       m, n = len(matrix), len(matrix[0])
+       left, right = 0, m * n - 1
+       
+       while left <= right:
+           mid = left + (right - left) // 2
+           row, col = mid // n, mid % n
+           value = matrix[row][col]
+           
+           if value == target:
+               return True
+           elif value < target:
+               left = mid + 1
+           else:
+               right = mid - 1
+               
+       return False
+   ```
+
+### Binary Search in System Design
+
+1. **Rate Limiter Implementation**
+   ```python
+   class RateLimiter:
+       """
+       Binary search for time window management
+       
+       Problem:
+       - Track requests within sliding window
+       - Remove old requests efficiently
+       
+       Example:
+       Window = 1 second
+       Limit = 5 requests
+       
+       Requests: [0.1, 0.2, 0.4, 0.8, 0.9, 1.1]
+       For new request at 1.2:
+       - Binary search for cutoff (1.2 - 1.0 = 0.2)
+       - Count requests after cutoff
+       """
+       def __init__(self, window_size: float, limit: int):
+           self.window = window_size
+           self.limit = limit
+           self.requests = []
+           
+       def allow_request(self, timestamp: float) -> bool:
+           # Binary search to find position of (timestamp - window)
+           cutoff = timestamp - self.window
+           pos = bisect.bisect_left(self.requests, cutoff)
+           
+           # Remove old requests
+           self.requests = self.requests[pos:]
+           
+           # Check if can allow new request
+           if len(self.requests) < self.limit:
+               self.requests.append(timestamp)
+               return True
+           return False
+   ```
+
+### Practice Problems
+
+1. **Basic**
+   - Standard Binary Search
+   - First/Last Position
+   - Search Insert Position
+   - Peak Element
+
+2. **Intermediate**
+   - Search in Rotated Array
+   - Find Minimum in Rotated Array
+   - Search 2D Matrix
+   - Koko Eating Bananas
+
+3. **Advanced**
+   - Split Array Largest Sum
+   - Find K-th Smallest Pair Distance
+   - Median of Two Sorted Arrays
+   - Aggressive Cows
+
+Remember: The key to mastering Binary Search is to:
+1. Identify the monotonic search space
+2. Handle boundary conditions carefully
+3. Choose appropriate templates
+4. Consider edge cases
+5. Test with various input sizes 
