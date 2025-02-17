@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply text-gray-900 bg-gray-50;
+  }
+}
+
+@layer components {
+  .prose {
+    @apply max-w-none;
+  }
+
+  .prose pre {
+    @apply bg-gray-900 text-gray-100;
+  }
+
+  .prose code {
+    @apply text-gray-800 bg-gray-100 px-1 py-0.5 rounded;
+  }
+
+  .prose pre code {
+    @apply text-gray-100 bg-transparent p-0;
+  }
+} 

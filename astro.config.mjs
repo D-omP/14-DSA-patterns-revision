@@ -1,24 +1,16 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import tailwind from '@astrojs/tailwind';
-
 import react from '@astrojs/react';
-
-// Only import sitemap if it's available
-let sitemap;
-try {
-  sitemap = require('@astrojs/sitemap');
-} catch (e) {
-  console.warn('Sitemap integration not available');
-}
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://coderaryan.com',
   integrations: [
     mdx(),
     tailwind(),
-    // Only add sitemap if it's available
-    ...(sitemap ? [sitemap({
+    react(),
+    sitemap({
       changefreq: 'weekly',
       priority: 0.7,
       lastmod: new Date(),
@@ -28,7 +20,21 @@ export default defineConfig({
           en: 'en-US',
         },
       },
-    })] : []),
-    react()
+    }),
   ],
+  vite: {
+    ssr: {
+      noExternal: ['@algolia/client-search'],
+    },
+    build: {
+      cssCodeSplit: true,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'react-vendor': ['react', 'react-dom'],
+          },
+        },
+      },
+    },
+  },
 });

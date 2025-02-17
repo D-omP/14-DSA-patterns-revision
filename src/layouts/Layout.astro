@@ -4,56 +4,65 @@ import '@fontsource/inter/500.css';
 import '@fontsource/inter/600.css';
 import '@fontsource/inter/700.css';
 import Navbar from '../components/Navbar.astro';
-import SEO from '../components/SEO.astro';
+import { ViewTransitions } from 'astro:transitions';
+import '../styles/global.css';
 
-interface Props {
+export interface Props {
   title: string;
-  description?: string;
+  description: string;
   image?: string;
-  article?: boolean;
-  publishDate?: Date;
-  modifiedDate?: Date;
-  author?: string;
-  tags?: string[];
+  structuredData?: object;
 }
 
 const { 
-  title,
-  description = "Learn to build profitable SaaS products with AI in days, not months. Complete course by Ex-Google Engineer.",
-  ...seoProps
+  title, 
+  description,
+  image = '/og-image.png',
+  structuredData,
 } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Basic Meta Tags -->
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, Astro.site)} />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(image, Astro.site)} />
+    
+    <!-- Structured Data -->
+    {structuredData && (
+      <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+    )}
+    
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     
-    <!-- SEO Component -->
-    <SEO 
-      title={title}
-      description={description}
-      {...seoProps}
-    />
-
-    <!-- Preload fonts -->
-    <link 
-      rel="preload" 
-      href="/fonts/inter-var.woff2" 
-      as="font" 
-      type="font/woff2" 
-      crossorigin 
-    />
-
-    <!-- Sitemap -->
-    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <!-- Preload Critical Assets -->
+    <link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin />
+    
+    <ViewTransitions />
   </head>
   <body class="bg-gray-50">
     <Navbar />
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <slot />
-    </main>
+    <slot />
   </body>
 </html>

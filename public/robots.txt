@@ -4,4 +4,7 @@ Allow: /
 Sitemap: https://coderaryan.com/sitemap-index.xml
 
 # Optimize crawling
-Crawl-delay: 10 
+Crawl-delay: 10
+
+Disallow: /api/
+Disallow: /admin/ 

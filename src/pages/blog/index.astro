@@ -78,13 +78,16 @@ const structuredData = {
     "@id": seoMetadata.siteUrl
   }
 };
+
+const formatDate = (date: Date) => {
+  return date.toISOString().split('T')[0];
+};
 ---
 
 <Layout 
   title={seoMetadata.title}
   description={seoMetadata.description}
-  ogImage={seoMetadata.ogImage}
-  twitterHandle={seoMetadata.twitterHandle}
+  image={seoMetadata.ogImage}
   structuredData={structuredData}
 >
   <main class="max-w-4xl mx-auto px-4 py-12">
@@ -120,7 +123,7 @@ const structuredData = {
                             </p>
                             <div class="flex items-center gap-4">
                               <time 
-                                datetime={post.data.pubDate}
+                                datetime={formatDate(post.data.pubDate)}
                                 class="text-sm text-gray-500"
                               >
                                 {new Date(post.data.pubDate).toLocaleDateString('en-US', {
