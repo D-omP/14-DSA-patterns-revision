@@ -66,24 +66,34 @@ Backtracking is an algorithmic technique that considers searching every possible
       - Implement efficient rollback
 
 ### Basic Template
+------c++#include <vector>
+using namespace std;
 
-```python
-def backtrack(input, path, result):
-    if isComplete(path):
-        result.append(path.copy())
-        return
-    
-    for candidate in getCandidates(input, path):
-        if isValid(candidate, path):
-            # Make choice
-            path.append(candidate)
-            
-            # Explore further
-            backtrack(input, path, result)
-            
-            # Undo choice
-            path.pop()
-```
+// Function prototypes (you need to define these)
+bool isComplete(const vector<int>& path);
+vector<int> getCandidates(const vector<int>& input, const vector<int>& path);
+bool isValid(int candidate, const vector<int>& path);
+
+void backtrack(const vector<int>& input, vector<int>& path, vector<vector<int>>& result) {
+    if (isComplete(path)) {
+        result.push_back(path); // Save a copy of the current path
+        return;
+    }
+
+    vector<int> candidates = getCandidates(input, path);
+    for (int candidate : candidates) {
+        if (isValid(candidate, path)) {
+            // Make choice
+            path.push_back(candidate);
+
+            // Explore further
+            backtrack(input, path, result);
+
+            // Undo choice
+            path.pop_back();
+        }
+    }
+}
 
 ### Common Variations
 
