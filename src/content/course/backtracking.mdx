@@ -180,31 +180,25 @@ def subsets(nums):
 
 1. **Choice-Based Backtracking**
 ```python
-def permutations(nums):
-    def backtrack(used, path):
-        if len(path) == len(nums):
-            result.append(path[:])
-            return
-            
-        for i in range(len(nums)):
-            # Skip used elements
-            if used[i]:
-                continue
-                
-            # Make choice
-            used[i] = True
-            path.append(nums[i])
-            
-            # Explore
-            backtrack(used, path)
-            
-            # Undo choice
-            used[i] = False
-            path.pop()
-    
-    result = []
-    backtrack([False] * len(nums), [])
-    return result
+void backtrack(InputType input, std::vector<CandidateType>& path, std::vector<std::vector<CandidateType>>& result) {
+    if (isComplete(path)) {
+        result.push_back(path);
+        return;
+    }
+
+    for (auto candidate : getCandidates(input, path)) {
+        if (isValid(candidate, path)) {
+            // Make choice
+            path.push_back(candidate);
+
+            // Explore further
+            backtrack(input, path, result);
+
+            // Undo choice
+            path.pop_back();
+        }
+    }
+}
 ```
 
 2. **Position-Based Backtracking**
